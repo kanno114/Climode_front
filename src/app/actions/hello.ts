@@ -2,7 +2,7 @@
 
 export async function getHelloMessage() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL_SERVER}/hello`, {
+    const response = await fetch(`${process.env.API_BASE_URL_SERVER}/hello`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
