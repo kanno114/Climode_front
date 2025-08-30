@@ -15,6 +15,7 @@ export async function signInAction(_: unknown, formData: FormData) {
   const { email, password } = submission.payload;
 
   try {
+    // 直接Rails APIを呼び出して認証
     const res = await fetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/signin`,
       {
@@ -23,52 +24,60 @@ export async function signInAction(_: unknown, formData: FormData) {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        credentials: "include",
         body: JSON.stringify({
-          user: {
-            email,
-            password,
-          },
+          user: { email, password },
         }),
       }
     );
 
+    // Rails APIからのレスポンスを処理
     if (!res.ok) {
-      const errorData = await res.json();
-      console.error("ログイン失敗:", errorData.errors || errorData);
+      const errorData = await res.json().catch(() => ({}));
+      console.error("Rails API認証失敗:", {
+        status: res.status,
+        error: errorData.error || errorData.details,
+      });
 
-      // エラーメッセージを適切に返す
+      // Rails側のエラーメッセージをそのまま使用
+      const errorMessage =
+        errorData.error ||
+        errorData.details ||
+        "メールアドレスまたはパスワードが正しくありません";
+
       return submission.reply({
-        formErrors: ["メールアドレスまたはパスワードが正しくありません"],
+        formErrors: [errorMessage],
       });
     }
 
-    // NextAuth側のセッション確立（credentials）
+    const userData = await res.json();
+    const { id, name } = userData;
+
+    // 認証成功時はAuth.jsでセッション確立
     const result = await signIn("credentials", {
       email,
       password,
+      id,
+      name,
       redirect: false,
     });
 
     if (result?.error) {
+      console.error("Auth.jsセッション確立失敗:", result.error);
       return submission.reply({
-        formErrors: ["認証に失敗しました"],
+        formErrors: ["セッションの確立に失敗しました。再度お試しください"],
       });
     }
-
   } catch (error: unknown) {
-    console.error(
-      "予期しないエラーが発生しました:",
-      error instanceof Error ? error.message : String(error)
-    );
+    console.error("予期しないエラーが発生しました:", error);
+
+    // エラーの種類に応じてメッセージを分ける
+    const errorMessage =
+      "ログインに失敗しました。しばらく時間をおいて再度お試しください";
 
     return submission.reply({
-      formErrors: [
-        "サーバーエラーが発生しました。しばらく時間をおいて再度お試しください",
-      ],
+      formErrors: [errorMessage],
     });
   }
-  if (submission.status === "success") {
-    redirect("/dashboard");
-  }
+
+  redirect("/dashboard");
 }

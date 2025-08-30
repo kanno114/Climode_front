@@ -16,7 +16,7 @@ import { signUpAction } from "../actions";
 import { signUpSchema } from "@/lib/schemas/signup";
 
 export function SignUpForm() {
-  const [lastResult, action] = useActionState(signUpAction, undefined);
+  const [lastResult, action, pending] = useActionState(signUpAction, undefined);
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {
@@ -53,7 +53,7 @@ export function SignUpForm() {
       <Button
         variant="outline"
         onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-        className="w-full"
+        className="w-full cursor-pointer"
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
@@ -104,7 +104,7 @@ export function SignUpForm() {
               key={fields.name.key}
               placeholder="山田太郎"
               className="pl-10"
-              required
+              disabled={pending}
             />
           </div>
           {fields.name.errors?.map((e) => (
@@ -124,7 +124,7 @@ export function SignUpForm() {
               key={fields.email.key}
               placeholder="example@email.com"
               className="pl-10"
-              required
+              disabled={pending}
             />
           </div>
           {fields.email.errors?.map((e) => (
@@ -144,7 +144,7 @@ export function SignUpForm() {
               key={fields.password.key}
               placeholder="8文字以上で入力"
               className="pl-10"
-              required
+              disabled={pending}
             />
           </div>
           {fields.password.errors?.map((e) => (
@@ -174,12 +174,8 @@ export function SignUpForm() {
           ))}
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={lastResult?.status === "success"}
-        >
-          {lastResult?.status === "success" ? (
+        <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
+          {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               登録中...

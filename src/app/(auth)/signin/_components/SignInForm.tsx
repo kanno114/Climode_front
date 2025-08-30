@@ -16,7 +16,7 @@ import { signInAction } from "../actions";
 import { signInSchema } from "@/lib/schemas/signin";
 
 export function SignInForm() {
-  const [lastResult, action] = useActionState(signInAction, undefined);
+  const [lastResult, action, pending] = useActionState(signInAction, undefined);
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {
@@ -47,11 +47,10 @@ export function SignInForm() {
         </Alert>
       )}
 
-
       <Button
         variant="outline"
         onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-        className="w-full"
+        className="w-full cursor-pointer"
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
@@ -102,6 +101,7 @@ export function SignInForm() {
               key={fields.email.key}
               placeholder="example@email.com"
               className="pl-10"
+              disabled={pending}
             />
           </div>
           {fields.email.errors?.map((e) => (
@@ -121,6 +121,7 @@ export function SignInForm() {
               key={fields.password.key}
               placeholder="パスワードを入力"
               className="pl-10 pr-10"
+              disabled={pending}
             />
           </div>
           {fields.password.errors?.map((e) => (
@@ -130,8 +131,8 @@ export function SignInForm() {
           ))}
         </div>
 
-        <Button type="submit" className="w-full">
-          {lastResult ? (
+        <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
+          {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ログイン中...
