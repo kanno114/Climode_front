@@ -31,7 +31,7 @@ export const providers = [
         console.log("認証開始:", { email: credentials?.email });
 
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL_SERVER}/api/v1/signin`,
+          `${process.env.API_BASE_URL_SERVER}/api/v1/signin`,
           {
             method: "POST",
             headers: {

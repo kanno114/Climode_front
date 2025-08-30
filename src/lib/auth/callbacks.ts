@@ -3,23 +3,12 @@
 import { NextAuthConfig } from "next-auth";
 
 export const callbacks: NextAuthConfig["callbacks"] = {
-  // ミドルウェアの保護ページ
-  authorized({ request, auth }) {
-    const { pathname } = request.nextUrl;
-    const protectedPaths = ["/posts", "/my-page"];
-    const isProtected = protectedPaths.some((path) =>
-      pathname.startsWith(path)
-    );
-    if (isProtected) return !!auth;
-    return true;
-  },
-
   // OAuth成功後、Railsへユーザー同期
   async signIn({ user, account }) {
     if (account?.provider !== "credentials") {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL_SERVER}/api/v1/oauth_register`,
+          `${process.env.API_BASE_URL_SERVER}/api/v1/oauth_register`,
           {
             method: "POST",
             headers: {

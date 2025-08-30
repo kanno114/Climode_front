@@ -12,9 +12,9 @@ export const authConfig: Partial<NextAuthConfig> = {
 
   pages: {
     // 認証が必要なページに未ログインでアクセスしたときのリダイレクト先
-    signIn: "/",
+    signIn: "/signin",
     // 認証処理中に発生したエラーをユーザーに知らせるためのページを表示します。
-    error: "/auth/error",
+    error: "/error",
     // ログアウトが行われる前に確認や処理がしたい場合
     // signOut: "/",
     // メールリンク認証（パスワードレスログイン）を使った場合に、メール送信後に表示される案内ページ。
