@@ -27,7 +27,7 @@ export default function SignUpPage() {
             <span className="text-muted-foreground">
               既にアカウントをお持ちの方は
             </span>{" "}
-            <Link href="/auth/signin" className="text-primary hover:underline">
+            <Link href="/signin" className="text-primary hover:underline">
               ログイン
             </Link>
           </div>
@@ -36,14 +36,33 @@ export default function SignUpPage() {
             <p className="text-muted-foreground text-center">
               テスト用ダミーアカウント
             </p>
-            <div className="rounded-md border p-3 space-y-1 bg-muted/40">
-              <p>
-                <span className="font-medium">メール:</span> testuser1@example.com /{" "}
-                <span className="font-medium">パスワード:</span> testuser123
-              </p>
+            <div className="rounded-md border p-3 space-y-2 bg-muted/40">
+              <div>
+                <span className="font-medium">名前:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    テストユーザー
+                  </code>
+                </div>
+              </div>
+              <div>
+                <span className="font-medium">メール:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    testuser1@example.com
+                  </code>
+                </div>
+              </div>
+              <div>
+                <span className="font-medium">パスワード:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    testuser123
+                  </code>
+                </div>
+              </div>
             </div>
           </div>
-
         </CardContent>
       </Card>
     </div>

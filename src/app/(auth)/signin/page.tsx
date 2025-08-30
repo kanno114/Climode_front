@@ -27,16 +27,14 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {params.message === "login_required" && (
-            <LoginRequiredToast />
-          )}
+          {params.message === "login_required" && <LoginRequiredToast />}
           <SignInForm />
 
           <div className="text-center text-sm">
             <span className="text-muted-foreground">
               アカウントをお持ちでない方は
             </span>{" "}
-            <Link href="/auth/signup" className="text-primary hover:underline">
+            <Link href="/signup" className="text-primary hover:underline">
               新規登録
             </Link>
           </div>
@@ -45,19 +43,61 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             <p className="text-muted-foreground text-center">
               テスト用ダミーアカウント
             </p>
-            <div className="rounded-md border p-3 space-y-1 bg-muted/40">
-              <p>
-                <span className="font-medium">メール:</span> alice@example.com /{" "}
-                <span className="font-medium">パスワード:</span> password123
-              </p>
-              <p>
-                <span className="font-medium">メール:</span> bob@example.com /{" "}
-                <span className="font-medium">パスワード:</span> password123
-              </p>
-              <p>
-                <span className="font-medium">メール:</span> carol@example.com /{" "}
-                <span className="font-medium">パスワード:</span> password123
-              </p>
+            <div className="rounded-md border p-3 space-y-2 bg-muted/40">
+              <div>
+                <span className="font-medium">メール:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    alice@example.com
+                  </code>
+                </div>
+              </div>
+              <div>
+                <span className="font-medium">パスワード:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    password123
+                  </code>
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground text-center pt-2">
+                または
+              </div>
+              <div>
+                <span className="font-medium">メール:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    bob@example.com
+                  </code>
+                </div>
+              </div>
+              <div>
+                <span className="font-medium">パスワード:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    password123
+                  </code>
+                </div>
+              </div>
+              <div className="text-xs text-muted-foreground text-center pt-2">
+                または
+              </div>
+              <div>
+                <span className="font-medium">メール:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    carol@example.com
+                  </code>
+                </div>
+              </div>
+              <div>
+                <span className="font-medium">パスワード:</span>
+                <div className="mt-1">
+                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
+                    password123
+                  </code>
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>

@@ -3,33 +3,20 @@
 import { signIn } from "@/auth";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
-import { z } from "zod";
-
-const signUpSchema = z
-  .object({
-    name: z.string().min(1, "お名前を入力してください"),
-    email: z.string().email("有効なメールアドレスを入力してください"),
-    password: z.string().min(8, "パスワードは8文字以上で入力してください"),
-    confirmPassword: z.string().min(1, "パスワード確認を入力してください"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "パスワードが一致しません",
-    path: ["confirmPassword"],
-  });
+import { signUpSchema } from "@/lib/schemas/signup";
 
 export async function signUpAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signUpSchema });
 
   if (submission.status !== "success") {
-    return submission.reply();
+    return submission.reply({
+      formErrors: ["入力内容を確認してください"],
+    });
   }
 
   const { name, email, password } = submission.payload;
 
-  let success = false;
-
   try {
-    // Rails APIにユーザー登録リクエスト
     const response = await fetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/signup`,
       {
@@ -53,7 +40,38 @@ export async function signUpAction(_: unknown, formData: FormData) {
     if (!response.ok) {
       const errorData = await response.json();
       console.error("登録失敗:", errorData.errors || errorData);
-      return;
+
+      // Railsからのエラーメッセージを処理
+      let errorMessages: string[] = [];
+
+      if (errorData.errors) {
+        // Railsのバリデーションエラーの場合
+        if (typeof errorData.errors === "object") {
+          // フィールド別のエラーメッセージを配列に変換
+          Object.values(errorData.errors).forEach((fieldErrors: unknown) => {
+            if (Array.isArray(fieldErrors)) {
+              errorMessages.push(...fieldErrors);
+            } else if (typeof fieldErrors === "string") {
+              errorMessages.push(fieldErrors);
+            }
+          });
+        } else if (Array.isArray(errorData.errors)) {
+          errorMessages = errorData.errors;
+        }
+      } else if (errorData.error) {
+        // 単一のエラーメッセージの場合
+        errorMessages = [errorData.error];
+      } else if (errorData.message) {
+        // messageフィールドの場合
+        errorMessages = [errorData.message];
+      } else {
+        // デフォルトエラーメッセージ
+        errorMessages = ["登録に失敗しました"];
+      }
+
+      return submission.reply({
+        formErrors: errorMessages,
+      });
     }
 
     // 登録成功後、自動ログイン
@@ -65,18 +83,21 @@ export async function signUpAction(_: unknown, formData: FormData) {
 
     if (signInResult?.error) {
       console.error("ログイン失敗:", signInResult.error);
-      return;
+      return submission.reply({
+        formErrors: ["認証に失敗しました"],
+      });
     }
-
-    success = true;
   } catch (error: unknown) {
     console.error(
       "予期しないエラーが発生しました:",
       error instanceof Error ? error.message : String(error)
     );
+    return submission.reply({
+      formErrors: ["予期しないエラーが発生しました"],
+    });
   }
 
-  if (success) {
+  if (submission.status === "success") {
     redirect("/dashboard");
   }
 }

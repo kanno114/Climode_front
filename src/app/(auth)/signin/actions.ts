@@ -3,7 +3,7 @@
 import { signIn } from "@/auth";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
-import { signInSchema } from "@/lib/schemas/signin"; // 共通スキーマをインポート
+import { signInSchema } from "@/lib/schemas/signin";
 
 export async function signInAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signInSchema });
@@ -35,17 +35,40 @@ export async function signInAction(_: unknown, formData: FormData) {
 
     if (!res.ok) {
       const errorData = await res.json();
-      console.error("登録失敗:", errorData.errors || errorData);
-      return;
+      console.error("ログイン失敗:", errorData.errors || errorData);
+
+      // エラーメッセージを適切に返す
+      return submission.reply({
+        formErrors: ["メールアドレスまたはパスワードが正しくありません"],
+      });
     }
 
     // NextAuth側のセッション確立（credentials）
-    await signIn("credentials", { email, password, redirect: false });
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      return submission.reply({
+        formErrors: ["認証に失敗しました"],
+      });
+    }
+
   } catch (error: unknown) {
     console.error(
       "予期しないエラーが発生しました:",
       error instanceof Error ? error.message : String(error)
     );
+
+    return submission.reply({
+      formErrors: [
+        "サーバーエラーが発生しました。しばらく時間をおいて再度お試しください",
+      ],
+    });
   }
-  redirect("/dashboard");
+  if (submission.status === "success") {
+    redirect("/dashboard");
+  }
 }
