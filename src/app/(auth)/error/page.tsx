@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 
-export default function AuthErrorPage() {
+function AuthErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -69,5 +70,36 @@ export default function AuthErrorPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function AuthErrorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
+                <AlertTriangle className="h-6 w-6 text-red-500" />
+                認証エラー
+              </CardTitle>
+              <CardDescription className="text-center">
+                読み込み中...
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="animate-pulse bg-gray-200 h-4 rounded"></div>
+              <div className="space-y-2">
+                <div className="animate-pulse bg-gray-200 h-10 rounded"></div>
+                <div className="animate-pulse bg-gray-200 h-10 rounded"></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <AuthErrorContent />
+    </Suspense>
   );
 }
