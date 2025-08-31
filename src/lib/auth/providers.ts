@@ -25,49 +25,21 @@ export const providers = [
     credentials: {
       email: { label: "Email", type: "email" },
       password: { label: "Password", type: "password" },
+      id: { label: "ID", type: "text" },
+      name: { label: "Name", type: "text" },
+      image: { label: "Image", type: "text" },
     },
     async authorize(credentials) {
       try {
-        console.log("認証開始:", { email: credentials?.email });
-
-        const res = await fetch(
-          `${process.env.API_BASE_URL_SERVER}/api/v1/signin`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-              user: {
-                email: credentials?.email,
-                password: credentials?.password,
-              },
-            }),
-          }
-        );
-
-        console.log("Rails API レスポンス:", {
-          status: res.status,
-          ok: res.ok,
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error(
-            "通常ログイン失敗 - HTTPエラー:",
-            res.status,
-            errorText
-          );
-          return null;
-        }
-
-        const data = await res.json();
-        console.log("認証成功:", { id: data.id, email: data.email });
-        return data;
+        // Server Actionで既に認証済みなので、ユーザー情報のみ返す
+        return {
+          id: credentials?.id as string,
+          email: credentials?.email as string,
+          name: credentials?.name as string | null,
+          image: credentials?.image as string | null,
+        };
       } catch (error) {
-        console.error("通常ログイン失敗:", error);
+        console.error("認証エラー:", error);
         return null;
       }
     },

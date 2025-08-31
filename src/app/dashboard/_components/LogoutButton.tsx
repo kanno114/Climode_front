@@ -2,17 +2,23 @@
 
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 
-export default function LogoutButton() {
+export default function LogoutButton({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" });
   };
 
   return (
-    <Button variant="outline" onClick={handleLogout}>
-      <LogOut className="mr-2 h-4 w-4" />
-      ログアウト
+    <Button
+      variant="ghost"
+      onClick={handleLogout}
+      className="w-full h-auto p-0 hover:bg-transparent focus:bg-transparent cursor-pointer"
+    >
+      {children}
     </Button>
   );
 }

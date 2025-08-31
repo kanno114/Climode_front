@@ -51,14 +51,14 @@ function AuthErrorContent() {
           </Alert>
 
           <div className="space-y-2">
-            <Button asChild className="w-full">
+            <Button asChild className="w-full cursor-pointer">
               <Link href="/signin">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 ログインページに戻る
               </Link>
             </Button>
 
-            <Button variant="outline" asChild className="w-full">
+            <Button variant="outline" asChild className="w-full cursor-pointer">
               <Link href="/">ホームに戻る</Link>
             </Button>
           </div>

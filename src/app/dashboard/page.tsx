@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import {
   Card,
   CardContent,
@@ -6,76 +5,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Calendar, Activity } from "lucide-react";
-import LogoutButton from "./_components/LogoutButton";
+import { Calendar, Activity } from "lucide-react";
+import { DailyLogForm } from "./_components/DailyLogForm";
+import { TodayArea } from "./_components/TodayArea";
+import { getTodayDailyLog } from "./actions";
 
 export default async function DashboardPage() {
-  const session = await auth();
-  if (!session?.user) {
-    return null;
-  }
-  const user = session.user;
+  // 今日の記録を取得
+  const todayDailyLog = await getTodayDailyLog();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
-        {/* ヘッダー */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Climode
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              体調管理ダッシュボード
-            </p>
-          </div>
-          <LogoutButton />
-        </div>
 
-        {/* ユーザー情報カード */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              ユーザー情報
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src={user.image || ""} alt={user.name || ""} />
-                <AvatarFallback>
-                  {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="text-xl font-semibold">
-                  {user.name || "ユーザー"}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">{user.email}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          {/* 今日の記録表示または入力フォーム */}
+          {todayDailyLog ? (
+            <TodayArea dailyLog={todayDailyLog} />
+          ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    今日の記録
+                  </CardTitle>
+                  <CardDescription>
+                    睡眠・気分・症状を記録して体調を管理しましょう
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DailyLogForm />
+                </CardContent>
+              </Card>
+          )}
 
         {/* 機能カード */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                今日の記録
-              </CardTitle>
-              <CardDescription>睡眠・気分・症状を記録</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                今日の体調を記録して、パターンを分析しましょう。
-              </p>
-            </CardContent>
-          </Card>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -108,7 +72,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* 今後の機能予定 */}
-        <Card className="mt-8">
+        <Card className="mt-5">
           <CardHeader>
             <CardTitle>今後の機能予定</CardTitle>
             <CardDescription>開発中の機能をご紹介します</CardDescription>
