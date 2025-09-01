@@ -7,6 +7,7 @@ import { Calendar, Eye } from "lucide-react";
 import { EditDailyLogForm } from "./EditDailyLogForm";
 import { DailyLogScore } from "./DailyLogScore";
 import { TodayDailyLog } from "./TodayDailyLog";
+import Suggestions from "./Suggestions";
 
 interface TodayAreaProps {
   dailyLog: {
@@ -31,9 +32,18 @@ interface TodayAreaProps {
       pressure_hpa: number;
     };
   };
+  suggestions: Array<{
+    key: string;
+    title: string;
+    message: string;
+    tags: Array<string>;
+    severity: number;
+    triggers: Array<string>;
+    category: string;
+  }>;
 }
 
-export function TodayArea({ dailyLog }: TodayAreaProps) {
+export function TodayArea({ dailyLog, suggestions }: TodayAreaProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   if (isEditing) {
@@ -69,6 +79,7 @@ export function TodayArea({ dailyLog }: TodayAreaProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       <DailyLogScore score={dailyLog.score} />
       <TodayDailyLog dailyLog={dailyLog} setIsEditing={setIsEditing} />
+      <Suggestions suggestions={suggestions} />
     </div>
   );
 }

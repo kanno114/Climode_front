@@ -8,35 +8,35 @@ import {
 import { Calendar, Activity } from "lucide-react";
 import { DailyLogForm } from "./_components/DailyLogForm";
 import { TodayArea } from "./_components/TodayArea";
-import { getTodayDailyLog } from "./actions";
+import { getTodayDailyLog, getSuggestions } from "./actions";
 
 export default async function DashboardPage() {
   // 今日の記録を取得
   const todayDailyLog = await getTodayDailyLog();
+  const suggestions = await getSuggestions();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
-
-          {/* 今日の記録表示または入力フォーム */}
-          {todayDailyLog ? (
-            <TodayArea dailyLog={todayDailyLog} />
-          ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    今日の記録
-                  </CardTitle>
-                  <CardDescription>
-                    睡眠・気分・症状を記録して体調を管理しましょう
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <DailyLogForm />
-                </CardContent>
-              </Card>
-          )}
+        {/* 今日の記録表示または入力フォーム */}
+        {todayDailyLog ? (
+          <TodayArea dailyLog={todayDailyLog} suggestions={suggestions} />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                今日の記録
+              </CardTitle>
+              <CardDescription>
+                睡眠・気分・症状を記録して体調を管理しましょう
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DailyLogForm />
+            </CardContent>
+          </Card>
+        )}
 
         {/* 機能カード */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
