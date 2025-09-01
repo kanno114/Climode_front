@@ -58,6 +58,11 @@ export async function getSuggestions() {
 
     if (res.ok) {
       return await res.json();
+    } else if (res.status === 404) {
+      return null;
+    } else if (res.status === 401) {
+      console.error("認証エラー - セッションが無効です");
+      return null;
     } else {
       console.error("提案データ取得失敗:", res.status);
       return null;
