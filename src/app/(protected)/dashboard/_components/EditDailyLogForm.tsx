@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { join } from "path/posix";
 
 interface EditDailyLogFormProps {
   dailyLog: {
@@ -251,7 +252,7 @@ export function EditDailyLogForm({
             <MapPin className="inline mr-2 h-4 w-4" />
             天気情報の取得位置
           </Label>
-          <Select name={fields.prefecture_id?.name} disabled={pending}>
+          <Select defaultValue={dailyLog.prefecture_id?.toString()} name={fields.prefecture_id?.name} disabled={pending}>
             <SelectTrigger>
               <SelectValue placeholder="選択してください" />
             </SelectTrigger>
