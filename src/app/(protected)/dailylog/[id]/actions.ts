@@ -1,0 +1,40 @@
+"use server";
+
+import { auth } from "@/auth";
+
+export async function getDailyLog(id: string) {
+  const session = await auth();
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const res = await fetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    } else if (res.status === 404) {
+      return null; // 今日の記録が存在しない
+    } else if (res.status === 401) {
+      // 認証エラーの場合はnullを返して、ページ側でログインページにリダイレクト
+      console.error("認証エラー - セッションが無効です");
+      return null;
+    } else {
+      console.error("今日の記録取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("今日の記録取得エラー:", error);
+    return null;
+  }
+}
