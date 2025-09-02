@@ -43,15 +43,15 @@ export async function DashboardMenu() {
     {
       icon: BarChart3,
       label: "体調分析",
-      href: "/analytics",
-      description: "データを分析・グラフ表示",
+      href: "",
+      description: "未実装・実装予定",
     },
-    {
-      icon: Settings,
-      label: "設定",
-      href: "/settings",
-      description: "アカウント設定",
-    },
+    // {
+    //   icon: Settings,
+    //   label: "設定",
+    //   href: "/settings",
+    //   description: "アカウント設定",
+    // },
   ];
 
   return (
