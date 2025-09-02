@@ -57,8 +57,8 @@ export async function DashboardMenu() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Menu className="h-4 w-4" />
+        <Button variant="outline" size="lg" className="gap-2">
+          <Menu className="h-10 w-10" />
           メニュー
         </Button>
       </DialogTrigger>

@@ -61,7 +61,7 @@ export function TodayArea({ dailyLog, suggestions }: TodayAreaProps) {
               onClick={() => setIsEditing(false)}
             >
               <Eye className="h-4 w-4 mr-2" />
-              詳細表示
+              表示
             </Button>
           </div>
         </CardHeader>
@@ -76,10 +76,14 @@ export function TodayArea({ dailyLog, suggestions }: TodayAreaProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <DailyLogScore score={dailyLog.score} />
-      <TodayDailyLog dailyLog={dailyLog} setIsEditing={setIsEditing} />
-      <Suggestions suggestions={suggestions} />
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <DailyLogScore score={dailyLog.score} />
+        <TodayDailyLog dailyLog={dailyLog} setIsEditing={setIsEditing} />
+      </div>
+      <div className="mt-4 w-full">
+        <Suggestions suggestions={suggestions} />
+      </div>
+    </>
   );
 }
