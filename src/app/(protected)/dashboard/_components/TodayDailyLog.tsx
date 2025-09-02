@@ -3,7 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Bed, Heart, Edit, MapPin } from "lucide-react";
+import { Calendar, Bed, Heart, Edit, MapPin, Star } from "lucide-react";
+import { SelfScoreDialog } from "./SelfScoreDialog";
 
 interface TodayDailyLogProps {
   dailyLog: {
@@ -13,6 +14,7 @@ interface TodayDailyLogProps {
     mood: number;
     memo?: string;
     score: number;
+    self_score?: number;
     prefecture?: {
       id: number;
       name_ja: string;
@@ -43,14 +45,17 @@ export function TodayDailyLog({ dailyLog, setIsEditing }: TodayDailyLogProps) {
             <Calendar className="h-5 w-5" />
             今日の記録
           </CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsEditing(true)}
-          >
-            <Edit className="h-4 w-4 mr-2" />
-            編集
-          </Button>
+          <div className="flex items-center gap-2">
+            <SelfScoreDialog dailyLog={dailyLog} />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditing(true)}
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              編集
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -68,6 +73,14 @@ export function TodayDailyLog({ dailyLog, setIsEditing }: TodayDailyLogProps) {
             <span className="text-sm">{moodScore}</span>
           </div>
         </div>
+
+        {dailyLog.self_score && (
+          <div className="flex items-center gap-2">
+            <Star className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">セルフスコア</span>
+            <span className="text-sm">{dailyLog.self_score}</span>
+          </div>
+        )}
 
         {/* 症状 */}
         {symptomNames.length > 0 && (
