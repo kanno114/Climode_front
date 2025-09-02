@@ -17,7 +17,7 @@ export async function signUpAction(_: unknown, formData: FormData) {
   const { name, email, password } = submission.payload;
 
   try {
-    const response = await fetch(
+    const backendSignUpResponse = await fetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/signup`,
       {
         method: "POST",
@@ -37,8 +37,8 @@ export async function signUpAction(_: unknown, formData: FormData) {
       }
     );
 
-    if (!response.ok) {
-      const errorData = await response.json();
+    if (!backendSignUpResponse.ok) {
+      const errorData = await backendSignUpResponse.json();
       console.error("登録失敗:", errorData.errors || errorData);
 
       // Railsからのエラーメッセージを処理
@@ -75,18 +75,58 @@ export async function signUpAction(_: unknown, formData: FormData) {
     }
 
     // 登録成功後、自動ログイン
-    const signInResult = await signIn("credentials", {
+    const backendSignInResponse = await fetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/signin`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          user: { email, password },
+        }),
+      }
+    );
+
+    // Rails APIからのレスポンスを処理
+    if (!backendSignInResponse.ok) {
+      const errorData = await backendSignInResponse.json().catch(() => ({}));
+      console.error("Rails API認証失敗:", {
+        status: backendSignInResponse.status,
+        error: errorData.error || errorData.details,
+      });
+
+      // Rails側のエラーメッセージをそのまま使用
+      const errorMessage =
+        errorData.error ||
+        errorData.details ||
+        "メールアドレスまたはパスワードが正しくありません";
+
+      return submission.reply({
+        formErrors: [errorMessage],
+      });
+    }
+
+    const userData = await backendSignInResponse.json();
+    const { id } = userData;
+
+    // 認証成功時はAuth.jsでセッション確立
+    const frontendSignInResult = await signIn("credentials", {
       email,
       password,
+      id,
+      name,
       redirect: false,
     });
 
-    if (signInResult?.error) {
-      console.error("ログイン失敗:", signInResult.error);
+    if (frontendSignInResult?.error) {
+      console.error("ログイン失敗:", frontendSignInResult.error);
       return submission.reply({
         formErrors: ["認証に失敗しました"],
       });
     }
+
   } catch (error: unknown) {
     console.error(
       "予期しないエラーが発生しました:",
