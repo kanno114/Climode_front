@@ -3,6 +3,7 @@
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { dailyLogSchema } from "@/lib/schemas/daily-log";
+import { selfScoreSchema } from "@/lib/schemas/self-score";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 
@@ -273,6 +274,80 @@ export async function updateDailyLogAction(_: unknown, formData: FormData) {
 
     const errorMessage =
       "日次記録の更新に失敗しました。しばらく時間をおいて再度お試しください";
+
+    return submission.reply({
+      formErrors: [errorMessage],
+    });
+  }
+
+  // try-catchブロックの外でリダイレクト
+  redirect("/dashboard");
+}
+
+export async function updateSelfScoreAction(_: unknown, formData: FormData) {
+  const submission = parseWithZod(formData, { schema: selfScoreSchema });
+
+  const session = await auth();
+  if (!session?.user) {
+    return submission.reply({
+      formErrors: ["ログインが必要です"],
+    });
+  }
+
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  const data = submission.payload;
+
+  try {
+    // 今日の記録のIDを取得
+    const today = new Date().toISOString().split("T")[0];
+    const getRes = await fetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date/${today}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+      }
+    );
+
+    if (!getRes.ok) {
+      return submission.reply({
+        formErrors: ["記録が見つかりません"],
+      });
+    }
+
+    const dailyLog = await getRes.json();
+
+    const res = await fetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/${dailyLog.id}/self_score`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+        body: JSON.stringify({
+          self_score: data.self_score,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      return submission.reply({
+        formErrors: ["スコアの更新に失敗しました"],
+      });
+    }
+  } catch (error: unknown) {
+    console.error("予期しないエラーが発生しました:", error);
+
+    const errorMessage =
+      "スコアの更新に失敗しました。しばらく時間をおいて再度お試しください";
 
     return submission.reply({
       formErrors: [errorMessage],
