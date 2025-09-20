@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -18,14 +20,25 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
-import { auth } from "@/auth";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-export async function DashboardMenu() {
-  const session = await auth();
-  if (!session?.user) {
-    return null;
-  }
-  const user = session.user;
+type Props = {
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+};
+
+export default function DashboardMenu({ user }: Props) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // ルートが変わるたびにダイアログを閉じる
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const menuItems = [
     {
@@ -43,22 +56,22 @@ export async function DashboardMenu() {
     {
       icon: BarChart3,
       label: "体調分析",
-      href: "/analytics",
-      description: "データを分析・グラフ表示",
+      href: "",
+      description: "未実装・実装予定",
     },
-    {
-      icon: Settings,
-      label: "設定",
-      href: "/settings",
-      description: "アカウント設定",
-    },
+    // {
+    //   icon: Settings,
+    //   label: "設定",
+    //   href: "/settings",
+    //   description: "アカウント設定",
+    // },
   ];
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Menu className="h-4 w-4" />
+        <Button variant="outline" size="lg" className="gap-2">
+          <Menu className="h-10 w-10" />
           メニュー
         </Button>
       </DialogTrigger>
@@ -67,30 +80,32 @@ export async function DashboardMenu() {
           <DialogTitle className="text-xl font-semibold">メニュー</DialogTitle>
         </DialogHeader>
 
-        {/* ユーザー情報セクション */}
         <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-6">
           <Avatar className="h-12 w-12">
             <AvatarImage src={user.image || ""} alt={user.name || ""} />
             <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400">
-              {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
+              {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
-              {user.name || "ユーザー"}
+              {user?.name || "ユーザー"}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-              {user.email}
+              {user?.email}
             </p>
           </div>
         </div>
 
-        {/* メニューアイテム */}
         <div className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
-              <Link key={item.href} href={item.href}>
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+              >
                 <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors">
                     <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -111,7 +126,6 @@ export async function DashboardMenu() {
 
         <Separator className="my-4" />
 
-        {/* ログアウトボタン */}
         <LogoutButton>
           <div className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
             <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900">

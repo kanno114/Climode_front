@@ -32,37 +32,6 @@ export default function SignUpPage() {
             </Link>
           </div>
 
-          <div className="mt-6 space-y-2 text-sm">
-            <p className="text-muted-foreground text-center">
-              テスト用ダミーアカウント
-            </p>
-            <div className="rounded-md border p-3 space-y-2 bg-muted/40">
-              <div>
-                <span className="font-medium">名前:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    テストユーザー
-                  </code>
-                </div>
-              </div>
-              <div>
-                <span className="font-medium">メール:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    testuser1@example.com
-                  </code>
-                </div>
-              </div>
-              <div>
-                <span className="font-medium">パスワード:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    testuser123
-                  </code>
-                </div>
-              </div>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>

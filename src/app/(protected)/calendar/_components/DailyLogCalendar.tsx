@@ -94,7 +94,7 @@ export default function DailyLogCalendar({
   // イベントクリック時の処理 日記詳細ページに遷移
   const handleEventClick = (arg: EventClickArg) => {
     const logId = arg.event.extendedProps.logId;
-    router.push(`/daily-logs/${logId}`);
+    router.push(`/dailylog/${logId}`);
   };
 
   if (!data || data.length === 0) {

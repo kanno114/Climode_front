@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { signInAction } from "../actions";
 import { signInSchema } from "@/lib/schemas/signin";
@@ -37,16 +36,6 @@ export function SignInForm() {
 
   return (
     <>
-      {form.errors && form.errors.length > 0 && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {form.errors.map((error: string, index: number) => (
-              <div key={index}>{error}</div>
-            ))}
-          </AlertDescription>
-        </Alert>
-      )}
-
       <Button
         variant="outline"
         onClick={() => signIn("google", { callbackUrl: "/dashboard" })}

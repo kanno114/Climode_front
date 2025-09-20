@@ -39,7 +39,7 @@ export default async function DashboardPage() {
         )}
 
         {/* 機能カード */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
           <Card className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
               </p>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
 
         {/* 今後の機能予定 */}
         <Card className="mt-5">

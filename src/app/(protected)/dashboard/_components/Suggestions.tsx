@@ -122,28 +122,10 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
     return "low";
   }, []);
 
-  const getCategoryIcon = useCallback((category: string) => {
-    const config =
-      categoryConfig[category as CategoryKey] || categoryConfig.general;
-    const IconComponent = config.icon;
-    return <IconComponent className={`w-4 h-4 ${config.color}`} />;
-  }, []);
-
   const getTagIcon = useCallback((tag: string) => {
     const IconComponent = tagIconMap[tag as keyof typeof tagIconMap] || Zap;
     return <IconComponent className="w-3 h-3" />;
   }, []);
-
-  const groupedSuggestions = useMemo(() => {
-    return suggestions.reduce((acc, suggestion) => {
-      const category = suggestion.category;
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(suggestion);
-      return acc;
-    }, {} as Record<string, Suggestion[]>);
-  }, [suggestions]);
 
   if (suggestions.length === 0) {
     return (
@@ -173,76 +155,45 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
           今日の行動提案
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {Object.entries(groupedSuggestions).map(
-          ([category, categorySuggestions]) => {
-            const config =
-              categoryConfig[category as CategoryKey] || categoryConfig.general;
+      <CardContent className="space-y-3">
+        {suggestions
+          .sort((a, b) => b.severity - a.severity)
+          .map((suggestion) => {
+            const severityLevel = getSeverityLevel(suggestion.severity);
+            const severityStyle = severityConfig[severityLevel];
 
             return (
-              <section
-                key={category}
-                className={`p-4 rounded-lg border ${config.bgColor} ${config.borderColor}`}
+              <article
+                key={suggestion.key}
+                className={`p-3 rounded border ${severityStyle.cardBgColor} ${severityStyle.borderColor}`}
               >
-                <header className="flex items-center gap-2 mb-3">
-                  {getCategoryIcon(category)}
-                  <h3 className="font-medium text-sm capitalize">
-                    {config.label}
-                  </h3>
-                </header>
-
-                <div className="space-y-3">
-                  {categorySuggestions
-                    .sort((a, b) => b.severity - a.severity)
-                    .map((suggestion) => {
-                      const severityLevel = getSeverityLevel(
-                        suggestion.severity
-                      );
-                      const severityStyle = severityConfig[severityLevel];
-
-                      return (
-                        <article
-                          key={suggestion.key}
-                          className={`p-3 rounded border ${severityStyle.cardBgColor} ${severityStyle.borderColor}`}
-                        >
-                          <div className="flex items-start justify-between mb-2">
-                            <h4 className="font-medium text-sm">
-                              {suggestion.title}
-                            </h4>
-                            <Badge
-                              variant="secondary"
-                              className={`text-xs ${severityStyle.color} ${severityStyle.bgColor}`}
-                            >
-                              {suggestion.severity}点
-                            </Badge>
-                          </div>
-
-                          <p className="text-sm text-gray-700 mb-2">
-                            {suggestion.message}
-                          </p>
-
-                          <div className="flex flex-wrap gap-1">
-                            {suggestion.tags.map((tag) => (
-                              <Badge
-                                key={tag}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                <span className="flex items-center gap-1">
-                                  {getTagIcon(tag)}
-                                  {tag}
-                                </span>
-                              </Badge>
-                            ))}
-                          </div>
-                        </article>
-                      );
-                    })}
+                <div className="flex items-start justify-between mb-2">
+                  <h4 className="font-medium text-sm">{suggestion.title}</h4>
+                  <Badge
+                    variant="secondary"
+                    className={`text-xs ${severityStyle.color} ${severityStyle.bgColor}`}
+                  >
+                    {suggestion.severity}
+                  </Badge>
                 </div>
-              </section>
+
+                <p className="text-sm text-gray-700 mb-2">
+                  {suggestion.message}
+                </p>
+
+                <div className="flex flex-wrap gap-1">
+                  {suggestion.tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      <span className="flex items-center gap-1">
+                        {getTagIcon(tag)}
+                        {tag}
+                      </span>
+                    </Badge>
+                  ))}
+                </div>
+              </article>
             );
-          }
-        )}
+          })}
       </CardContent>
     </Card>
   );

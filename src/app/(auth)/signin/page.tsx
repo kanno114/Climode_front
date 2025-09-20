@@ -39,67 +39,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             </Link>
           </div>
 
-          <div className="mt-6 space-y-2 text-sm">
-            <p className="text-muted-foreground text-center">
-              テスト用ダミーアカウント
-            </p>
-            <div className="rounded-md border p-3 space-y-2 bg-muted/40">
-              <div>
-                <span className="font-medium">メール:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    alice@example.com
-                  </code>
-                </div>
-              </div>
-              <div>
-                <span className="font-medium">パスワード:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    password123
-                  </code>
-                </div>
-              </div>
-              <div className="text-xs text-muted-foreground text-center pt-2">
-                または
-              </div>
-              <div>
-                <span className="font-medium">メール:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    bob@example.com
-                  </code>
-                </div>
-              </div>
-              <div>
-                <span className="font-medium">パスワード:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    password123
-                  </code>
-                </div>
-              </div>
-              <div className="text-xs text-muted-foreground text-center pt-2">
-                または
-              </div>
-              <div>
-                <span className="font-medium">メール:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    carol@example.com
-                  </code>
-                </div>
-              </div>
-              <div>
-                <span className="font-medium">パスワード:</span>
-                <div className="mt-1">
-                  <code className="text-xs bg-background px-2 py-1 rounded select-all cursor-text block">
-                    password123
-                  </code>
-                </div>
-              </div>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
