@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SignInForm } from "./_components/SignInForm";
-import { LoginRequiredToast } from "./_components/LoginRequiredToast";
+import { ToastMessage } from "./_components/ToastMessage";
 
 interface SignInPageProps {
   searchParams: Promise<{ message?: string }>;
@@ -27,7 +27,10 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {params.message === "login_required" && <LoginRequiredToast />}
+          {params.message === "login_required" && ToastMessage("ログインが必要です", "このページにアクセスするには、アカウントにログインしてください。", 5000)}
+          {params.message === "session_expired" && ToastMessage("セッションの有効期限が切れました", "再度ログインしてください。", 5000)}
+          {params.message === "token_refresh_failed" && ToastMessage("認証の更新に失敗しました", "再度ログインしてください。", 5000)}
+          {params.message === "invalid_token" && ToastMessage("無効な認証情報です", "再度ログインしてください。", 5000)}
           <SignInForm />
 
           <div className="text-center text-sm">
@@ -38,7 +41,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
               新規登録
             </Link>
           </div>
-
         </CardContent>
       </Card>
     </div>

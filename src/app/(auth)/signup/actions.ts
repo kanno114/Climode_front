@@ -4,6 +4,7 @@ import { signIn } from "@/auth";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { signUpSchema } from "@/lib/schemas/signup";
+import { setAuthCookies } from "@/lib/auth/cookies";
 
 export async function signUpAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signUpSchema });
@@ -109,14 +110,31 @@ export async function signUpAction(_: unknown, formData: FormData) {
     }
 
     const userData = await backendSignInResponse.json();
-    const { id } = userData;
+    const {
+      user: signedInUser,
+      access_token,
+      refresh_token,
+      expires_in,
+    } = userData;
+
+    // Railsトークンをクッキーへ保存（Railsサインイン確立）
+    if (access_token && refresh_token) {
+      await setAuthCookies({
+        accessToken: access_token,
+        refreshToken: refresh_token,
+        accessTokenMaxAgeSec:
+          typeof expires_in === "number"
+            ? Math.max(60, Math.min(expires_in, 60 * 60))
+            : 60 * 10,
+      });
+    }
 
     // 認証成功時はAuth.jsでセッション確立
     const frontendSignInResult = await signIn("credentials", {
       email,
       password,
-      id,
-      name,
+      id: signedInUser?.id,
+      name: signedInUser?.name,
       redirect: false,
     });
 
@@ -126,7 +144,6 @@ export async function signUpAction(_: unknown, formData: FormData) {
         formErrors: ["認証に失敗しました"],
       });
     }
-
   } catch (error: unknown) {
     console.error(
       "予期しないエラーが発生しました:",
