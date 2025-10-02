@@ -4,6 +4,7 @@ import { signIn } from "@/auth";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { signInSchema } from "@/lib/schemas/signin";
+import { setAuthCookies } from "@/lib/auth/cookies";
 
 export async function signInAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signInSchema });
@@ -50,14 +51,26 @@ export async function signInAction(_: unknown, formData: FormData) {
     }
 
     const userData = await res.json();
-    const { id, name } = userData;
+    const { user, access_token, refresh_token, expires_in } = userData;
+
+    // HttpOnlyクッキーに保存（アクセストークン短寿命、リフレッシュ長寿命）
+    if (access_token && refresh_token) {
+      await setAuthCookies({
+        accessToken: access_token,
+        refreshToken: refresh_token,
+        accessTokenMaxAgeSec:
+          typeof expires_in === "number"
+            ? Math.max(60, Math.min(expires_in, 60 * 60))
+            : 60 * 10,
+      });
+    }
 
     // 認証成功時はAuth.jsでセッション確立
     const result = await signIn("credentials", {
       email,
       password,
-      id,
-      name,
+      id: user?.id,
+      name: user?.name,
       redirect: false,
     });
 

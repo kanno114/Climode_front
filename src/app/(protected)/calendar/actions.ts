@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
+import { apiFetch } from "@/lib/api/api-fetch";
 
 export async function getDailyLogs() {
   const session = await auth();
@@ -9,7 +10,7 @@ export async function getDailyLogs() {
   }
 
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date_range_30days`,
       {
         method: "GET",

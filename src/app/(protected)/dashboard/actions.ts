@@ -6,6 +6,7 @@ import { dailyLogSchema } from "@/lib/schemas/daily-log";
 import { selfScoreSchema } from "@/lib/schemas/self-score";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { apiFetch } from "@/lib/api/api-fetch";
 
 export async function getPrefectures() {
   const session = await auth();
@@ -14,7 +15,7 @@ export async function getPrefectures() {
   }
 
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/prefectures`,
       {
         method: "GET",
@@ -45,7 +46,7 @@ export async function getSuggestions() {
   }
 
   try {
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/suggestions`,
       {
         method: "GET",
@@ -82,7 +83,7 @@ export async function getTodayDailyLog() {
 
   try {
     const today = new Date().toISOString().split("T")[0];
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date/${today}`,
       {
         method: "GET",
@@ -130,7 +131,7 @@ export async function createDailyLogAction(_: unknown, formData: FormData) {
 
   try {
     // Rails APIを呼び出して日次記録を作成
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs`,
       {
         method: "POST",
@@ -206,7 +207,7 @@ export async function updateDailyLogAction(_: unknown, formData: FormData) {
   try {
     // 今日の記録のIDを取得
     const today = new Date().toISOString().split("T")[0];
-    const getRes = await fetch(
+    const getRes = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date/${today}`,
       {
         method: "GET",
@@ -227,7 +228,7 @@ export async function updateDailyLogAction(_: unknown, formData: FormData) {
     const dailyLog = await getRes.json();
 
     // Rails APIを呼び出して日次記録を更新
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/${dailyLog.id}`,
       {
         method: "PUT",
@@ -303,7 +304,7 @@ export async function updateSelfScoreAction(_: unknown, formData: FormData) {
   try {
     // 今日の記録のIDを取得
     const today = new Date().toISOString().split("T")[0];
-    const getRes = await fetch(
+    const getRes = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date/${today}`,
       {
         method: "GET",
@@ -323,7 +324,7 @@ export async function updateSelfScoreAction(_: unknown, formData: FormData) {
 
     const dailyLog = await getRes.json();
 
-    const res = await fetch(
+    const res = await apiFetch(
       `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/${dailyLog.id}/self_score`,
       {
         method: "PATCH",

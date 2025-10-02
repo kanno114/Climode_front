@@ -120,7 +120,11 @@ export function SignInForm() {
           ))}
         </div>
 
-        <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={pending}
+        >
           {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

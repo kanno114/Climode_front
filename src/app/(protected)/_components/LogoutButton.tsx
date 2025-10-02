@@ -1,7 +1,7 @@
 "use client";
 
-import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { logout } from "@/lib/auth/logout";
 
 export default function LogoutButton({
   children,
@@ -9,7 +9,7 @@ export default function LogoutButton({
   children?: React.ReactNode;
 }) {
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/" });
+    await logout();
   };
 
   return (
