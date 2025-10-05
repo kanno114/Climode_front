@@ -1,0 +1,126 @@
+"use server";
+
+import { parseWithZod } from "@conform-to/zod";
+import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
+import { apiFetch } from "@/lib/api/api-fetch";
+import { profileSchema } from "@/lib/schemas/profile";
+
+export async function getPrefectures() {
+  const session = await auth();
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/prefectures`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error("都道府県データ取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("都道府県データ取得エラー:", error);
+    return null;
+  }
+}
+
+export async function getProfileAction() {
+  const session = await auth();
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
+      {
+        method: "GET",
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error("プロファイル取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("プロファイル取得エラー:", error);
+    return null;
+  }
+}
+
+export async function updateProfileAction(_: unknown, formData: FormData) {
+  const session = await auth();
+  if (!session?.user) {
+    return {
+      status: "error" as const,
+      error: { message: "認証が必要です" },
+    };
+  }
+
+  const submission = parseWithZod(formData, { schema: profileSchema });
+
+  if (submission.status !== "success") {
+    return submission.reply({
+      formErrors: ["入力内容を確認してください"],
+    });
+  }
+
+  const { name, prefecture_id } = submission.payload;
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+        body: JSON.stringify({
+          user: {
+            name,
+            prefecture_id: parseInt(prefecture_id as string),
+          },
+        }),
+      }
+    );
+
+    if (res.ok) {
+      revalidatePath("/profile");
+      return { status: "success" as const };
+    } else {
+      const errorData = await res.json();
+      return {
+        status: "error" as const,
+        error: {
+          message:
+            errorData.errors?.[0] ||
+            errorData.message ||
+            "プロファイルの更新に失敗しました",
+        },
+      };
+    }
+  } catch (error) {
+    console.error("プロファイル更新エラー:", error);
+    return {
+      status: "error" as const,
+      error: { message: "プロファイルの更新に失敗しました" },
+    };
+  }
+}
