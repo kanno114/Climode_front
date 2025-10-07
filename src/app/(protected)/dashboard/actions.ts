@@ -358,3 +358,34 @@ export async function updateSelfScoreAction(_: unknown, formData: FormData) {
   // try-catchブロックの外でリダイレクト
   redirect("/dashboard");
 }
+
+export async function getDefaultPrefecture() {
+  const session = await auth();
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/users/default_prefecture`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error("デフォルト都道府県データ取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("デフォルト都道府県データ取得エラー:", error);
+    return null;
+  }
+}

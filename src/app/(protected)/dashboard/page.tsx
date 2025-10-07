@@ -5,23 +5,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Calendar, Activity } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { DailyLogForm } from "./_components/DailyLogForm";
 import { TodayArea } from "./_components/TodayArea";
-import { getTodayDailyLog, getSuggestions } from "./actions";
+import {
+  getTodayDailyLog,
+  getSuggestions,
+  getPrefectures,
+  getDefaultPrefecture,
+} from "./actions";
 
 export default async function DashboardPage() {
-  // 今日の記録を取得
   const todayDailyLog = await getTodayDailyLog();
   const suggestions = await getSuggestions();
-
+  const prefectures = await getPrefectures();
+  const defaultPrefecture = await getDefaultPrefecture();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
         {/* 今日の記録表示または入力フォーム */}
         {todayDailyLog ? (
-          <TodayArea dailyLog={todayDailyLog} suggestions={suggestions} />
+          <TodayArea
+            dailyLog={todayDailyLog}
+            suggestions={suggestions}
+            prefectures={prefectures}
+          />
         ) : (
           <Card>
             <CardHeader>
@@ -34,7 +43,10 @@ export default async function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <DailyLogForm />
+              <DailyLogForm
+                prefectures={prefectures}
+                defaultPrefecture={defaultPrefecture.prefecture}
+              />
             </CardContent>
           </Card>
         )}

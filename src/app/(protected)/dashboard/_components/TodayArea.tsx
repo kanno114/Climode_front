@@ -41,9 +41,10 @@ interface TodayAreaProps {
     triggers: Array<string>;
     category: string;
   }>;
+  prefectures: Array<{ id: number; code: string; name_ja: string }>;
 }
 
-export function TodayArea({ dailyLog, suggestions }: TodayAreaProps) {
+export function TodayArea({ dailyLog, suggestions, prefectures }: TodayAreaProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   if (isEditing) {
@@ -69,6 +70,7 @@ export function TodayArea({ dailyLog, suggestions }: TodayAreaProps) {
           <EditDailyLogForm
             dailyLog={dailyLog}
             onCancel={() => setIsEditing(false)}
+            prefectures={prefectures}
           />
         </CardContent>
       </Card>
