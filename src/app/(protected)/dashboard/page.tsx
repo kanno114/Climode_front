@@ -43,10 +43,16 @@ export default async function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {defaultPrefecture?.prefecture ? (
               <DailyLogForm
                 prefectures={prefectures}
-                defaultPrefecture={defaultPrefecture.prefecture}
-              />
+                defaultPrefecture={defaultPrefecture?.prefecture}
+                />
+              ) : (
+                <DailyLogForm
+                  prefectures={prefectures}
+                />
+              )}
             </CardContent>
           </Card>
         )}

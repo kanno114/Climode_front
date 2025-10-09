@@ -27,7 +27,7 @@ import {
 
 interface DailyLogFormProps {
   prefectures: Array<{ id: number; code: string; name_ja: string }>;
-  defaultPrefecture: { id: number; name_ja: string };
+  defaultPrefecture?: { id: number; name_ja: string };
 }
 
 export function DailyLogForm({
@@ -60,7 +60,7 @@ export function DailyLogForm({
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
     defaultValue: {
-      prefecture_id: defaultPrefecture.id?.toString(),
+      prefecture_id: defaultPrefecture?.id?.toString(),
       sleep_hours: "6",
       mood_score: "0",
     },
@@ -223,7 +223,7 @@ export function DailyLogForm({
             天気情報の取得位置
           </Label>
           <Select
-            defaultValue={defaultPrefecture.id?.toString()}
+            defaultValue={defaultPrefecture?.id?.toString()}
             name={fields.prefecture_id?.name}
             disabled={pending}
           >
