@@ -152,9 +152,6 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
           {/* 送信ボタン */}
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline">
-              キャンセル
-            </Button>
             <Button type="submit" disabled={pending}>
               {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               更新する
