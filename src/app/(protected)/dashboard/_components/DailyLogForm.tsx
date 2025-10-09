@@ -10,10 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, CalendarIcon, Bed, Heart, MapPin } from "lucide-react";
-import { createDailyLogAction, getPrefectures } from "../actions";
+import { createDailyLogAction } from "@/app/(protected)/dashboard/actions";
 import { dailyLogSchema } from "@/lib/schemas/daily-log";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -26,30 +25,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function DailyLogForm() {
+interface DailyLogFormProps {
+  prefectures: Array<{ id: number; code: string; name_ja: string }>;
+  defaultPrefecture?: { id: number; name_ja: string };
+}
+
+export function DailyLogForm({
+  prefectures,
+  defaultPrefecture,
+}: DailyLogFormProps) {
   const [lastResult, action, pending] = useActionState(
     createDailyLogAction,
     undefined
   );
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
-  const [prefectures, setPrefectures] = useState<
-    Array<{ id: number; code: string; name_ja: string }>
-  >([]);
   const [sleepHours, setSleepHours] = useState<number[]>([6]);
   const [moodScore, setMoodScore] = useState<number[]>([0]);
   // 今日の日付のみ使用
   const today = new Date();
-
-  // 都道府県データを取得
-  useEffect(() => {
-    const fetchPrefectures = async () => {
-      const data = await getPrefectures();
-      if (data) {
-        setPrefectures(data);
-      }
-    };
-    fetchPrefectures();
-  }, []);
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {
@@ -66,6 +59,11 @@ export function DailyLogForm() {
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
+    defaultValue: {
+      prefecture_id: defaultPrefecture?.id?.toString(),
+      sleep_hours: "6",
+      mood_score: "0",
+    },
   });
 
   const handleSymptomChange = (symptom: string, checked: boolean) => {
@@ -224,7 +222,11 @@ export function DailyLogForm() {
             <MapPin className="inline mr-2 h-4 w-4" />
             天気情報の取得位置
           </Label>
-          <Select name={fields.prefecture_id?.name} disabled={pending}>
+          <Select
+            defaultValue={defaultPrefecture?.id?.toString()}
+            name={fields.prefecture_id?.name}
+            disabled={pending}
+          >
             <SelectTrigger>
               <SelectValue placeholder="選択してください" />
             </SelectTrigger>

@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, CalendarIcon, Bed, Heart, X, MapPin } from "lucide-react";
-import { updateDailyLogAction, getPrefectures } from "../actions";
+import { updateDailyLogAction } from "../actions";
 import { dailyLogSchema } from "@/lib/schemas/daily-log";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -24,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { join } from "path/posix";
 
 interface EditDailyLogFormProps {
   dailyLog: {
@@ -40,12 +39,14 @@ interface EditDailyLogFormProps {
       code: string;
     }>;
   };
+  prefectures: Array<{ id: number; code: string; name_ja: string }>;
   onCancel: () => void;
 }
 
 export function EditDailyLogForm({
   dailyLog,
   onCancel,
+  prefectures,
 }: EditDailyLogFormProps) {
   const [lastResult, action, pending] = useActionState(
     updateDailyLogAction,
@@ -54,24 +55,10 @@ export function EditDailyLogForm({
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>(
     dailyLog.symptoms.map((s) => s.name)
   );
-  const [prefectures, setPrefectures] = useState<
-    Array<{ id: number; code: string; name_ja: string }>
-  >([]);
   const [sleepHours, setSleepHours] = useState<number[]>([
     dailyLog.sleep_hours,
   ]);
   const [moodScore, setMoodScore] = useState<number[]>([dailyLog.mood]);
-
-  // 都道府県データを取得
-  useEffect(() => {
-    const fetchPrefectures = async () => {
-      const data = await getPrefectures();
-      if (data) {
-        setPrefectures(data);
-      }
-    };
-    fetchPrefectures();
-  }, []);
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {
@@ -252,7 +239,11 @@ export function EditDailyLogForm({
             <MapPin className="inline mr-2 h-4 w-4" />
             天気情報の取得位置
           </Label>
-          <Select defaultValue={dailyLog.prefecture_id?.toString()} name={fields.prefecture_id?.name} disabled={pending}>
+          <Select
+            defaultValue={dailyLog.prefecture_id?.toString()}
+            name={fields.prefecture_id?.name}
+            disabled={pending}
+          >
             <SelectTrigger>
               <SelectValue placeholder="選択してください" />
             </SelectTrigger>

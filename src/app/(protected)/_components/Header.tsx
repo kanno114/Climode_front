@@ -1,14 +1,12 @@
 import DashboardMenu from "./DashboardMenu";
-import { auth } from "@/auth";
-
+import { getProfileAction } from "../profile/actions";
 
 export async function Header() {
 
-  const session = await auth();
-  if (!session?.user) {
+  const user = await getProfileAction();
+  if (!user) {
     return null;
   }
-  const user = session.user;
 
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -23,7 +21,7 @@ export async function Header() {
             </p>
           </div>
           <div className="flex items-center gap-6 p-4">
-            <DashboardMenu user={user} />
+            <DashboardMenu user={user.user} />
           </div>
         </div>
       </div>

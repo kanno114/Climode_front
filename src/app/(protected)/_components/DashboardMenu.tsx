@@ -80,22 +80,24 @@ export default function DashboardMenu({ user }: Props) {
           <DialogTitle className="text-xl font-semibold">メニュー</DialogTitle>
         </DialogHeader>
 
-        <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-6">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={user.image || ""} alt={user.name || ""} />
-            <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400">
-              {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
-              {user?.name || "ユーザー"}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-              {user?.email}
-            </p>
+        <Link href="/profile">
+          <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg mb-6">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={user.image || ""} alt={user.name || ""} />
+              <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400">
+                {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
+                {user?.name || "ユーザー"}
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                {user?.email}
+              </p>
+            </div>
           </div>
-        </div>
+        </Link>
 
         <div className="space-y-2">
           {menuItems.map((item) => {

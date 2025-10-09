@@ -1,6 +1,7 @@
 import {
   getAccessTokenFromCookies,
   getRefreshTokenFromCookies,
+  setAuthCookies,
 } from "@/lib/auth/cookies";
 import { redirect } from "next/navigation";
 
@@ -13,6 +14,7 @@ export type TokenValidationResult = {
 export type TokenRefreshResult = {
   success: boolean;
   newAccessToken: string | null;
+  newRefreshToken?: string | null; // この行を追加
   error?: string;
 };
 
@@ -80,9 +82,8 @@ export async function refreshAccessToken(): Promise<TokenRefreshResult> {
     }
 
     const data = await refreshRes.json();
-    const { access_token } = data || {};
+    const { access_token, refresh_token: new_refresh_token } = data || {};
 
-    // 判定を緩和: access_token のみ取得できれば成功扱い
     if (!access_token) {
       return {
         success: false,
@@ -91,12 +92,11 @@ export async function refreshAccessToken(): Promise<TokenRefreshResult> {
       };
     }
 
-    // Cookie への書き込みはここでは行わない（レンダリング中の制約回避）
-    // 呼び出し元で新しいトークンを使用して再試行する
-
+    // Cookieの更新は呼び出し元で行う
     return {
       success: true,
       newAccessToken: access_token,
+      newRefreshToken: new_refresh_token || refreshToken,
     };
   } catch (error) {
     console.error("Token refresh error:", error);
