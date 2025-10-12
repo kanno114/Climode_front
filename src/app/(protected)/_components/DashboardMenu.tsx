@@ -10,14 +10,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  Calendar,
-  Menu,
-  Settings,
-  BarChart3,
-  LogOut,
-  Home,
-} from "lucide-react";
+import { Calendar, Menu, BarChart3, LogOut, Home } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import { useEffect, useState } from "react";
@@ -55,9 +48,9 @@ export default function DashboardMenu({ user }: Props) {
     },
     {
       icon: BarChart3,
-      label: "体調分析",
-      href: "",
-      description: "未実装・実装予定",
+      label: "週間サマリー",
+      href: "/dashboard/weekly-summary",
+      description: "1週間の体調推移を確認",
     },
     // {
     //   icon: Settings,
