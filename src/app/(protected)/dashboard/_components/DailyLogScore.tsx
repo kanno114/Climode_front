@@ -102,7 +102,7 @@ export function DailyLogScore({
             </div>
 
             {/* X共有ボタン */}
-            <div className="text-center">
+            <div className="flex justify-end">
               <Button
                 variant="outline"
                 size="sm"
