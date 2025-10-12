@@ -25,6 +25,9 @@ export async function generateMetadata({
   const ogImageUrl = `${baseUrl}/api/og/score?score=${encodeURIComponent(
     score
   )}&date=${encodeURIComponent(date)}&message=${encodeURIComponent(message)}`;
+  const pageUrl = `${baseUrl}/share/score?score=${score}&date=${encodeURIComponent(
+    date
+  )}&message=${encodeURIComponent(message)}`;
 
   return {
     title: `体調スコア: ${score}点 - Climode`,
@@ -41,12 +44,14 @@ export async function generateMetadata({
         },
       ],
       type: "website",
+      siteName: "Climode",
+      url: pageUrl,
     },
     twitter: {
       card: "summary_large_image",
       title: `体調スコア: ${score}点`,
       description: `${date} - ${message}`,
-      images: [ogImageUrl],
+      images: ogImageUrl,
     },
   };
 }
