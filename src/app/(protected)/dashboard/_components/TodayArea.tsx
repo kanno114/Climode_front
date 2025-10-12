@@ -44,7 +44,11 @@ interface TodayAreaProps {
   prefectures: Array<{ id: number; code: string; name_ja: string }>;
 }
 
-export function TodayArea({ dailyLog, suggestions, prefectures }: TodayAreaProps) {
+export function TodayArea({
+  dailyLog,
+  suggestions,
+  prefectures,
+}: TodayAreaProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   if (isEditing) {
@@ -80,7 +84,7 @@ export function TodayArea({ dailyLog, suggestions, prefectures }: TodayAreaProps
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <DailyLogScore score={dailyLog.score} />
+        <DailyLogScore score={dailyLog.score} date={dailyLog.date} />
         <TodayDailyLog dailyLog={dailyLog} setIsEditing={setIsEditing} />
       </div>
       <div className="mt-4 w-full">
