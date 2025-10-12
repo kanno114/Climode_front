@@ -45,18 +45,6 @@ export async function GET(request: NextRequest) {
             padding: "60px",
           }}
         >
-          {/* タイトル */}
-          <div
-            style={{
-              fontSize: 48,
-              fontWeight: "bold",
-              color: "#1e40af",
-              marginBottom: 40,
-              display: "flex",
-            }}
-          >
-            Climode
-          </div>
 
           {/* メインカード */}
           <div
