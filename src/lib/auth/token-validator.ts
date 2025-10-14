@@ -1,7 +1,6 @@
 import {
   getAccessTokenFromCookies,
   getRefreshTokenFromCookies,
-  setAuthCookies,
 } from "@/lib/auth/cookies";
 import { redirect } from "next/navigation";
 

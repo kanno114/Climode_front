@@ -1,4 +1,4 @@
-export default {
+const jaLocale = {
   code: "ja",
   week: {
     dow: 1,
@@ -18,3 +18,5 @@ export default {
   moreLinkText: "他 %d 件",
   noEventsText: "イベントはありません",
 };
+
+export default jaLocale;
