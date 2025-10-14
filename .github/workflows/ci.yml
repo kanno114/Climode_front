@@ -48,6 +48,8 @@ jobs:
         run: npm run build
         env:
           # Next.js ビルド時に必要な環境変数
+          AUTH_GOOGLE_CLIENT_ID: ${{ secrets.AUTH_GOOGLE_CLIENT_ID || 'dummy-google-client-id-for-ci' }}
+          AUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.AUTH_GOOGLE_CLIENT_SECRET || 'dummy-google-client-secret-for-ci' }}
           AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dummy-secret-for-ci-build' }}
           NEXTAUTH_URL: http://localhost:3000
           NEXT_PUBLIC_API_URL: http://localhost:3001
