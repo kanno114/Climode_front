@@ -35,13 +35,12 @@ jest.mock("../../actions", () => ({
 import { SignUpForm } from "../SignUpForm";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
-import { signUpAction } from "../../actions";
 
 // useActionStateのモック
 const mockUseActionState = jest.fn();
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
-  useActionState: (action: any, initialState: any) =>
+  useActionState: (action: unknown, initialState: unknown) =>
     mockUseActionState(action, initialState),
 }));
 
@@ -197,7 +196,7 @@ describe("SignUpForm", () => {
       info: jest.fn(),
       warning: jest.fn(),
     };
-    (toast as any).error = mockToast.error;
+    (toast as { error: jest.Mock }).error = mockToast.error;
 
     mockUseActionState.mockImplementation(() => [
       {

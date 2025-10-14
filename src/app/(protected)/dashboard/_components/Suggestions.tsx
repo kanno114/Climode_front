@@ -1,12 +1,11 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Activity,
   Heart,
-  Moon,
   Thermometer,
   Droplets,
   Wind,
@@ -26,59 +25,7 @@ interface Suggestion {
   category: string;
 }
 
-type CategoryKey =
-  | "health"
-  | "activity"
-  | "sleep"
-  | "mood"
-  | "environment"
-  | "general";
 type SeverityLevel = "high" | "medium" | "low";
-
-const categoryConfig = {
-  health: {
-    icon: Heart,
-    color: "text-red-600",
-    bgColor: "bg-red-50",
-    borderColor: "border-red-200",
-    label: "健康管理",
-  },
-  activity: {
-    icon: Activity,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200",
-    label: "活動",
-  },
-  sleep: {
-    icon: Moon,
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200",
-    label: "睡眠",
-  },
-  mood: {
-    icon: Brain,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200",
-    label: "メンタル",
-  },
-  environment: {
-    icon: Thermometer,
-    color: "text-orange-600",
-    bgColor: "bg-orange-50",
-    borderColor: "border-orange-200",
-    label: "環境",
-  },
-  general: {
-    icon: Zap,
-    color: "text-gray-600",
-    bgColor: "bg-gray-50",
-    borderColor: "border-gray-200",
-    label: "その他",
-  },
-} as const;
 
 const severityConfig = {
   high: {
