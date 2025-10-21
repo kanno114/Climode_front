@@ -1,17 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  webpack: (config, { isServer }) => {
-    // Service Worker should only be loaded on the client side
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-    return config;
-  },
+  // Turbopackではfsモジュールは自動的にクライアント側で無効化されるため、
+  // 明示的な設定は不要
 };
 
 export default nextConfig;
