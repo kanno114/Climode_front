@@ -8,10 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, User, MapPin } from "lucide-react";
 import { profileSchema } from "@/lib/schemas/profile";
@@ -116,10 +113,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
           {/* 都道府県 */}
           <div className="space-y-2">
-            <Label
-              htmlFor={fields.prefecture_id.id}
-              className="flex items-center gap-2"
-            >
+            <Label className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               都道府県
             </Label>

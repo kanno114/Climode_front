@@ -124,3 +124,97 @@ export async function updateProfileAction(_: unknown, formData: FormData) {
     };
   }
 }
+
+export async function subscribePushNotificationAction(subscription: {
+  endpoint: string;
+  p256dh_key: string;
+  auth_key: string;
+}) {
+  const session = await auth();
+  if (!session?.user) {
+    return {
+      status: "error" as const,
+      error: { message: "認証が必要です" },
+    };
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/push_subscriptions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+        body: JSON.stringify({ subscription }),
+      }
+    );
+
+    if (res.ok) {
+      return { status: "success" as const };
+    } else {
+      const errorData = await res.json();
+      return {
+        status: "error" as const,
+        error: {
+          message:
+            errorData.errors?.[0] ||
+            errorData.message ||
+            "通知の登録に失敗しました",
+        },
+      };
+    }
+  } catch (error) {
+    console.error("通知登録エラー:", error);
+    return {
+      status: "error" as const,
+      error: { message: "通知の登録に失敗しました" },
+    };
+  }
+}
+
+export async function unsubscribePushNotificationAction(endpoint: string) {
+  const session = await auth();
+  if (!session?.user) {
+    return {
+      status: "error" as const,
+      error: { message: "認証が必要です" },
+    };
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/push_subscriptions/by_endpoint`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+        body: JSON.stringify({ endpoint }),
+      }
+    );
+
+    if (res.ok) {
+      return { status: "success" as const };
+    } else {
+      const errorData = await res.json();
+      return {
+        status: "error" as const,
+        error: {
+          message:
+            errorData.error || errorData.message || "通知の解除に失敗しました",
+        },
+      };
+    }
+  } catch (error) {
+    console.error("通知解除エラー:", error);
+    return {
+      status: "error" as const,
+      error: { message: "通知の解除に失敗しました" },
+    };
+  }
+}
