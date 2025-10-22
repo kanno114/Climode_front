@@ -20,15 +20,30 @@ self.addEventListener("push", (event) => {
 
   if (event.data) {
     try {
+      // Try to parse as JSON
       data = event.data.json();
-      console.log("Push data parsed:", data);
+      console.log("Push data parsed as JSON:", data);
     } catch (e) {
-      console.log("Push data parse error:", e);
+      // If JSON parse fails, try to use as plain text
+      const textData = event.data.text();
+      console.warn(
+        "Push data is not valid JSON, using as plain text:",
+        textData
+      );
+      console.warn("Parse error:", e.message);
+
       data = {
         title: "Climode",
-        body: event.data.text(),
+        body: textData || "新しい通知があります",
       };
     }
+  } else {
+    // No data in push event
+    console.log("Push event has no data, using defaults");
+    data = {
+      title: "Climode",
+      body: "新しい通知があります",
+    };
   }
 
   const title = data.title || "Climode";
@@ -38,7 +53,9 @@ self.addEventListener("push", (event) => {
     badge: data.badge || "/badge-72x72.png",
     data: data.data || {},
     requireInteraction: false,
-    tag: "climode-notification",
+    tag: "climode-notification-" + Date.now(),
+    renotify: true,
+    vibrate: [200, 100, 200],
   };
 
   console.log("Showing notification with:", { title, options });
