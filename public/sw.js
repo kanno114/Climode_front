@@ -21,7 +21,9 @@ self.addEventListener("push", (event) => {
   if (event.data) {
     try {
       data = event.data.json();
+      console.log("Push data parsed:", data);
     } catch (e) {
+      console.log("Push data parse error:", e);
       data = {
         title: "Climode",
         body: event.data.text(),
@@ -39,7 +41,18 @@ self.addEventListener("push", (event) => {
     tag: "climode-notification",
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
+  console.log("Showing notification with:", { title, options });
+
+  event.waitUntil(
+    self.registration
+      .showNotification(title, options)
+      .then(() => {
+        console.log("Notification shown successfully");
+      })
+      .catch((error) => {
+        console.error("Failed to show notification:", error);
+      })
+  );
 });
 
 // Notification click event
@@ -73,4 +86,3 @@ self.addEventListener("pushsubscriptionchange", (event) => {
   console.log("Push subscription changed:", event);
   // Handle subscription renewal if needed
 });
-

@@ -1,5 +1,6 @@
 import { ProfileEditForm } from "./_components/ProfileEditForm";
 import { getProfileAction } from "./actions";
+import { NotificationSettings } from "@/components/NotificationSettings";
 
 export default async function ProfilePage() {
   const profile = await getProfileAction();
@@ -20,12 +21,16 @@ export default async function ProfilePage() {
           <p className="text-gray-600 mt-2">あなたの基本情報を管理できます</p>
         </div>
 
-        <ProfileEditForm
-          initialData={{
-            name: profile?.user?.name || "",
-            prefecture_id: profile?.user?.prefecture_id,
-          }}
-        />
+        <div className="space-y-6">
+          <ProfileEditForm
+            initialData={{
+              name: profile?.user?.name || "",
+              prefecture_id: profile?.user?.prefecture_id,
+            }}
+          />
+
+          <NotificationSettings />
+        </div>
       </div>
     </div>
   );

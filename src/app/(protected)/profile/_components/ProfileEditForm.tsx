@@ -2,16 +2,13 @@
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { useActionState } from "react";
+import { useActionState, useId } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, User, MapPin } from "lucide-react";
 import { profileSchema } from "@/lib/schemas/profile";
@@ -32,6 +29,7 @@ interface ProfileEditFormProps {
 }
 
 export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
+  const selectId = useId();
   const [lastResult, action, pending] = useActionState(
     updateProfileAction,
     undefined
@@ -116,10 +114,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
           {/* 都道府県 */}
           <div className="space-y-2">
-            <Label
-              htmlFor={fields.prefecture_id.id}
-              className="flex items-center gap-2"
-            >
+            <Label htmlFor={selectId} className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               都道府県
             </Label>
@@ -128,6 +123,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
               defaultValue={fields.prefecture_id.initialValue}
             >
               <SelectTrigger
+                id={selectId}
                 className={fields.prefecture_id.errors ? "border-red-500" : ""}
               >
                 <SelectValue placeholder="都道府県を選択してください" />
