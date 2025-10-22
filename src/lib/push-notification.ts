@@ -66,18 +66,3 @@ export async function isSubscribed(): Promise<boolean> {
     return false;
   }
 }
-
-// Get current subscription
-export async function getCurrentSubscription(): Promise<PushSubscription | null> {
-  try {
-    if (!("serviceWorker" in navigator)) {
-      return null;
-    }
-
-    const registration = await navigator.serviceWorker.ready;
-    return await registration.pushManager.getSubscription();
-  } catch (error) {
-    console.error("Error getting current subscription:", error);
-    return null;
-  }
-}
