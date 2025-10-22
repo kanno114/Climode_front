@@ -2,7 +2,7 @@
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { useActionState, useId } from "react";
+import { useActionState } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,6 @@ interface ProfileEditFormProps {
 }
 
 export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
-  const selectId = useId();
   const [lastResult, action, pending] = useActionState(
     updateProfileAction,
     undefined
@@ -114,7 +113,7 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
 
           {/* 都道府県 */}
           <div className="space-y-2">
-            <Label htmlFor={selectId} className="flex items-center gap-2">
+            <Label className="flex items-center gap-2">
               <MapPin className="h-4 w-4" />
               都道府県
             </Label>
@@ -123,7 +122,6 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
               defaultValue={fields.prefecture_id.initialValue}
             >
               <SelectTrigger
-                id={selectId}
                 className={fields.prefecture_id.errors ? "border-red-500" : ""}
               >
                 <SelectValue placeholder="都道府県を選択してください" />
