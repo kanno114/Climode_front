@@ -12,17 +12,21 @@ import {
 } from "@/components/ui/card";
 import { toast } from "sonner";
 import {
-  subscribeToPushNotifications,
-  unsubscribeFromPushNotifications,
+  requestNotificationPermission,
+  registerServiceWorker,
   isSubscribed,
   isNotificationSupported,
+  urlBase64ToUint8Array,
 } from "@/lib/push-notification";
+import {
+  subscribePushNotificationAction,
+  unsubscribePushNotificationAction,
+} from "@/app/(protected)/profile/actions";
 
-interface NotificationSettingsProps {
-  token: string;
-}
+// VAPID public key
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
-export function NotificationSettings({ token }: NotificationSettingsProps) {
+export function NotificationSettings() {
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [supported, setSupported] = useState<boolean>(true);
@@ -47,7 +51,39 @@ export function NotificationSettings({ token }: NotificationSettingsProps) {
   const handleSubscribe = async () => {
     setLoading(true);
     try {
-      await subscribeToPushNotifications(token);
+      // Request notification permission
+      const permission = await requestNotificationPermission();
+      if (permission !== "granted") {
+        throw new Error("Notification permission denied");
+      }
+
+      // Register service worker
+      const registration = await registerServiceWorker();
+
+      // Check if already subscribed
+      let subscription = await registration.pushManager.getSubscription();
+
+      if (!subscription) {
+        // Subscribe to push notifications
+        const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: applicationServerKey as BufferSource,
+        });
+      }
+
+      // Send subscription to backend via Server Action
+      const subscriptionJSON = subscription.toJSON();
+      const result = await subscribePushNotificationAction({
+        endpoint: subscriptionJSON.endpoint!,
+        p256dh_key: subscriptionJSON.keys!.p256dh,
+        auth_key: subscriptionJSON.keys!.auth,
+      });
+
+      if (result.status === "error") {
+        throw new Error(result.error.message);
+      }
+
       setSubscribed(true);
       toast.success("通知を有効にしました", {
         description: "毎日20:00にリマインダーが届きます",
@@ -78,7 +114,31 @@ export function NotificationSettings({ token }: NotificationSettingsProps) {
   const handleUnsubscribe = async () => {
     setLoading(true);
     try {
-      await unsubscribeFromPushNotifications(token);
+      if (!("serviceWorker" in navigator)) {
+        throw new Error("Service workers are not supported");
+      }
+
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+
+      if (!subscription) {
+        console.log("No subscription found");
+        setSubscribed(false);
+        return;
+      }
+
+      // Unsubscribe from browser
+      await subscription.unsubscribe();
+
+      // Delete subscription from backend via Server Action
+      const result = await unsubscribePushNotificationAction(
+        subscription.endpoint
+      );
+
+      if (result.status === "error") {
+        throw new Error(result.error.message);
+      }
+
       setSubscribed(false);
       toast.success("通知を無効にしました");
     } catch (error) {
@@ -161,4 +221,3 @@ export function NotificationSettings({ token }: NotificationSettingsProps) {
     </Card>
   );
 }
-
