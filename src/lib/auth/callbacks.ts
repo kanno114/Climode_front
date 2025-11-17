@@ -37,6 +37,9 @@ export const callbacks: NextAuthConfig["callbacks"] = {
         const data = await response.json();
         // ユーザーIDを設定（data.user.id 形式と data.id 形式の両対応）
         user.id = data?.user?.id ?? data?.id;
+        // 初回登録フラグ（存在する場合のみ）
+        // @ts-expect-error augment at runtime
+        user.isNewUser = Boolean(data?.is_new_user);
 
         // RailsからのJWTを保存してRails側のサインイン状態を確立
         const access_token = data?.access_token;
@@ -52,6 +55,13 @@ export const callbacks: NextAuthConfig["callbacks"] = {
                 ? Math.max(60, Math.min(expires_in, 60 * 60))
                 : 60 * 10,
           });
+        }
+
+        // 初回登録ユーザーはオンボーディングへリダイレクト
+        if (data?.is_new_user === true) {
+          const base =
+            process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || "";
+          return `${base}/onboarding/welcome`;
         }
       } catch (err) {
         console.error("RailsへのOAuth登録失敗:", err);

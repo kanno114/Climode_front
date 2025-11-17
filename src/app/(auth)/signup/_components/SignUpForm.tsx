@@ -41,7 +41,7 @@ export function SignUpForm() {
     <>
       <Button
         variant="outline"
-        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+        onClick={() => signIn("google", { callbackUrl: "/onboarding/welcome" })}
         className="w-full cursor-pointer"
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -163,7 +163,11 @@ export function SignUpForm() {
           ))}
         </div>
 
-        <Button type="submit" className="w-full cursor-pointer" disabled={pending}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={pending}
+        >
           {pending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -155,6 +155,6 @@ export async function signUpAction(_: unknown, formData: FormData) {
   }
 
   if (submission.status === "success") {
-    redirect("/dashboard");
+    redirect("/onboarding/welcome");
   }
 }
