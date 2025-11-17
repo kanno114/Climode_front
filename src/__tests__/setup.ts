@@ -1,5 +1,12 @@
 import "@testing-library/jest-dom";
 
+// ResizeObserverのモック（Radix UIコンポーネントで使用される）
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 // next/navigationのモック
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
@@ -35,5 +42,3 @@ jest.mock("sonner", () => ({
   },
   Toaster: () => null,
 }));
-
-
