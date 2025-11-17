@@ -88,7 +88,7 @@ describe("SignUpForm", () => {
     await user.click(googleButton);
 
     expect(mockSignIn).toHaveBeenCalledWith("google", {
-      callbackUrl: "/dashboard",
+      callbackUrl: "/onboarding/welcome",
     });
   });
 
