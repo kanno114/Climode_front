@@ -2,8 +2,6 @@ import { auth } from "@/auth";
 import { fetchUserTriggers, fetchTriggerPresets } from "@/lib/api/triggers";
 import type { Trigger, UserTrigger } from "@/lib/schemas/triggers";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { TriggerSetupForm } from "./_components/TriggerSetupForm";
 
 export default async function TriggerSettingsPage() {
