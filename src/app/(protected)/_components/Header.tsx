@@ -1,5 +1,6 @@
 import DashboardMenu from "./DashboardMenu";
 import { getProfileAction } from "../profile/actions";
+import Link from "next/link";
 
 export async function Header() {
 
@@ -13,12 +14,14 @@ export async function Header() {
       <div className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Climode
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
+            <Link href="/dashboard">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  Climode
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
               体調管理ダッシュボード
-            </p>
+              </p>
+            </Link>
           </div>
           <div className="flex items-center gap-6 p-4">
             <DashboardMenu user={user.user} />

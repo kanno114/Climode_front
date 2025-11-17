@@ -14,8 +14,24 @@ import {
   getPrefectures,
   getDefaultPrefecture,
 } from "./actions";
+import { auth } from "@/auth";
+import { fetchUserTriggers } from "@/lib/api/triggers";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 
 export default async function DashboardPage() {
+  const session = await auth();
+  const userId = session?.user?.id as string;
+  let hasNoUserTriggers = false;
+  try {
+    const userTriggers = await fetchUserTriggers(userId);
+    hasNoUserTriggers = userTriggers.length === 0;
+  } catch {
+    // API失敗時は未登録扱いのUIを出す（厳密でなくUX優先）
+    hasNoUserTriggers = true;
+  }
   const todayDailyLog = await getTodayDailyLog();
   const suggestions = await getSuggestions();
   const prefectures = await getPrefectures();
@@ -24,6 +40,20 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
+        {hasNoUserTriggers && (
+          <Alert className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>トリガーが未設定です</AlertTitle>
+            <AlertDescription className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <span>
+                通知や提案の精度向上のため、あなたの「トリガー」を設定してください。
+              </span>
+              <Button asChild>
+                <Link href="/setup/triggers">トリガーを設定する</Link>
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
         {/* 今日の記録表示または入力フォーム */}
         {todayDailyLog ? (
           <TodayArea
@@ -44,14 +74,12 @@ export default async function DashboardPage() {
             </CardHeader>
             <CardContent>
               {defaultPrefecture?.prefecture ? (
-              <DailyLogForm
-                prefectures={prefectures}
-                defaultPrefecture={defaultPrefecture?.prefecture}
-                />
-              ) : (
                 <DailyLogForm
                   prefectures={prefectures}
+                  defaultPrefecture={defaultPrefecture?.prefecture}
                 />
+              ) : (
+                <DailyLogForm prefectures={prefectures} />
               )}
             </CardContent>
           </Card>

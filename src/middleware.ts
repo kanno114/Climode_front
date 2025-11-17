@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 export default auth((request) => {
   const { pathname, origin } = request.nextUrl;
 
-  // // ログイン済みユーザーが認証ページにアクセスした場合、/dashboardにリダイレクト
-  // if (request.auth && (pathname === "/signin" || pathname === "/signup")) {
-  //   return NextResponse.redirect(new URL("/dashboard", origin));
-  // }
+  const requiresAuth =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/settings") ||
+    pathname.startsWith("/setup/triggers") ||
+    pathname.startsWith("/onboarding/welcome");
 
-  // 未認証ユーザーが/dashboardにアクセスした場合、/signinにリダイレクト
-  if (pathname.startsWith("/dashboard") && !request.auth) {
+  if (requiresAuth && !request.auth) {
     return NextResponse.redirect(
       new URL("/signin?message=login_required", origin)
     );
@@ -18,5 +18,12 @@ export default auth((request) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/signin", "/signup"],
+  matcher: [
+    "/dashboard/:path*",
+    "/settings/:path*",
+    "/setup/triggers",
+    "/onboarding/welcome",
+    "/signin",
+    "/signup",
+  ],
 };
