@@ -9,6 +9,7 @@ import { DailyLogScore } from "./DailyLogScore";
 import { TodayDailyLog } from "./TodayDailyLog";
 import Suggestions from "./Suggestions";
 import { SignalsList } from "./SignalsList";
+import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
 
 type SignalEvent = {
   id: number;
@@ -27,7 +28,10 @@ interface TodayAreaProps {
     sleep_hours: number;
     mood: number;
     memo?: string;
+    note?: string | null;
     score: number;
+    helpfulness?: number | null;
+    match_score?: number | null;
     prefecture?: {
       id: number;
       name_ja: string;
@@ -42,6 +46,11 @@ interface TodayAreaProps {
       humidity_pct: number;
       pressure_hpa: number;
     };
+    suggestion_feedbacks?: Array<{
+      id: number;
+      suggestion_key: string;
+      helpfulness: boolean;
+    }>;
   };
   suggestions: Array<{
     key: string;
@@ -106,6 +115,15 @@ export function TodayArea({
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SignalsList signals={normalizedSignals} hasError={hasSignalError} />
         <Suggestions suggestions={normalizedSuggestions} />
+      </div>
+      <div className="mt-6">
+        <EveningReflectionDisplay
+          note={dailyLog.note}
+          suggestion_feedbacks={dailyLog.suggestion_feedbacks}
+          suggestions={normalizedSuggestions}
+          helpfulness={dailyLog.helpfulness}
+          match_score={dailyLog.match_score}
+        />
       </div>
     </>
   );
