@@ -10,7 +10,6 @@ import {
   Droplets,
   Wind,
   Brain,
-  Coffee,
   Bed,
   Zap,
 } from "lucide-react";

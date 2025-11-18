@@ -89,12 +89,6 @@ export function EveningReflectionForm() {
     },
     shouldValidate: "onBlur",
     shouldRevalidate: "onInput",
-    defaultValue: {
-      note: "",
-      helpfulness: null,
-      match_score: null,
-      suggestion_feedbacks: [],
-    },
   });
 
   const handleSuggestionHelpfulnessChange = (
