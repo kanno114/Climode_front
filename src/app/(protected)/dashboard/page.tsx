@@ -13,6 +13,7 @@ import {
   getSuggestions,
   getPrefectures,
   getDefaultPrefecture,
+  getTodaySignals,
 } from "./actions";
 import { auth } from "@/auth";
 import { fetchUserTriggers } from "@/lib/api/triggers";
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
   }
   const todayDailyLog = await getTodayDailyLog();
   const suggestions = await getSuggestions();
+  const signals = await getTodaySignals();
   const prefectures = await getPrefectures();
   const defaultPrefecture = await getDefaultPrefecture();
 
@@ -50,7 +52,7 @@ export default async function DashboardPage() {
                 通知や提案の精度向上のため、あなたの「トリガー」を設定してください。
               </span>
               <Button asChild>
-                <Link href="/setup/triggers">トリガーを設定する</Link>
+                <Link href="/settings/triggers">トリガーを設定する</Link>
               </Button>
             </AlertDescription>
           </Alert>
@@ -76,6 +78,7 @@ export default async function DashboardPage() {
           <TodayArea
             dailyLog={todayDailyLog}
             suggestions={suggestions}
+            signals={signals}
             prefectures={prefectures}
           />
         ) : (

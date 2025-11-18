@@ -70,7 +70,7 @@ export async function submitMorningDeclaration(_: unknown, formData: FormData) {
     });
   }
 
-  // 成功時は /signals/today にリダイレクト
+  // 成功時は /dashboard にリダイレクト
   // redirect()は内部でエラーをスローするため、try-catchの外で呼び出す
-  redirect(result.next || "/signals/today");
+  redirect("/dashboard");
 }

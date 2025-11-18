@@ -8,6 +8,41 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/lib/api/api-fetch";
 
+export async function getTodaySignals() {
+  const session = await auth();
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/signal_events/today`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+        next: { revalidate: 3600 },
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    } else if (res.status === 401) {
+      console.error("認証エラー - セッションが無効です");
+      return null;
+    } else {
+      console.error("シグナルデータ取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("シグナルデータ取得エラー:", error);
+    return null;
+  }
+}
+
 export async function getPrefectures() {
   const session = await auth();
   if (!session?.user) {
