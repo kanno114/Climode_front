@@ -8,7 +8,8 @@ export default auth((request) => {
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/settings") ||
     pathname.startsWith("/setup/triggers") ||
-    pathname.startsWith("/onboarding/welcome");
+    pathname.startsWith("/onboarding/welcome") ||
+    pathname.startsWith("/morning");
 
   if (requiresAuth && !request.auth) {
     return NextResponse.redirect(
@@ -23,6 +24,7 @@ export const config = {
     "/settings/:path*",
     "/setup/triggers",
     "/onboarding/welcome",
+    "/morning/:path*",
     "/signin",
     "/signup",
   ],
