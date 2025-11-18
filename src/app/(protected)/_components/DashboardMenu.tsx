@@ -17,6 +17,7 @@ import {
   LogOut,
   Home,
   Settings,
+  Moon,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -46,6 +47,12 @@ export default function DashboardMenu({ user }: Props) {
       label: "ダッシュボード",
       href: "/dashboard",
       description: "ホーム画面に戻る",
+    },
+    {
+      icon: Moon,
+      label: "夜の振り返り",
+      href: "/evening",
+      description: "一日の振り返りを記録",
     },
     {
       icon: Calendar,
