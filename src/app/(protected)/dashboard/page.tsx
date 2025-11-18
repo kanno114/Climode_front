@@ -16,6 +16,7 @@ import {
 } from "./actions";
 import { auth } from "@/auth";
 import { fetchUserTriggers } from "@/lib/api/triggers";
+import { MorningDeclarationForm } from "../morning/_components/MorningDeclarationForm";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -54,6 +55,22 @@ export default async function DashboardPage() {
             </AlertDescription>
           </Alert>
         )}
+        {/* 朝の自己申告フォーム */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              朝の自己申告
+            </CardTitle>
+            <CardDescription>
+              睡眠時間・気分・疲労感を素早く入力してシグナル判定に活用します
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <MorningDeclarationForm />
+          </CardContent>
+        </Card>
+
         {/* 今日の記録表示または入力フォーム */}
         {todayDailyLog ? (
           <TodayArea
