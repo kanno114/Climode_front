@@ -8,6 +8,17 @@ import { EditDailyLogForm } from "./EditDailyLogForm";
 import { DailyLogScore } from "./DailyLogScore";
 import { TodayDailyLog } from "./TodayDailyLog";
 import Suggestions from "./Suggestions";
+import { SignalsList } from "./SignalsList";
+
+type SignalEvent = {
+  id: number;
+  trigger_key: string;
+  category: string;
+  level: string;
+  priority: number;
+  evaluated_at: string;
+  meta?: Record<string, unknown> | null;
+};
 
 interface TodayAreaProps {
   dailyLog: {
@@ -40,16 +51,21 @@ interface TodayAreaProps {
     severity: number;
     triggers: Array<string>;
     category: string;
-  }>;
+  }> | null;
+  signals: Array<SignalEvent> | null;
   prefectures: Array<{ id: number; code: string; name_ja: string }>;
 }
 
 export function TodayArea({
   dailyLog,
   suggestions,
+  signals,
   prefectures,
 }: TodayAreaProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const normalizedSuggestions = Array.isArray(suggestions) ? suggestions : [];
+  const normalizedSignals = Array.isArray(signals) ? signals : [];
+  const hasSignalError = signals === null;
 
   if (isEditing) {
     return (
@@ -87,8 +103,9 @@ export function TodayArea({
         <DailyLogScore score={dailyLog.score} date={dailyLog.date} />
         <TodayDailyLog dailyLog={dailyLog} setIsEditing={setIsEditing} />
       </div>
-      <div className="mt-4 w-full">
-        <Suggestions suggestions={suggestions} />
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <SignalsList signals={normalizedSignals} hasError={hasSignalError} />
+        <Suggestions suggestions={normalizedSuggestions} />
       </div>
     </>
   );
