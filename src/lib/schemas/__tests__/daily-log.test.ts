@@ -25,7 +25,6 @@ describe("dailyLogSchema", () => {
         prefecture_id: "13",
         sleep_hours: 7,
         mood_score: 3,
-        symptoms: ["headache", "fatigue"],
         notes: "今日は体調が良かった",
       };
 
@@ -33,13 +32,12 @@ describe("dailyLogSchema", () => {
       expect(result.success).toBe(true);
     });
 
-    it("symptomsとnotesが空でも成功する", () => {
+    it("notesが空でも成功する", () => {
       const validData = {
         date: today,
         prefecture_id: "13",
         sleep_hours: 7,
         mood_score: 3,
-        symptoms: [],
         notes: "",
       };
 
@@ -325,7 +323,7 @@ describe("dailyLogSchema", () => {
   });
 
   describe("オプショナルフィールドのバリデーション", () => {
-    it("symptomsが未定義でも成功する", () => {
+    it("notesが未定義でも成功する", () => {
       const validData = {
         date: today,
         prefecture_id: "13",
@@ -343,19 +341,6 @@ describe("dailyLogSchema", () => {
         prefecture_id: "13",
         sleep_hours: 7,
         mood_score: 3,
-      };
-
-      const result = dailyLogSchema.safeParse(validData);
-      expect(result.success).toBe(true);
-    });
-
-    it("複数の症状を受け入れる", () => {
-      const validData = {
-        date: today,
-        prefecture_id: "13",
-        sleep_hours: 7,
-        mood_score: 3,
-        symptoms: ["headache", "fatigue", "nausea"],
       };
 
       const result = dailyLogSchema.safeParse(validData);

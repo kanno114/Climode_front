@@ -16,7 +16,6 @@ export const dailyLogSchema = z.object({
     .number({ required_error: "気分スコアは必須です" })
     .min(-5, "気分スコアは-5以上で入力してください")
     .max(5, "気分スコアは5以下で入力してください"),
-  symptoms: z.array(z.string()).optional(),
   notes: z.string().optional(),
 });
 
