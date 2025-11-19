@@ -36,16 +36,6 @@ interface TodayAreaProps {
       id: number;
       name_ja: string;
     };
-    symptoms: Array<{
-      id: number;
-      name: string;
-      code: string;
-    }>;
-    weather_observation?: {
-      temperature_c: number;
-      humidity_pct: number;
-      pressure_hpa: number;
-    };
     suggestion_feedbacks?: Array<{
       id: number;
       suggestion_key: string;

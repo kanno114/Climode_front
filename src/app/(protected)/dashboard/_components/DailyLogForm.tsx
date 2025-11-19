@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, CalendarIcon, Bed, Heart, MapPin } from "lucide-react";
@@ -16,7 +15,6 @@ import { createDailyLogAction } from "@/app/(protected)/dashboard/actions";
 import { dailyLogSchema } from "@/lib/schemas/daily-log";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import { SYMPTOM_NAMES, symptomNamesToCodes } from "@/lib/symptoms";
 import {
   Select,
   SelectContent,
@@ -38,7 +36,6 @@ export function DailyLogForm({
     createDailyLogAction,
     undefined
   );
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [sleepHours, setSleepHours] = useState<number[]>([6]);
   const [moodScore, setMoodScore] = useState<number[]>([0]);
   // 今日の日付のみ使用
@@ -65,14 +62,6 @@ export function DailyLogForm({
       mood_score: "0",
     },
   });
-
-  const handleSymptomChange = (symptom: string, checked: boolean) => {
-    if (checked) {
-      setSelectedSymptoms((prev) => [...prev, symptom]);
-    } else {
-      setSelectedSymptoms((prev) => prev.filter((s) => s !== symptom));
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -175,33 +164,6 @@ export function DailyLogForm({
               {e}
             </p>
           ))}
-        </div>
-
-        {/* 症状選択 */}
-        <div className="space-y-2">
-          <Label>症状（複数選択可）</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {SYMPTOM_NAMES.map((symptom) => (
-              <div key={symptom} className="flex items-center space-x-2">
-                <Checkbox
-                  id={symptom}
-                  checked={selectedSymptoms.includes(symptom)}
-                  onCheckedChange={(checked) =>
-                    handleSymptomChange(symptom, checked as boolean)
-                  }
-                  disabled={pending}
-                />
-                <Label htmlFor={symptom} className="text-sm">
-                  {symptom}
-                </Label>
-              </div>
-            ))}
-          </div>
-          <input
-            type="hidden"
-            name={fields.symptoms?.name || "symptoms"}
-            value={JSON.stringify(symptomNamesToCodes(selectedSymptoms))}
-          />
         </div>
 
         {/* メモ */}

@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, CalendarIcon, Bed, Heart, X, MapPin } from "lucide-react";
@@ -16,7 +15,6 @@ import { updateDailyLogAction } from "../actions";
 import { dailyLogSchema } from "@/lib/schemas/daily-log";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
-import { SYMPTOM_NAMES, symptomNamesToCodes } from "@/lib/symptoms";
 import {
   Select,
   SelectContent,
@@ -33,11 +31,6 @@ interface EditDailyLogFormProps {
     mood: number;
     memo?: string;
     prefecture_id?: number;
-    symptoms: Array<{
-      id: number;
-      name: string;
-      code: string;
-    }>;
   };
   prefectures: Array<{ id: number; code: string; name_ja: string }>;
   onCancel: () => void;
@@ -51,9 +44,6 @@ export function EditDailyLogForm({
   const [lastResult, action, pending] = useActionState(
     updateDailyLogAction,
     undefined
-  );
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>(
-    dailyLog.symptoms.map((s) => s.name)
   );
   const [sleepHours, setSleepHours] = useState<number[]>([
     dailyLog.sleep_hours,
@@ -83,14 +73,6 @@ export function EditDailyLogForm({
       notes: dailyLog.memo || "",
     },
   });
-
-  const handleSymptomChange = (symptom: string, checked: boolean) => {
-    if (checked) {
-      setSelectedSymptoms((prev) => [...prev, symptom]);
-    } else {
-      setSelectedSymptoms((prev) => prev.filter((s) => s !== symptom));
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -191,33 +173,6 @@ export function EditDailyLogForm({
               {e}
             </p>
           ))}
-        </div>
-
-        {/* 症状選択 */}
-        <div className="space-y-2">
-          <Label>症状（複数選択可）</Label>
-          <div className="grid grid-cols-2 gap-2">
-            {SYMPTOM_NAMES.map((symptom) => (
-              <div key={symptom} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`edit-${symptom}`}
-                  checked={selectedSymptoms.includes(symptom)}
-                  onCheckedChange={(checked) =>
-                    handleSymptomChange(symptom, checked as boolean)
-                  }
-                  disabled={pending}
-                />
-                <Label htmlFor={`edit-${symptom}`} className="text-sm">
-                  {symptom}
-                </Label>
-              </div>
-            ))}
-          </div>
-          <input
-            type="hidden"
-            name={fields.symptoms?.name || "symptoms"}
-            value={JSON.stringify(symptomNamesToCodes(selectedSymptoms))}
-          />
         </div>
 
         {/* メモ */}
