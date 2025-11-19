@@ -3,7 +3,13 @@
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-export function ToastMessage( message: string, description: string, duration: number ) {
+interface ToastMessageProps {
+  message: string;
+  description: string;
+  duration: number;
+}
+
+export function ToastMessage({ message, description, duration }: ToastMessageProps) {
   useEffect(() => {
     setTimeout(() => {
       toast.error(message, {
