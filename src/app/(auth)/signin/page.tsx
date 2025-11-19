@@ -27,30 +27,34 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {params.message === "login_required" &&
-            ToastMessage(
-              "ログインが必要です",
-              "このページにアクセスするには、アカウントにログインしてください。",
-              5000
-            )}
-          {params.message === "session_expired" &&
-            ToastMessage(
-              "セッションの有効期限が切れました",
-              "再度ログインしてください。",
-              5000
-            )}
-          {params.message === "token_refresh_failed" &&
-            ToastMessage(
-              "認証の更新に失敗しました",
-              "再度ログインしてください。",
-              5000
-            )}
-          {params.message === "invalid_token" &&
-            ToastMessage(
-              "無効な認証情報です",
-              "再度ログインしてください。",
-              5000
-            )}
+          {params.message === "login_required" && (
+            <ToastMessage
+              message="ログインが必要です"
+              description="このページにアクセスするには、アカウントにログインしてください。"
+              duration={5000}
+            />
+          )}
+          {params.message === "session_expired" && (
+            <ToastMessage
+              message="セッションの有効期限が切れました"
+              description="再度ログインしてください。"
+              duration={5000}
+            />
+          )}
+          {params.message === "token_refresh_failed" && (
+            <ToastMessage
+              message="認証の更新に失敗しました"
+              description="再度ログインしてください。"
+              duration={5000}
+            />
+          )}
+          {params.message === "invalid_token" && (
+            <ToastMessage
+              message="無効な認証情報です"
+              description="再度ログインしてください。"
+              duration={5000}
+            />
+          )}
           <SignInForm />
 
           <div className="text-center text-sm">
