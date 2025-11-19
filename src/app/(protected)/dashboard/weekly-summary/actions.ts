@@ -12,18 +12,6 @@ export interface DailyLogData {
   mood: number | null;
   fatigue: number | null;
   memo: string;
-  weather_observation: {
-    id: number;
-    temperature_c: number | null;
-    humidity_pct: number | null;
-    pressure_hpa: number | null;
-    observed_at: string;
-  } | null;
-  symptoms: Array<{
-    id: number;
-    name: string;
-    code: string;
-  }>;
   prefecture: {
     id: number;
     name: string;
