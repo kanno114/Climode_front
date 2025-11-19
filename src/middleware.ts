@@ -1,7 +1,6 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((request) => {
+export function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
 
   const requiresAuth =
@@ -12,12 +11,19 @@ export default auth((request) => {
     pathname.startsWith("/morning") ||
     pathname.startsWith("/evening");
 
-  if (requiresAuth && !request.auth) {
-    return NextResponse.redirect(
-      new URL("/signin?message=login_required", origin)
-    );
+  if (requiresAuth) {
+    // Cookieからアクセストークンの存在をチェック（軽量）
+    const accessToken = request.cookies.get("access_token")?.value;
+
+    if (!accessToken) {
+      return NextResponse.redirect(
+        new URL("/signin?message=login_required", origin)
+      );
+    }
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
