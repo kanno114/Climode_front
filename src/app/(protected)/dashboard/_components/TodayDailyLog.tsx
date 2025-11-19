@@ -1,9 +1,8 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Bed, Heart, Edit, MapPin, Star } from "lucide-react";
+import { Calendar, Bed, Heart, Edit, Star } from "lucide-react";
 import { SelfScoreDialog } from "./SelfScoreDialog";
 
 interface TodayDailyLogProps {
@@ -19,23 +18,12 @@ interface TodayDailyLogProps {
       id: number;
       name_ja: string;
     };
-    symptoms: Array<{
-      id: number;
-      name: string;
-      code: string;
-    }>;
-    weather_observation?: {
-      temperature_c: number;
-      humidity_pct: number;
-      pressure_hpa: number;
-    };
   };
   setIsEditing: (isEditing: boolean) => void;
 }
 
 export function TodayDailyLog({ dailyLog, setIsEditing }: TodayDailyLogProps) {
   const moodScore = dailyLog.mood; // そのまま表示
-  const symptomNames = dailyLog.symptoms.map((s) => s.name);
 
   return (
     <Card>
@@ -82,20 +70,6 @@ export function TodayDailyLog({ dailyLog, setIsEditing }: TodayDailyLogProps) {
           </div>
         )}
 
-        {/* 症状 */}
-        {symptomNames.length > 0 && (
-          <div className="space-y-2">
-            <span className="text-sm font-medium">症状</span>
-            <div className="flex flex-wrap gap-1">
-              {symptomNames.map((symptom, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {symptom}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* メモ */}
         {dailyLog.memo && (
           <div className="space-y-2">
@@ -106,34 +80,6 @@ export function TodayDailyLog({ dailyLog, setIsEditing }: TodayDailyLogProps) {
           </div>
         )}
 
-        {/* 天候情報 */}
-        {dailyLog.weather_observation && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">天候情報</span>
-              {dailyLog.prefecture && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{dailyLog.prefecture.name_ja}</span>
-                </div>
-              )}
-            </div>
-            <div className="grid grid-cols-3 gap-2 text-xs">
-              <div className="bg-muted/50 p-2 rounded">
-                <div className="font-medium">気温</div>
-                <div>{dailyLog.weather_observation.temperature_c}℃</div>
-              </div>
-              <div className="bg-muted/50 p-2 rounded">
-                <div className="font-medium">湿度</div>
-                <div>{dailyLog.weather_observation.humidity_pct}%</div>
-              </div>
-              <div className="bg-muted/50 p-2 rounded">
-                <div className="font-medium">気圧</div>
-                <div>{dailyLog.weather_observation.pressure_hpa}hPa</div>
-              </div>
-            </div>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

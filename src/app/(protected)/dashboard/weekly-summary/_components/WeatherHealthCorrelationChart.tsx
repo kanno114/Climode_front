@@ -40,12 +40,8 @@ export function WeatherHealthCorrelationChart({
   );
 
   const scores = data.map((log) => log.score ?? 0);
-  const temperatures = data.map(
-    (log) => log.weather_observation?.temperature_c ?? null
-  );
-  const humidity = data.map(
-    (log) => log.weather_observation?.humidity_pct ?? null
-  );
+  const temperatures = data.map(() => 0);
+  const humidity = data.map(() => 0);
 
   const chartData = {
     labels,

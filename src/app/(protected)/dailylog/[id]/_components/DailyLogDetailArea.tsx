@@ -16,16 +16,6 @@ interface DailyLogDetailAreaProps {
       id: number;
       name_ja: string;
     };
-    symptoms: Array<{
-      id: number;
-      name: string;
-      code: string;
-    }>;
-    weather_observation?: {
-      temperature_c: number;
-      humidity_pct: number;
-      pressure_hpa: number;
-    };
     prefecture_id?: number;
   };
 }

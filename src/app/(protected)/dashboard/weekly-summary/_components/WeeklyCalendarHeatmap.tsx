@@ -64,30 +64,7 @@ export function WeeklyCalendarHeatmap({ data }: WeeklyCalendarHeatmapProps) {
                 <div className="text-sm text-gray-600">
                   {getScoreLabel(log.score)}
                 </div>
-                {log.symptoms.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {log.symptoms.slice(0, 3).map((symptom) => (
-                      <span
-                        key={symptom.id}
-                        className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded"
-                      >
-                        {symptom.name}
-                      </span>
-                    ))}
-                    {log.symptoms.length > 3 && (
-                      <span className="text-xs text-gray-500">
-                        +{log.symptoms.length - 3}
-                      </span>
-                    )}
-                  </div>
-                )}
               </div>
-              {log.weather_observation && (
-                <div className="text-right text-sm text-gray-600">
-                  <div>🌡️ {log.weather_observation.temperature_c}°C</div>
-                  <div>💧 {log.weather_observation.humidity_pct}%</div>
-                </div>
-              )}
             </div>
           ))}
         </div>
