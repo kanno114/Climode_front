@@ -118,6 +118,69 @@ export async function handleAuthFailure(): Promise<void> {
 }
 
 /**
+ * Rails APIでトークンの有効性を確認する
+ * @returns TokenValidationResult
+ */
+export async function validateTokenWithApi(): Promise<TokenValidationResult> {
+  const accessToken = await getAccessTokenFromCookies();
+
+  if (!accessToken) {
+    return {
+      isValid: false,
+      accessToken: null,
+      needsRefresh: false,
+    };
+  }
+
+  try {
+    const validateEndpoint = `${process.env.API_BASE_URL_SERVER}/api/v1/validate_token`;
+    const response = await fetch(validateEndpoint, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.valid) {
+        return {
+          isValid: true,
+          accessToken,
+          needsRefresh: false,
+        };
+      }
+    }
+
+    // 401エラーの場合、リフレッシュが必要かどうかを確認
+    if (response.status === 401) {
+      const errorData = await response.json().catch(() => ({}));
+      return {
+        isValid: false,
+        accessToken,
+        needsRefresh: errorData.needs_refresh === true,
+      };
+    }
+
+    // その他のエラー
+    return {
+      isValid: false,
+      accessToken,
+      needsRefresh: false,
+    };
+  } catch (error) {
+    console.error("Token validation API error:", error);
+    return {
+      isValid: false,
+      accessToken,
+      needsRefresh: false,
+    };
+  }
+}
+
+/**
  * トークンの有効性を確認し、必要に応じてリフレッシュを試行する
  * @returns 有効なアクセストークンまたはnull
  */
