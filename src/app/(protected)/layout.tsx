@@ -1,5 +1,4 @@
 import { Header } from "./_components/Header";
-import { redirect } from "next/navigation";
 import {
   validateTokenWithApi,
   refreshAccessToken,

@@ -18,7 +18,6 @@ import {
   Home,
   Settings,
   Moon,
-  FileBarChart,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
