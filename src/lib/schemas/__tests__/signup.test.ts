@@ -8,6 +8,7 @@ describe("signUpSchema", () => {
         email: "test@example.com",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(validData);
@@ -20,6 +21,7 @@ describe("signUpSchema", () => {
         email: "user@test.com",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(validData);
@@ -34,6 +36,7 @@ describe("signUpSchema", () => {
         email: "test@example.com",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -48,6 +51,7 @@ describe("signUpSchema", () => {
         email: "test@example.com",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -68,6 +72,7 @@ describe("signUpSchema", () => {
         email: "invalid-email",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -85,6 +90,7 @@ describe("signUpSchema", () => {
         email: "",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -96,6 +102,7 @@ describe("signUpSchema", () => {
         name: "山田太郎",
         password: "password123",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -116,6 +123,7 @@ describe("signUpSchema", () => {
         email: "test@example.com",
         password: "short",
         confirmPassword: "short",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -132,6 +140,7 @@ describe("signUpSchema", () => {
         name: "山田太郎",
         email: "test@example.com",
         confirmPassword: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -152,6 +161,7 @@ describe("signUpSchema", () => {
         email: "test@example.com",
         password: "password123",
         confirmPassword: "different123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -171,6 +181,7 @@ describe("signUpSchema", () => {
         email: "test@example.com",
         password: "password123",
         confirmPassword: "",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -188,6 +199,7 @@ describe("signUpSchema", () => {
         name: "山田太郎",
         email: "test@example.com",
         password: "password123",
+        prefecture_id: "13",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -201,6 +213,58 @@ describe("signUpSchema", () => {
     });
   });
 
+  describe("都道府県IDのバリデーション", () => {
+    it("有効な都道府県IDを受け入れる", () => {
+      const validData = {
+        name: "山田太郎",
+        email: "test@example.com",
+        password: "password123",
+        confirmPassword: "password123",
+        prefecture_id: "13",
+      };
+
+      const result = signUpSchema.safeParse(validData);
+      expect(result.success).toBe(true);
+    });
+
+    it("都道府県IDが空の場合エラーを返す", () => {
+      const invalidData = {
+        name: "山田太郎",
+        email: "test@example.com",
+        password: "password123",
+        confirmPassword: "password123",
+        prefecture_id: "",
+      };
+
+      const result = signUpSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const prefError = result.error.issues.find((i) =>
+          i.message.includes("都道府県")
+        );
+        expect(prefError?.message).toBe("都道府県を選択してください");
+      }
+    });
+
+    it("都道府県IDが未定義の場合エラーを返す", () => {
+      const invalidData = {
+        name: "山田太郎",
+        email: "test@example.com",
+        password: "password123",
+        confirmPassword: "password123",
+      };
+
+      const result = signUpSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const prefError = result.error.issues.find((i) =>
+          i.message.includes("都道府県")
+        );
+        expect(prefError?.message).toBe("都道府県を選択してください");
+      }
+    });
+  });
+
   describe("複数フィールドのバリデーション", () => {
     it("すべてのフィールドが無効な場合、複数のエラーを返す", () => {
       const invalidData = {
@@ -208,6 +272,7 @@ describe("signUpSchema", () => {
         email: "invalid",
         password: "short",
         confirmPassword: "different",
+        prefecture_id: "",
       };
 
       const result = signUpSchema.safeParse(invalidData);
@@ -223,7 +288,7 @@ describe("signUpSchema", () => {
       const result = signUpSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues.length).toBeGreaterThanOrEqual(4);
+        expect(result.error.issues.length).toBeGreaterThanOrEqual(5);
       }
     });
   });
