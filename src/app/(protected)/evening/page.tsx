@@ -11,7 +11,7 @@ export default async function EveningPage() {
         <div className="max-w-2xl mx-auto">
           {/* ヘッダー */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">一日の振り返り</h1>
+            <h1 className="text-3xl font-bold mb-2">今日1日を振り返ってみましょう</h1>
             <p className="text-lg text-muted-foreground">
               {format(today, "yyyy年MM月dd日", { locale: ja })}
             </p>

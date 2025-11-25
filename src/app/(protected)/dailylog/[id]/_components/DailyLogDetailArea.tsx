@@ -1,6 +1,5 @@
 "use client";
 
-import { DailyLogScore } from "./DailyLogScore";
 import { DailyLogDetail } from "./DailyLogDetail";
 
 interface DailyLogDetailAreaProps {
@@ -21,11 +20,5 @@ interface DailyLogDetailAreaProps {
 }
 
 export function DailyLogDetailArea({ dailyLog }: DailyLogDetailAreaProps) {
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <DailyLogScore score={dailyLog.score} />
-      <DailyLogDetail dailyLog={dailyLog} />
-    </div>
-  );
+  return <DailyLogDetail dailyLog={dailyLog} />;
 }

@@ -6,6 +6,32 @@ import { redirect } from "next/navigation";
 import { signUpSchema } from "@/lib/schemas/signup";
 import { setAuthCookies } from "@/lib/auth/cookies";
 
+export async function getPrefectures() {
+  try {
+    const res = await fetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/prefectures`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        cache: "force-cache",
+      }
+    );
+
+    if (res.ok) {
+      return await res.json();
+    } else {
+      console.error("都道府県データ取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("都道府県データ取得エラー:", error);
+    return null;
+  }
+}
+
 export async function signUpAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signUpSchema });
 
@@ -15,7 +41,7 @@ export async function signUpAction(_: unknown, formData: FormData) {
     });
   }
 
-  const { name, email, password } = submission.payload;
+  const { name, email, password, prefecture_id } = submission.payload;
 
   try {
     const backendSignUpResponse = await fetch(
@@ -33,6 +59,7 @@ export async function signUpAction(_: unknown, formData: FormData) {
             email,
             password,
             password_confirmation: submission.payload.confirmPassword,
+            prefecture_id: prefecture_id ? parseInt(String(prefecture_id), 10) : null,
           },
         }),
       }

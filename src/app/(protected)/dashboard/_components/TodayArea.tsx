@@ -1,19 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar, Eye } from "lucide-react";
-import { EditDailyLogForm } from "./EditDailyLogForm";
-import { DailyLogScore } from "./DailyLogScore";
-import { TodayDailyLog } from "./TodayDailyLog";
 import Suggestions from "./Suggestions";
-import { SignalsList } from "./SignalsList";
 import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
+import { SignalsList } from "./SignalsList";
 
 type SignalEvent = {
   id: number;
   trigger_key: string;
+  trigger_key_label?: string;
   category: string;
   level: string;
   priority: number;
@@ -51,60 +45,37 @@ interface TodayAreaProps {
     triggers: Array<string>;
     category: string;
   }> | null;
-  signals: Array<SignalEvent> | null;
-  prefectures: Array<{ id: number; code: string; name_ja: string }>;
+  bodySignals: Array<SignalEvent> | null;
+  envSignals: Array<SignalEvent> | null;
 }
 
 export function TodayArea({
   dailyLog,
   suggestions,
-  signals,
-  prefectures,
+  bodySignals,
+  envSignals,
 }: TodayAreaProps) {
-  const [isEditing, setIsEditing] = useState(false);
   const normalizedSuggestions = Array.isArray(suggestions) ? suggestions : [];
-  const normalizedSignals = Array.isArray(signals) ? signals : [];
-  const hasSignalError = signals === null;
-
-  if (isEditing) {
-    return (
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              記録を編集
-            </CardTitle>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEditing(false)}
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              表示
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <EditDailyLogForm
-            dailyLog={dailyLog}
-            onCancel={() => setIsEditing(false)}
-            prefectures={prefectures}
-          />
-        </CardContent>
-      </Card>
-    );
-  }
+  const normalizedBodySignals = Array.isArray(bodySignals) ? bodySignals : [];
+  const normalizedEnvSignals = Array.isArray(envSignals) ? envSignals : [];
+  const combinedSignals = [...normalizedEnvSignals, ...normalizedBodySignals];
+  const hasSignalError = bodySignals === null || envSignals === null;
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <DailyLogScore score={dailyLog.score} date={dailyLog.date} />
-        <TodayDailyLog dailyLog={dailyLog} setIsEditing={setIsEditing} />
+      {/* 体調シグナルと提案 */}
+      <div className="mt-6">
+        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+          今日はこうした方がいいかも
+        </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Suggestions suggestions={normalizedSuggestions} />
+          <SignalsList
+            signals={combinedSignals}
+            hasError={hasSignalError}
+            title="今日のシグナル"
+          />
       </div>
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SignalsList signals={normalizedSignals} hasError={hasSignalError} />
-        <Suggestions suggestions={normalizedSuggestions} />
       </div>
       <div className="mt-6">
         <EveningReflectionDisplay

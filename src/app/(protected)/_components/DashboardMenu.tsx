@@ -18,7 +18,6 @@ import {
   Home,
   Settings,
   Moon,
-  FileBarChart,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -63,15 +62,9 @@ export default function DashboardMenu({ user }: Props) {
     },
     {
       icon: BarChart3,
-      label: "週間サマリー",
-      href: "/dashboard/weekly-summary",
-      description: "1週間の体調推移を確認",
-    },
-    {
-      icon: FileBarChart,
-      label: "週次レポート",
-      href: "/reports/weekly",
-      description: "シグナルと提案の評価を振り返り",
+      label: "週間レポート",
+      href: "/dashboard/weekly",
+      description: "週間サマリーと週次レポートを確認",
     },
     {
       icon: Settings,
