@@ -11,6 +11,9 @@ export const signUpSchema = z
     .min(8, "パスワードは8文字以上で入力してください"),
     confirmPassword: z.string({ required_error: "パスワード確認は必須です" })
     .min(1, "パスワード確認を入力してください"),
+    prefecture_id: z
+    .string({ required_error: "都道府県を選択してください" })
+    .min(1, "都道府県を選択してください"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "パスワードが一致しません",

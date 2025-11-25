@@ -10,11 +10,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Loader2, Mail, Lock, User } from "lucide-react";
+import { Loader2, Mail, Lock, User, MapPin } from "lucide-react";
 import { signUpAction } from "../actions";
 import { signUpSchema } from "@/lib/schemas/signup";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export function SignUpForm() {
+interface SignUpFormProps {
+  prefectures: Array<{ id: number; code: string; name_ja: string }>;
+}
+
+export function SignUpForm({ prefectures }: SignUpFormProps) {
   const [lastResult, action, pending] = useActionState(signUpAction, undefined);
 
   // バックエンドエラーをtoastで表示
@@ -157,6 +168,41 @@ export function SignUpForm() {
             />
           </div>
           {fields.confirmPassword.errors?.map((e) => (
+            <p key={e} className="text-sm text-red-500">
+              {e}
+            </p>
+          ))}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="prefecture_id">
+            <MapPin className="inline mr-2 h-4 w-4" />
+            取得地域（都道府県）
+          </Label>
+          <Select
+            name={fields.prefecture_id.name}
+            key={fields.prefecture_id.key}
+            disabled={pending}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="都道府県を選択してください" />
+            </SelectTrigger>
+            <SelectContent>
+              {prefectures.map((prefecture) => (
+                <SelectItem
+                  key={prefecture.id}
+                  value={prefecture.id.toString()}
+                >
+                  {prefecture.name_ja}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            天気情報を取得する都道府県を選択してください
+          </p>
+          {fields.prefecture_id.errors?.map((e) => (
             <p key={e} className="text-sm text-red-500">
               {e}
             </p>
