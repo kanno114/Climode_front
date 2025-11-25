@@ -8,6 +8,7 @@ import { AlertTriangle, ActivitySquare, Sun, Thermometer } from "lucide-react";
 type SignalEvent = {
   id: number;
   trigger_key: string;
+  trigger_key_label?: string;
   category: string;
   level: string;
   priority: number;
@@ -18,6 +19,10 @@ type SignalEvent = {
 interface SignalsListProps {
   signals: Array<SignalEvent>;
   hasError: boolean;
+  title?: string;
+  emptyTitle?: string;
+  emptyMessage?: string;
+  emptySubMessage?: string;
 }
 
 const levelStyles: Record<
@@ -63,13 +68,6 @@ const categoryIconMap: Record<
   body: ActivitySquare,
 };
 
-const formatTriggerKey = (key: string) => {
-  return key
-    .split("_")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-};
-
 const extractMetaText = (meta?: Record<string, unknown> | null) => {
   if (!meta) return null;
   if (typeof meta.comment === "string") return meta.comment;
@@ -77,7 +75,14 @@ const extractMetaText = (meta?: Record<string, unknown> | null) => {
   return null;
 };
 
-export function SignalsList({ signals, hasError }: SignalsListProps) {
+export function SignalsList({
+  signals,
+  hasError,
+  title = "今日のシグナル",
+  emptyTitle = "今日のシグナル",
+  emptyMessage = "今日は特に注意する点はありません ☀️",
+  emptySubMessage = "穏やかなコンディションで過ごせそうです。",
+}: SignalsListProps) {
   if (hasError) {
     return (
       <Card>
@@ -106,13 +111,13 @@ export function SignalsList({ signals, hasError }: SignalsListProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sun className="h-5 w-5 text-amber-500" />
-            今日のシグナル
+            {emptyTitle}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center text-sm text-muted-foreground py-6 space-y-2">
           <Sun className="h-8 w-8 mx-auto text-amber-400" />
-          <p>今日は特に注意する点はありません ☀️</p>
-          <p>穏やかなコンディションで過ごせそうです。</p>
+          <p>{emptyMessage}</p>
+          <p>{emptySubMessage}</p>
         </CardContent>
       </Card>
     );
@@ -123,7 +128,7 @@ export function SignalsList({ signals, hasError }: SignalsListProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Thermometer className="h-5 w-5 text-slate-600" />
-          今日のシグナル
+          {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -142,7 +147,7 @@ export function SignalsList({ signals, hasError }: SignalsListProps) {
                 <div>
                   <p className="text-xs text-muted-foreground">トリガー</p>
                   <p className="text-lg font-semibold">
-                    {formatTriggerKey(signal.trigger_key)}
+                    {signal.trigger_key_label || signal.trigger_key}
                   </p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                     <IconComponent className="h-3.5 w-3.5" />

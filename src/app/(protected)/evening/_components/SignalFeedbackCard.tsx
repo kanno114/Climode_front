@@ -9,6 +9,7 @@ import { ActivitySquare, Thermometer } from "lucide-react";
 type SignalEvent = {
   id: number;
   trigger_key: string;
+  trigger_key_label?: string;
   category: string;
   level: string;
   priority: number;
@@ -65,13 +66,6 @@ const categoryIconMap: Record<
   body: ActivitySquare,
 };
 
-const formatTriggerKey = (key: string) => {
-  return key
-    .split("_")
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-};
-
 export function SignalFeedbackCard({
   signal,
   match,
@@ -88,7 +82,7 @@ export function SignalFeedbackCard({
           <div>
             <p className="text-xs text-muted-foreground">トリガー</p>
             <p className="text-lg font-semibold">
-              {formatTriggerKey(signal.trigger_key)}
+              {signal.trigger_key_label || signal.trigger_key}
             </p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
               <IconComponent className="h-3.5 w-3.5" />

@@ -21,8 +21,9 @@ export function WeeklyReportNavigation({
     const newWeekStart = newDate.toISOString().split("T")[0];
 
     const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", "report");
     params.set("start", newWeekStart);
-    router.push(`/reports/weekly?${params.toString()}`);
+    router.push(`/dashboard/weekly?${params.toString()}`);
   };
 
   return (
