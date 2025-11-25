@@ -75,7 +75,7 @@ export function TodayArea({
             hasError={hasSignalError}
             title="今日のシグナル"
           />
-        </div>
+      </div>
       </div>
       <div className="mt-6">
         <EveningReflectionDisplay
