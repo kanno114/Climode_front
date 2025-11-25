@@ -59,7 +59,7 @@ export async function signUpAction(_: unknown, formData: FormData) {
             email,
             password,
             password_confirmation: submission.payload.confirmPassword,
-            prefecture_id: prefecture_id ? parseInt(prefecture_id, 10) : null,
+            prefecture_id: prefecture_id ? parseInt(String(prefecture_id), 10) : null,
           },
         }),
       }
