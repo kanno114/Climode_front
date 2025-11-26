@@ -164,15 +164,6 @@ export function SignalsList({
                   {metaText}
                 </p>
               ) : null}
-              <p className="mt-2 text-xs text-muted-foreground">
-                評価時刻:{" "}
-                {new Date(signal.evaluated_at).toLocaleTimeString("ja-JP", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                  timeZone: "Asia/Tokyo",
-                })}
-              </p>
             </article>
           );
         })}
