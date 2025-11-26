@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, ActivitySquare, Sun, Thermometer } from "lucide-react";
+import { extractMetaText, formatObservedValue } from "@/lib/signal-format";
 
 type SignalEvent = {
   id: number;
@@ -68,13 +69,6 @@ const categoryIconMap: Record<
   body: ActivitySquare,
 };
 
-const extractMetaText = (meta?: Record<string, unknown> | null) => {
-  if (!meta) return null;
-  if (typeof meta.comment === "string") return meta.comment;
-  if (typeof meta.summary === "string") return meta.summary;
-  return null;
-};
-
 export function SignalsList({
   signals,
   hasError,
@@ -137,6 +131,7 @@ export function SignalsList({
             categoryIconMap[signal.category] || ActivitySquare;
           const style = levelStyles[signal.level] || levelStyles.default;
           const metaText = extractMetaText(signal.meta);
+          const observedValue = formatObservedValue(signal.meta);
 
           return (
             <article
@@ -157,18 +152,18 @@ export function SignalsList({
                 </div>
                 <Badge className={`${style.badge} border`}>{style.label}</Badge>
               </div>
+              {observedValue && (
+                <div className="mt-3 p-2 bg-white/60 dark:bg-slate-800/60 rounded text-sm">
+                  <p className="font-medium text-slate-900 dark:text-white">
+                    {observedValue}
+                  </p>
+                </div>
+              )}
               {metaText ? (
-                <p className="mt-3 text-sm text-slate-700">{metaText}</p>
+                <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
+                  {metaText}
+                </p>
               ) : null}
-              <p className="mt-2 text-xs text-muted-foreground">
-                評価時刻:{" "}
-                {new Date(signal.evaluated_at).toLocaleTimeString("ja-JP", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                  timeZone: "Asia/Tokyo",
-                })}
-              </p>
             </article>
           );
         })}
