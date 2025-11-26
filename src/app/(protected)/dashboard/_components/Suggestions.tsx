@@ -25,26 +25,69 @@ interface Suggestion {
   category: string;
 }
 
-type SeverityLevel = "high" | "medium" | "low";
+// categoryによる色分け
+const categoryConfig = {
+  env: {
+    color: "text-blue-700",
+    bgColor: "bg-blue-100",
+    borderColor: "border-blue-200",
+    cardBgColor: "bg-blue-50",
+  },
+  body: {
+    color: "text-pink-700",
+    bgColor: "bg-pink-100",
+    borderColor: "border-pink-200",
+    cardBgColor: "bg-pink-50",
+  },
+  default: {
+    color: "text-gray-700",
+    bgColor: "bg-gray-100",
+    borderColor: "border-gray-200",
+    cardBgColor: "bg-gray-50",
+  },
+} as const;
 
-const severityConfig = {
-  high: {
-    color: "text-red-700",
-    bgColor: "bg-red-100",
-    borderColor: "border-red-200",
-    cardBgColor: "bg-red-50",
+// tagsによる色分け（Badge用）
+const tagColorMap = {
+  temperature: {
+    color: "text-blue-700",
+    bgColor: "bg-blue-100",
+    borderColor: "border-blue-300",
   },
-  medium: {
-    color: "text-yellow-700",
-    bgColor: "bg-yellow-100",
-    borderColor: "border-yellow-200",
-    cardBgColor: "bg-yellow-50",
+  humidity: {
+    color: "text-cyan-700",
+    bgColor: "bg-cyan-100",
+    borderColor: "border-cyan-300",
   },
-  low: {
+  pressure: {
+    color: "text-indigo-700",
+    bgColor: "bg-indigo-100",
+    borderColor: "border-indigo-300",
+  },
+  sleep: {
+    color: "text-purple-700",
+    bgColor: "bg-purple-100",
+    borderColor: "border-purple-300",
+  },
+  mood: {
+    color: "text-amber-700",
+    bgColor: "bg-amber-100",
+    borderColor: "border-amber-300",
+  },
+  activity: {
     color: "text-green-700",
     bgColor: "bg-green-100",
-    borderColor: "border-green-200",
-    cardBgColor: "bg-green-50",
+    borderColor: "border-green-300",
+  },
+  health: {
+    color: "text-red-700",
+    bgColor: "bg-red-100",
+    borderColor: "border-red-300",
+  },
+  default: {
+    color: "text-gray-700",
+    bgColor: "bg-gray-100",
+    borderColor: "border-gray-300",
   },
 } as const;
 
@@ -63,10 +106,15 @@ interface SuggestionsProps {
 }
 
 export default function Suggestions({ suggestions }: SuggestionsProps) {
-  const getSeverityLevel = useCallback((severity: number): SeverityLevel => {
-    if (severity >= 80) return "high";
-    if (severity >= 50) return "medium";
-    return "low";
+  const getCategoryStyle = useCallback((category: string) => {
+    return (
+      categoryConfig[category as keyof typeof categoryConfig] ||
+      categoryConfig.default
+    );
+  }, []);
+
+  const getTagStyle = useCallback((tag: string) => {
+    return tagColorMap[tag as keyof typeof tagColorMap] || tagColorMap.default;
   }, []);
 
   const getTagIcon = useCallback((tag: string) => {
@@ -106,19 +154,20 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
         {suggestions
           .sort((a, b) => b.severity - a.severity)
           .map((suggestion) => {
-            const severityLevel = getSeverityLevel(suggestion.severity);
-            const severityStyle = severityConfig[severityLevel];
+            const categoryStyle = getCategoryStyle(suggestion.category);
 
             return (
               <article
                 key={suggestion.key}
-                className={`p-3 rounded border ${severityStyle.cardBgColor} ${severityStyle.borderColor}`}
+                className={`p-3 rounded border ${categoryStyle.cardBgColor} ${categoryStyle.borderColor}`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-medium text-sm">{suggestion.title}</h4>
+                  <h4 className="font-semibold text-base text-gray-900 dark:text-white">
+                    {suggestion.title}
+                  </h4>
                   <Badge
                     variant="secondary"
-                    className={`text-xs ${severityStyle.color} ${severityStyle.bgColor}`}
+                    className={`text-xs ${categoryStyle.color} ${categoryStyle.bgColor}`}
                   >
                     {suggestion.severity}
                   </Badge>
@@ -129,14 +178,21 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
                 </p>
 
                 <div className="flex flex-wrap gap-1">
-                  {suggestion.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
+                  {suggestion.tags.map((tag) => {
+                    const tagStyle = getTagStyle(tag);
+                    return (
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
+                      >
                       <span className="flex items-center gap-1">
                         {getTagIcon(tag)}
                         {tag}
                       </span>
                     </Badge>
-                  ))}
+                    );
+                  })}
                 </div>
               </article>
             );
