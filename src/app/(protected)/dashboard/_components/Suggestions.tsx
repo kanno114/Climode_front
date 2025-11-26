@@ -103,9 +103,17 @@ const tagIconMap = {
 
 interface SuggestionsProps {
   suggestions: Array<Suggestion>;
+  title?: string;
+  emptyTitle?: string;
+  emptyMessage?: string;
 }
 
-export default function Suggestions({ suggestions }: SuggestionsProps) {
+export default function Suggestions({
+  suggestions,
+  title = "今日の行動提案",
+  emptyTitle = "今日の行動提案",
+  emptyMessage = "今日は特別な提案はありません",
+}: SuggestionsProps) {
   const getCategoryStyle = useCallback((category: string) => {
     return (
       categoryConfig[category as keyof typeof categoryConfig] ||
@@ -128,13 +136,13 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="w-5 h-5" />
-            今日の行動提案
+            {emptyTitle}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-6 text-gray-500">
             <Coffee className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p>今日は特別な提案はありません</p>
+            <p>{emptyMessage}</p>
             <p className="text-sm">体調が良好なようです！</p>
           </div>
         </CardContent>
@@ -147,7 +155,7 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Zap className="w-5 h-5" />
-          今日の行動提案
+          {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -186,11 +194,11 @@ export default function Suggestions({ suggestions }: SuggestionsProps) {
                         variant="outline"
                         className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
                       >
-                      <span className="flex items-center gap-1">
-                        {getTagIcon(tag)}
-                        {tag}
-                      </span>
-                    </Badge>
+                        <span className="flex items-center gap-1">
+                          {getTagIcon(tag)}
+                          {tag}
+                        </span>
+                      </Badge>
                     );
                   })}
                 </div>

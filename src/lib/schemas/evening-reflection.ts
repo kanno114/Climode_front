@@ -22,6 +22,7 @@ const suggestionFeedbacksSchema = z.preprocess((val) => {
 
 export const eveningReflectionSchema = z.object({
   note: z.string().optional().default(""),
+  self_score: z.number().int().min(1).max(3).optional().nullable(),
   helpfulness: z.number().int().min(1).max(5).optional().nullable(),
   match_score: z.number().int().min(1).max(5).optional().nullable(),
   suggestion_feedbacks: suggestionFeedbacksSchema,

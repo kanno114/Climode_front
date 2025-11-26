@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Zap, MessageSquare } from "lucide-react";
+import { Loader2, Zap, MessageSquare, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   submitEveningReflection,
@@ -42,6 +42,7 @@ export function EveningReflectionForm() {
     Record<string, boolean>
   >({});
   const [note, setNote] = useState("");
+  const [selfScore, setSelfScore] = useState<number | null>(null);
 
   // データ取得
   useEffect(() => {
@@ -111,6 +112,9 @@ export function EveningReflectionForm() {
 
     const formData = new FormData();
     formData.append("note", note);
+    if (selfScore !== null) {
+      formData.append("self_score", selfScore.toString());
+    }
 
     const suggestionFeedbacksArray = Object.entries(suggestionFeedbacks)
       .filter(
@@ -190,6 +194,39 @@ export function EveningReflectionForm() {
             </CardContent>
           </Card>
         )}
+
+        {/* セクションB: セルフスコア */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Star className="h-5 w-5" />
+              今日の体調はどうでしたか？
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>セルフスコア</Label>
+              <div className="flex gap-2">
+                {[1, 2, 3].map((score) => (
+                  <Button
+                    key={score}
+                    type="button"
+                    variant={selfScore === score ? "default" : "outline"}
+                    onClick={() => setSelfScore(score)}
+                    className="flex-1"
+                    disabled={pending || isPending}
+                  >
+                    {score === 1
+                      ? "😕 悪い"
+                      : score === 2
+                      ? "😐 普通"
+                      : "😊 良い"}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* セクションC: 出来事入力 */}
         <Card>

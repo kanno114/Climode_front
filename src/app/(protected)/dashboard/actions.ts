@@ -11,7 +11,7 @@ export async function getTodaySignals(category?: "env" | "body") {
 
   try {
     const url = new URL(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/signal_events/today`
+      `${process.env.API_BASE_URL_SERVER}/api/v1/signal_events`
     );
     if (category) {
       url.searchParams.set("category", category);
@@ -115,4 +115,3 @@ export async function getTodayDailyLog() {
     return null;
   }
 }
-
