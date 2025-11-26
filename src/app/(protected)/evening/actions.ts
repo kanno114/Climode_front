@@ -69,6 +69,7 @@ export async function submitEveningReflection(_: unknown, formData: FormData) {
         },
         body: JSON.stringify({
           note: data.note || "",
+          self_score: data.self_score || null,
           suggestion_feedbacks: data.suggestion_feedbacks || [],
         }),
       }
