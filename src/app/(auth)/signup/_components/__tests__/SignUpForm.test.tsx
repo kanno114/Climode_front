@@ -45,12 +45,6 @@ jest.mock("react", () => ({
 }));
 
 describe("SignUpForm", () => {
-  const mockPrefectures = [
-    { id: 1, code: "01", name_ja: "北海道" },
-    { id: 13, code: "13", name_ja: "東京都" },
-    { id: 27, code: "27", name_ja: "大阪府" },
-  ];
-
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -63,7 +57,7 @@ describe("SignUpForm", () => {
   });
 
   it("フォームが正しくレンダリングされる", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     expect(
       screen.getByRole("button", { name: /Googleで登録/i })
@@ -79,7 +73,6 @@ describe("SignUpForm", () => {
     expect(
       screen.getByRole("button", { name: "アカウント作成" })
     ).toBeInTheDocument();
-    expect(screen.getByText("取得地域（都道府県）")).toBeInTheDocument();
   });
 
   it("Googleログインボタンがクリックできる", async () => {
@@ -87,7 +80,7 @@ describe("SignUpForm", () => {
     const mockSignIn = jest.fn();
     (signIn as jest.Mock).mockImplementation(mockSignIn);
 
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const googleButton = screen.getByRole("button", {
       name: /Googleで登録/i,
@@ -100,7 +93,7 @@ describe("SignUpForm", () => {
   });
 
   it("すべての入力フィールドが有効である", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const nameInput = screen.getByPlaceholderText(
       "山田太郎"
@@ -126,7 +119,7 @@ describe("SignUpForm", () => {
   });
 
   it("フォームにsubmitボタンが存在する", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const submitButton = screen.getByRole("button", {
       name: "アカウント作成",
@@ -142,7 +135,7 @@ describe("SignUpForm", () => {
       true, // pending = true
     ]);
 
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     expect(screen.getByText("登録中...")).toBeInTheDocument();
   });
@@ -154,7 +147,7 @@ describe("SignUpForm", () => {
       true, // pending = true
     ]);
 
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const nameInput = screen.getByPlaceholderText("山田太郎");
     const emailInput = screen.getByPlaceholderText("example@email.com");
@@ -182,7 +175,7 @@ describe("SignUpForm", () => {
       false,
     ]);
 
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     expect(screen.getByText("名前を入力してください")).toBeInTheDocument();
     expect(
@@ -211,7 +204,7 @@ describe("SignUpForm", () => {
       false,
     ]);
 
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     await waitFor(() => {
       expect(mockToastError).toHaveBeenCalledWith("登録に失敗しました");
@@ -219,24 +212,21 @@ describe("SignUpForm", () => {
   });
 
   it("区切り線とテキストが表示される", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
     expect(screen.getByText("または")).toBeInTheDocument();
   });
 
   it("すべてのラベルが正しく表示される", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
-    expect(screen.getByText("お名前")).toBeInTheDocument();
+    render(<SignUpForm />);
+    expect(screen.getByText("ニックネーム")).toBeInTheDocument();
     expect(screen.getByText("メールアドレス")).toBeInTheDocument();
-    // パスワードラベルは2つある（パスワード、パスワード確認）
-    const passwordLabels = screen.getAllByText("パスワード");
-    expect(passwordLabels).toHaveLength(1);
+    expect(screen.getByText("パスワード")).toBeInTheDocument();
     expect(screen.getByText("パスワード確認")).toBeInTheDocument();
-    expect(screen.getByText("取得地域（都道府県）")).toBeInTheDocument();
   });
 
   it("名前フィールドにテキスト入力ができる", async () => {
     const user = userEvent.setup();
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const nameInput = screen.getByPlaceholderText("山田太郎");
     await user.type(nameInput, "テスト太郎");
@@ -246,7 +236,7 @@ describe("SignUpForm", () => {
 
   it("メールアドレスフィールドにテキスト入力ができる", async () => {
     const user = userEvent.setup();
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const emailInput = screen.getByPlaceholderText("example@email.com");
     await user.type(emailInput, "test@example.com");
@@ -256,7 +246,7 @@ describe("SignUpForm", () => {
 
   it("パスワードフィールドにテキスト入力ができる", async () => {
     const user = userEvent.setup();
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const passwordInput = screen.getByPlaceholderText("8文字以上で入力");
     await user.type(passwordInput, "password123");
@@ -266,27 +256,12 @@ describe("SignUpForm", () => {
 
   it("パスワード確認フィールドにテキスト入力ができる", async () => {
     const user = userEvent.setup();
-    render(<SignUpForm prefectures={mockPrefectures} />);
+    render(<SignUpForm />);
 
     const confirmPasswordInput =
       screen.getByPlaceholderText("パスワードを再入力");
     await user.type(confirmPasswordInput, "password123");
 
     expect(confirmPasswordInput).toHaveValue("password123");
-  });
-
-  it("都道府県選択フィールドが表示される", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
-
-    expect(screen.getByText("取得地域（都道府県）")).toBeInTheDocument();
-    expect(screen.getByText("都道府県を選択してください")).toBeInTheDocument();
-  });
-
-  it("都道府県選択フィールドが有効である", () => {
-    render(<SignUpForm prefectures={mockPrefectures} />);
-
-    const selectTrigger = screen.getByRole("combobox");
-    expect(selectTrigger).toBeInTheDocument();
-    expect(selectTrigger).toBeEnabled();
   });
 });
