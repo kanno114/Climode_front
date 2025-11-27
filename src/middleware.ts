@@ -12,10 +12,13 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/evening");
 
   if (requiresAuth) {
-    // Cookieからアクセストークンの存在をチェック（軽量）
+    // Cookieからアクセストークンとリフレッシュトークンの存在をチェック
     const accessToken = request.cookies.get("access_token")?.value;
+    const refreshToken = request.cookies.get("refresh_token")?.value;
 
-    if (!accessToken) {
+    // アクセストークンまたはリフレッシュトークンのいずれかが存在すれば通過
+    // アクセストークンが期限切れの場合、layout.tsxでリフレッシュを試みる
+    if (!accessToken && !refreshToken) {
       return NextResponse.redirect(
         new URL("/signin?message=login_required", origin)
       );

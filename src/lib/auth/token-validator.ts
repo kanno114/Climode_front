@@ -137,9 +137,9 @@ export async function validateTokenWithApi(): Promise<TokenValidationResult> {
     const response = await fetch(validateEndpoint, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
       },
     });
 

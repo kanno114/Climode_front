@@ -9,7 +9,11 @@ interface ToastMessageProps {
   duration: number;
 }
 
-export function ToastMessage({ message, description, duration }: ToastMessageProps) {
+export function ToastMessage({
+  message,
+  description,
+  duration,
+}: ToastMessageProps) {
   useEffect(() => {
     setTimeout(() => {
       toast.error(message, {
