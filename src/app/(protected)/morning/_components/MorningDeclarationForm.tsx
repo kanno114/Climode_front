@@ -19,8 +19,8 @@ export function MorningDeclarationForm() {
     undefined
   );
   const [sleepHours, setSleepHours] = useState<number[]>([6]);
-  const [mood, setMood] = useState<number>(0);
-  const [fatigue, setFatigue] = useState<number>(0);
+  const [mood, setMood] = useState<number>(3);
+  const [fatigue, setFatigue] = useState<number>(3);
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {
@@ -41,24 +41,24 @@ export function MorningDeclarationForm() {
     shouldRevalidate: "onInput",
     defaultValue: {
       sleep_hours: "6",
-      mood: "0",
-      fatigue: "0",
+      mood: "3",
+      fatigue: "3",
     },
   });
 
   const moodOptions = [
-    { value: -5, emoji: "😢", label: "とても悪い" },
-    { value: -2, emoji: "😕", label: "悪い" },
-    { value: 0, emoji: "😐", label: "普通" },
-    { value: 2, emoji: "🙂", label: "良い" },
+    { value: 1, emoji: "😢", label: "とても悪い" },
+    { value: 2, emoji: "😕", label: "悪い" },
+    { value: 3, emoji: "😐", label: "普通" },
+    { value: 4, emoji: "🙂", label: "良い" },
     { value: 5, emoji: "😊", label: "とても良い" },
   ];
 
   const fatigueOptions = [
-    { value: -5, label: "とても低い" },
-    { value: -2, label: "低い" },
-    { value: 0, label: "普通" },
-    { value: 2, label: "高い" },
+    { value: 1, label: "とても低い" },
+    { value: 2, label: "低い" },
+    { value: 3, label: "普通" },
+    { value: 4, label: "高い" },
     { value: 5, label: "とても高い" },
   ];
 
@@ -119,7 +119,7 @@ export function MorningDeclarationForm() {
         <div className="space-y-2">
           <Label htmlFor="mood">
             <Heart className="inline mr-2 h-4 w-4" />
-            気分（-5〜5）
+            気分（1〜5）
           </Label>
           <div className="grid grid-cols-5 gap-2">
             {moodOptions.map((option) => (
@@ -153,7 +153,7 @@ export function MorningDeclarationForm() {
         <div className="space-y-2">
           <Label htmlFor="fatigue">
             <Zap className="inline mr-2 h-4 w-4" />
-            疲労感（-5〜5）
+            疲労感（1〜5）
           </Label>
           <div className="grid grid-cols-5 gap-2">
             {fatigueOptions.map((option) => (

@@ -62,8 +62,8 @@ describe("MorningDeclarationForm", () => {
     render(<MorningDeclarationForm />);
 
     expect(screen.getByText("睡眠時間（時間）")).toBeInTheDocument();
-    expect(screen.getByText("気分（-5〜5）")).toBeInTheDocument();
-    expect(screen.getByText("疲労感（-5〜5）")).toBeInTheDocument();
+    expect(screen.getByText("気分（1〜5）")).toBeInTheDocument();
+    expect(screen.getByText("疲労感（1〜5）")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "今日のシグナルを見る" })
     ).toBeInTheDocument();
