@@ -92,17 +92,17 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
             </Alert>
           )}
 
-          {/* 名前 */}
+          {/* ニックネーム */}
           <div className="space-y-2">
             <Label htmlFor={fields.name.id} className="flex items-center gap-2">
               <User className="h-4 w-4" />
-              お名前
+              ニックネーム
             </Label>
             <Input
               id={fields.name.id}
               name={fields.name.name}
               type="text"
-              placeholder="お名前を入力してください"
+              placeholder="ニックネームを入力してください"
               defaultValue={fields.name.initialValue}
               className={fields.name.errors ? "border-red-500" : ""}
             />

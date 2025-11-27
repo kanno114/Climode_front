@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Climode - 体調管理アプリ",
   description:
-    "睡眠・気分・症状などの身体データと、天気・気圧・花粉・PM2.5 などの環境データを統合して体調をスコア化する健康管理アプリ",
+    "睡眠・気分・症状などの身体データと、天気・気圧・湿度 などの環境データを統合して体調をスコア化する健康管理アプリ",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

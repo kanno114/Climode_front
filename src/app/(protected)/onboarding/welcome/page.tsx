@@ -1,101 +1,63 @@
-"use client";
+"use server";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import { checkUserTriggersAction } from "./actions";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
+import { fetchTriggerPresets, fetchUserTriggers } from "@/lib/api/triggers";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tutorial } from "./_components/Tutorial";
+  getProfileAction,
+  getPrefectures,
+} from "@/app/(protected)/profile/actions";
+import { OnboardingWizard } from "./_components/OnboardingWizard";
+import type { Trigger, UserTrigger } from "@/lib/schemas/triggers";
 
-export default function OnboardingWelcomePage() {
-  const router = useRouter();
-  const [showTutorial, setShowTutorial] = useState(true);
-  const [hasTriggers, setHasTriggers] = useState(false);
-  const [loading, setLoading] = useState(true);
+type PrefectureOption = {
+  id: number;
+  code: string;
+  name_ja: string;
+};
 
-  const checkUserTriggers = useCallback(async () => {
-    try {
-      const result = await checkUserTriggersAction();
-      if (result.error === "Not authenticated") {
-        router.push("/signin?message=login_required");
-        return;
-      }
-      if (result.hasTriggers) {
-        setHasTriggers(true);
-        router.push("/dashboard");
-      }
-    } catch {
-      // 失敗時は初回扱いでページ表示を続ける
-    } finally {
-      setLoading(false);
-    }
-  }, [router]);
-
-  useEffect(() => {
-    checkUserTriggers();
-  }, [checkUserTriggers]);
-
-  const handleTutorialComplete = () => {
-    setShowTutorial(false);
-  };
-
-  const handleTutorialSkip = () => {
-    setShowTutorial(false);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">読み込み中...</p>
-        </div>
-      </div>
-    );
+export default async function OnboardingWelcomePage() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    redirect("/signin?message=login_required");
   }
 
-  if (hasTriggers) {
-    return null;
+  const prefectureList = (await getPrefectures()) ?? [];
+  const prefectures: PrefectureOption[] = prefectureList;
+  let triggerPresets: Trigger[] = [];
+  let userTriggers: UserTrigger[] = [];
+
+  try {
+    const [presets, triggers] = await Promise.all([
+      fetchTriggerPresets(session.user.id),
+      fetchUserTriggers(session.user.id),
+    ]);
+    triggerPresets = presets;
+    userTriggers = triggers;
+  } catch (error) {
+    console.error("Failed to load onboarding data:", error);
   }
+
+  let profile = null;
+  try {
+    profile = await getProfileAction();
+  } catch (error) {
+    console.error("Failed to load profile:", error);
+  }
+  const initialPrefectureId = profile?.user?.prefecture_id ?? null;
+  const initialTriggerKeys = (userTriggers ?? []).map(
+    (item) => item.trigger.key
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto max-w-3xl px-4 py-12">
-        {showTutorial ? (
-          <Tutorial
-            onComplete={handleTutorialComplete}
-            onSkip={handleTutorialSkip}
-          />
-        ) : (
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-2xl">ようこそ！</CardTitle>
-              <CardDescription>
-                はじめに、あなたの体調に影響する「トリガー」を設定しましょう。
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <p className="text-muted-foreground">
-                設定すると通知や提案が最適化されます。後からいつでも変更できます。
-              </p>
-              <div className="flex gap-3">
-                <Button asChild>
-                  <Link href="/settings/triggers">設定を開始する</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/dashboard">あとで</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+      <div className="container mx-auto max-w-4xl px-4 py-12">
+        <OnboardingWizard
+          prefectures={prefectures}
+          initialPrefectureId={initialPrefectureId}
+          triggerPresets={triggerPresets}
+          initialSelectedTriggerKeys={initialTriggerKeys}
+        />
       </div>
     </div>
   );

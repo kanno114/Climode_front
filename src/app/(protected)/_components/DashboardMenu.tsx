@@ -17,7 +17,7 @@ import {
   LogOut,
   Home,
   Settings,
-  Moon,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -41,38 +41,37 @@ export default function DashboardMenu({ user }: Props) {
     setOpen(false);
   }, [pathname]);
 
-  const menuItems = [
-    {
-      icon: Home,
-      label: "ダッシュボード",
-      href: "/dashboard",
-      description: "ホーム画面に戻る",
-    },
-    {
-      icon: Moon,
-      label: "夜の振り返り",
-      href: "/evening",
-      description: "一日の振り返りを記録",
-    },
-    {
-      icon: Calendar,
-      label: "カレンダー",
-      href: "/calendar",
-      description: "記録をカレンダーで確認",
-    },
-    {
-      icon: BarChart3,
-      label: "週間レポート",
-      href: "/dashboard/weekly",
-      description: "週間サマリーと週次レポートを確認",
-    },
-    {
-      icon: Settings,
-      label: "トリガー設定",
-      href: "/settings/triggers",
-      description: "通知に使う要因を設定・編集",
-    },
-  ];
+  // チュートリアル中はメニュー項目を制限
+  const isOnboarding = pathname.startsWith("/onboarding/welcome");
+
+  const menuItems = isOnboarding
+    ? []
+    : [
+        {
+          icon: Home,
+          label: "ダッシュボード",
+          href: "/dashboard",
+          description: "ホーム画面に戻る",
+        },
+        {
+          icon: Calendar,
+          label: "カレンダー",
+          href: "/calendar",
+          description: "記録をカレンダーで確認",
+        },
+        {
+          icon: BarChart3,
+          label: "週間レポート",
+          href: "/dashboard/weekly",
+          description: "週間サマリーと週次レポートを確認",
+        },
+        {
+          icon: Zap,
+          label: "トリガー設定",
+          href: "/settings/triggers",
+          description: "通知に使う要因を設定・編集",
+        },
+      ];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -103,6 +102,7 @@ export default function DashboardMenu({ user }: Props) {
                 {user?.email}
               </p>
             </div>
+            <Settings className="h-6 w-6 text-gray-600 dark:text-gray-400" />
           </div>
         </Link>
 

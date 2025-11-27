@@ -1,11 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { NotebookPen } from "lucide-react";
 import Suggestions from "./Suggestions";
 import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
 import { SignalsList } from "./SignalsList";
-import { getTimeOfDay, type TimeOfDay } from "@/lib/time-based";
 import { useEffect, useState } from "react";
 
 type SignalEvent = {
@@ -59,19 +58,10 @@ export function AfterInputContent({
   bodySignals,
   envSignals,
 }: AfterInputContentProps) {
-  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>(() => getTimeOfDay());
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    setTimeOfDay(getTimeOfDay());
-
-    // 時間帯が変わる可能性があるので、1時間ごとにチェック
-    const interval = setInterval(() => {
-      setTimeOfDay(getTimeOfDay());
-    }, 60 * 60 * 1000); // 1時間ごと
-
-    return () => clearInterval(interval);
   }, []);
 
   const normalizedBodySignals = Array.isArray(bodySignals) ? bodySignals : [];
@@ -87,17 +77,6 @@ export function AfterInputContent({
 
   return (
     <>
-      {/* 振り返り導線（夕方以降で未実施の場合） */}
-      {/* mountedフラグでクライアント側でのみ表示 */}
-      {mounted &&
-        !hasReflection &&
-        (timeOfDay === "evening" || timeOfDay === "night") && (
-          <div className="flex justify-center">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/evening">夜の振り返りに進む</Link>
-            </Button>
-          </div>
-        )}
       {/* 夜の振り返り表示（振り返り済みの場合のみ） */}
       {hasReflection && (
         <EveningReflectionDisplay
@@ -121,6 +100,19 @@ export function AfterInputContent({
             title="今日のシグナル"
           />
         </div>
+        {/* 振り返り導線（時間帯に関係なく未実施の場合に表示） */}
+        {/* mountedフラグでクライアント側でのみ表示 */}
+        {mounted && !hasReflection && (
+          <div className="flex justify-end mt-4">
+            <Link
+              href="/evening"
+              className="flex items-center gap-2 text-base text-gray-700 dark:text-gray-300 font-medium underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            >
+              <NotebookPen className="h-4 w-4" />
+              夜の振り返りを書く
+            </Link>
+          </div>
+        )}
       </div>
     </>
   );

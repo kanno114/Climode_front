@@ -7,11 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SignUpForm } from "./_components/SignUpForm";
-import { getPrefectures } from "../signup/actions";
 
 export default async function SignUpPage() {
-  const prefectures = await getPrefectures() || [];
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-md">
@@ -24,7 +21,7 @@ export default async function SignUpPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <SignUpForm prefectures={prefectures} />
+          <SignUpForm />
 
           <div className="text-center text-sm">
             <span className="text-muted-foreground">

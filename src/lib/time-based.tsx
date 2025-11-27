@@ -4,6 +4,18 @@ import { Sun, Moon, Sunset, Sunrise } from "lucide-react";
 export type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
 
 export function getTimeOfDay(): TimeOfDay {
+  const override = process.env
+    .NEXT_PUBLIC_TIME_OF_DAY_OVERRIDE as TimeOfDay | undefined;
+
+  if (
+    override === "morning" ||
+    override === "afternoon" ||
+    override === "evening" ||
+    override === "night"
+  ) {
+    return override;
+  }
+
   const now = new Date();
   const hour = now.getHours();
 
