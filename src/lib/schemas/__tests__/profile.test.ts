@@ -2,7 +2,7 @@ import { profileSchema } from "../profile";
 
 describe("profileSchema", () => {
   describe("成功ケース", () => {
-    it("有効な名前と都道府県IDを受け入れる", () => {
+    it("有効なニックネームと都道府県IDを受け入れる", () => {
       const validData = {
         name: "山田太郎",
         prefecture_id: "13",
@@ -12,7 +12,7 @@ describe("profileSchema", () => {
       expect(result.success).toBe(true);
     });
 
-    it("1文字の名前を受け入れる", () => {
+    it("1文字のニックネームを受け入れる", () => {
       const validData = {
         name: "太",
         prefecture_id: "1",
@@ -22,7 +22,7 @@ describe("profileSchema", () => {
       expect(result.success).toBe(true);
     });
 
-    it("50文字の名前を受け入れる", () => {
+    it("50文字のニックネームを受け入れる", () => {
       const validData = {
         name: "あ".repeat(50),
         prefecture_id: "13",
@@ -33,8 +33,8 @@ describe("profileSchema", () => {
     });
   });
 
-  describe("名前のバリデーション", () => {
-    it("名前が空の場合エラーを返す", () => {
+  describe("ニックネームのバリデーション", () => {
+    it("ニックネームが空の場合エラーを返す", () => {
       const invalidData = {
         name: "",
         prefecture_id: "13",
@@ -43,11 +43,11 @@ describe("profileSchema", () => {
       const result = profileSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe("お名前を入力してください");
+        expect(result.error.issues[0].message).toBe("ニックネームを入力してください");
       }
     });
 
-    it("名前が未定義の場合エラーを返す", () => {
+    it("ニックネームが未定義の場合エラーを返す", () => {
       const invalidData = {
         prefecture_id: "13",
       };
@@ -56,13 +56,13 @@ describe("profileSchema", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         const nameError = result.error.issues.find((i) =>
-          i.message.includes("名前")
+          i.message.includes("ニックネーム")
         );
-        expect(nameError?.message).toBe("お名前を入力してください");
+        expect(nameError?.message).toBe("ニックネームを入力してください");
       }
     });
 
-    it("名前が50文字を超える場合エラーを返す", () => {
+    it("ニックネームが50文字を超える場合エラーを返す", () => {
       const invalidData = {
         name: "あ".repeat(51),
         prefecture_id: "13",
@@ -72,7 +72,7 @@ describe("profileSchema", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toBe(
-          "お名前は50文字以内で入力してください"
+          "ニックネームは50文字以内で入力してください"
         );
       }
     });
