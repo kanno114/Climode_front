@@ -62,7 +62,7 @@ export default function DashboardMenu({ user }: Props) {
         {
           icon: BarChart3,
           label: "週間レポート",
-          href: "/dashboard/weekly",
+          href: "/reports/weekly",
           description: "週間サマリーと週次レポートを確認",
         },
         {

@@ -23,7 +23,7 @@ export function WeeklyReportNavigation({
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", "report");
     params.set("start", newWeekStart);
-    router.push(`/dashboard/weekly?${params.toString()}`);
+    router.push(`/reports/weekly?${params.toString()}`);
   };
 
   return (
@@ -49,4 +49,3 @@ export function WeeklyReportNavigation({
     </div>
   );
 }
-
