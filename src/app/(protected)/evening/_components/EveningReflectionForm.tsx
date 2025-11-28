@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   submitEveningReflection,
   getTodaySuggestions,
+  getTodayDailyLog,
 } from "@/app/(protected)/evening/actions";
 import { eveningReflectionSchema } from "@/lib/schemas/evening-reflection";
 import { SuggestionFeedbackCard } from "./SuggestionFeedbackCard";
@@ -49,11 +50,51 @@ export function EveningReflectionForm() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const suggestionsData = await getTodaySuggestions();
+
+        // 提案データと既存の振り返りデータを並列取得
+        const [suggestionsData, dailyLogData] = await Promise.all([
+          getTodaySuggestions(),
+          getTodayDailyLog(),
+        ]);
 
         if (suggestionsData) {
           setSuggestions(suggestionsData);
-          // 初期値は設定しない（nullのまま）
+        }
+
+        // 既存の振り返りデータがあればフォームに反映
+        if (dailyLogData) {
+          // メモを設定
+          if (dailyLogData.note) {
+            setNote(dailyLogData.note);
+          }
+
+          // セルフスコアを設定
+          if (
+            dailyLogData.self_score !== null &&
+            dailyLogData.self_score !== undefined
+          ) {
+            setSelfScore(dailyLogData.self_score);
+          }
+
+          // 提案フィードバックを設定
+          if (
+            dailyLogData.suggestion_feedbacks &&
+            Array.isArray(dailyLogData.suggestion_feedbacks)
+          ) {
+            const feedbacksMap: Record<string, boolean> = {};
+            dailyLogData.suggestion_feedbacks.forEach(
+              (feedback: { suggestion_key: string; helpfulness: boolean }) => {
+                if (
+                  feedback.suggestion_key &&
+                  feedback.helpfulness !== null &&
+                  feedback.helpfulness !== undefined
+                ) {
+                  feedbacksMap[feedback.suggestion_key] = feedback.helpfulness;
+                }
+              }
+            );
+            setSuggestionFeedbacks(feedbacksMap);
+          }
         }
 
         setError(null);
