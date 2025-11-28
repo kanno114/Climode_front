@@ -22,10 +22,25 @@ export interface WeeklyReportSignals {
   by_day: WeeklyReportSignalByDay[];
 }
 
+export interface DailyLogByDay {
+  date: string;
+  sleep_hours: number | null;
+  mood: number | null;
+  fatigue_level: number | null;
+}
+
 export interface WeeklyReportDaily {
   avg_sleep_hours: number | null;
   avg_mood: number | null;
   avg_fatigue_level: number | null;
+  by_day: DailyLogByDay[];
+}
+
+export interface FeedbackByDay {
+  date: string;
+  has_feedback: boolean;
+  helpfulness: boolean | null;
+  self_score: number | null;
 }
 
 export interface WeeklyReportFeedback {
@@ -34,6 +49,110 @@ export interface WeeklyReportFeedback {
     helpful: number;
     not_helpful: number;
   };
+  avg_self_score: number | null;
+  self_score_distribution: {
+    1: number;
+    2: number;
+    3: number;
+  };
+  by_day: FeedbackByDay[];
+}
+
+export interface Statistics {
+  mean: number | null;
+  median: number | null;
+  std_dev: number | null;
+  min: number | null;
+  max: number | null;
+  q1: number | null;
+  q2: number | null;
+  q3: number | null;
+  coefficient_of_variation: number | null;
+}
+
+export interface HealthMetrics {
+  sleep_hours: Statistics;
+  mood: Statistics;
+  fatigue_level: Statistics;
+  score: Statistics;
+}
+
+export interface WeatherMetrics {
+  temperature_c: Statistics;
+  humidity_pct: Statistics;
+  pressure_hpa: Statistics;
+  pressure_drop_6h: Statistics;
+  pressure_drop_24h: Statistics;
+}
+
+export interface WeeklyComparison {
+  score_diff: number | null;
+  score_change_rate: number | null;
+  current_avg: number | null;
+  previous_avg: number | null;
+}
+
+export interface WeeklyStatistics {
+  health_metrics: HealthMetrics;
+  weather_metrics: WeatherMetrics;
+  weekly_comparison: WeeklyComparison | null;
+}
+
+export interface WeatherHealthCorrelations {
+  pressure_score: number | null;
+  pressure_drop_24h_score: number | null;
+  pressure_drop_6h_score: number | null;
+  humidity_score: number | null;
+  temperature_score: number | null;
+}
+
+export interface HealthHealthCorrelations {
+  sleep_score: number | null;
+  mood_fatigue: number | null;
+  sleep_mood: number | null;
+}
+
+export interface ConditionalAverages {
+  pressure_drop_low_score: number | null;
+  pressure_drop_high_score: number | null;
+  high_humidity_score: number | null;
+  low_humidity_score: number | null;
+  rapid_pressure_drop_score: number | null;
+  rapid_pressure_rise_score: number | null;
+  sleep_insufficient_score: number | null;
+  sleep_sufficient_score: number | null;
+  low_mood_fatigue: number | null;
+}
+
+export interface SignalHealthAnalysis {
+  with_signals_avg: number | null;
+  without_signals_avg: number | null;
+  signal_count: number;
+}
+
+export interface Correlations {
+  weather_health_correlations: WeatherHealthCorrelations;
+  health_health_correlations: HealthHealthCorrelations;
+  conditional_averages: ConditionalAverages;
+  signal_health_analysis: SignalHealthAnalysis;
+}
+
+export interface WeekdayStats {
+  avg_score: number | null;
+  avg_sleep_hours: number | null;
+  avg_mood: number | null;
+  count: number;
+}
+
+export interface WeekHalfComparison {
+  first_half_avg: number;
+  second_half_avg: number;
+  score_diff: number;
+}
+
+export interface WeeklyPatterns {
+  weekday_stats: Record<number, WeekdayStats>;
+  week_half_comparison: WeekHalfComparison | null;
 }
 
 export interface WeeklyReport {
@@ -42,4 +161,7 @@ export interface WeeklyReport {
   daily: WeeklyReportDaily;
   feedback: WeeklyReportFeedback;
   insight: string;
+  statistics: WeeklyStatistics;
+  correlations: Correlations;
+  patterns: WeeklyPatterns;
 }

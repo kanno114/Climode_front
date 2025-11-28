@@ -54,4 +54,3 @@ export async function getWeeklyReport(
     return null;
   }
 }
-
