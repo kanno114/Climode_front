@@ -7,6 +7,7 @@ jest.mock("@conform-to/react", () => ({
 
 jest.mock("@/app/(protected)/evening/actions", () => ({
   getTodaySuggestions: jest.fn(),
+  getTodayDailyLog: jest.fn(),
   submitEveningReflection: jest.fn(),
 }));
 
@@ -26,7 +27,10 @@ jest.mock("sonner", () => ({
 }));
 
 import { EveningReflectionForm } from "../EveningReflectionForm";
-import { getTodaySuggestions } from "@/app/(protected)/evening/actions";
+import {
+  getTodaySuggestions,
+  getTodayDailyLog,
+} from "@/app/(protected)/evening/actions";
 import { toast } from "sonner";
 
 describe("EveningReflectionForm", () => {
@@ -61,6 +65,7 @@ describe("EveningReflectionForm", () => {
     mockUseActionState.mockImplementation(() => [undefined, jest.fn(), false]);
     mockUseTransition.mockImplementation(() => [false, jest.fn()]);
     (getTodaySuggestions as jest.Mock).mockResolvedValue(mockSuggestions);
+    (getTodayDailyLog as jest.Mock).mockResolvedValue(null);
   });
 
   it("ローディング状態が表示される", () => {
@@ -169,8 +174,9 @@ describe("EveningReflectionForm", () => {
     render(<EveningReflectionForm />);
 
     await waitFor(() => {
-      expect(screen.getByText("データの取得に失敗しました")).toBeInTheDocument();
+      expect(
+        screen.getByText("データの取得に失敗しました")
+      ).toBeInTheDocument();
     });
   });
 });
-

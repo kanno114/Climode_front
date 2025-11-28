@@ -7,10 +7,12 @@ import {
 } from "@/components/ui/card";
 
 const upcomingFeatures = [
-  { label: "花粉・PM2.5データ連携", description: "季節要因もシグナルに反映" },
   { label: "体調予測機能", description: "1日のリズムから先読み" },
-  { label: "週次レポート", description: "振り返りを簡単に" },
   { label: "SNS共有機能", description: "気づきを家族とシェア" },
+  {
+    label: "カスタムトリガー設定",
+    description: "自分に合った体調のトリガーを登録",
+  },
 ];
 
 export function UpcomingFeatures() {

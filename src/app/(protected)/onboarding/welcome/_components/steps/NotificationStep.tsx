@@ -21,7 +21,10 @@ type NotificationStepProps = {
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
-export function NotificationStep({ onComplete, onSkip }: NotificationStepProps) {
+export function NotificationStep({
+  onComplete,
+  onSkip,
+}: NotificationStepProps) {
   const [supported, setSupported] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -96,7 +99,7 @@ export function NotificationStep({ onComplete, onSkip }: NotificationStepProps) 
       <div className="flex items-center gap-3 rounded-md border border-primary/40 bg-primary/5 px-4 py-3 text-sm">
         <ShieldCheck className="h-4 w-4 text-primary" />
         <p>
-          通知は毎日朝・夜の2回だけ。必要なときは設定からいつでも無効にできます。
+          通知は毎日朝7時・夜20時の2回だけ。必要なときは設定からいつでも無効にできます。
         </p>
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -130,5 +133,3 @@ export function NotificationStep({ onComplete, onSkip }: NotificationStepProps) 
     </div>
   );
 }
-
-
