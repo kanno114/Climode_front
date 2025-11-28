@@ -27,7 +27,7 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
           まずは「取得地域（都道府県）」を設定します。
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>環境データを組み合わせたシグナルが毎朝届きます</li>
+          <li>環境データを組み合わせたシグナルが毎朝7時に届きます</li>
           <li>地域に合わせたアドバイスで無理のない過ごし方を提案</li>
         </ul>
         <p className="pt-2">
@@ -71,11 +71,11 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
     tutorial: (
       <div className="space-y-3 text-sm text-muted-foreground">
         <p>
-          通知を有効にすると、朝はシグナルのお知らせ、夜は振り返りのリマインドが届きます。
+          通知を有効にすると、朝7時はシグナルのお知らせ、夜20時は振り返りのリマインドが届きます。
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>朝：今日のシグナルと行動のヒント</li>
-          <li>夜：1分で終わる振り返りフォームへのご案内</li>
+          <li>朝7時：今日のシグナルと行動のヒント</li>
+          <li>夜20時：1分で終わる振り返りフォームへのご案内</li>
         </ul>
         <p className="pt-2">
           通知は設定からいつでも有効/無効に変更できます。不調な日でも負担にならない頻度で届けます。
