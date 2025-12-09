@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  type ChartOptions,
 } from "chart.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart3 } from "lucide-react";
@@ -67,7 +68,7 @@ export function WeeklySignalChart({ signals }: WeeklySignalChartProps) {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -78,8 +79,10 @@ export function WeeklySignalChart({ signals }: WeeklySignalChartProps) {
         backgroundColor: "rgba(0, 0, 0, 0.8)",
         padding: 12,
         callbacks: {
-          label: (context: { parsed: { y: number } }) =>
-            `発生数: ${context.parsed.y}回`,
+          label: (tooltipItem) => {
+            const value = tooltipItem.parsed.y;
+            return `発生数: ${value ?? 0}回`;
+          },
         },
       },
     },
@@ -117,4 +120,3 @@ export function WeeklySignalChart({ signals }: WeeklySignalChartProps) {
     </Card>
   );
 }
-

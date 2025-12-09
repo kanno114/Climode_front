@@ -6,10 +6,32 @@ import { auth } from "@/auth";
 import { fetchUserTriggers } from "@/lib/api/triggers";
 import { Suspense } from "react";
 import { Loading } from "@/components/ui/loading";
+import { redirect } from "next/navigation";
+import { getProfileAction } from "@/app/(protected)/profile/actions";
 
 export default async function DashboardPage() {
   const session = await auth();
-  const userId = session?.user?.id as string;
+  if (!session?.user?.id) {
+    redirect("/signin?message=login_required");
+  }
+
+  const userId = session.user.id;
+
+  // 都道府県の設定状況をチェック
+  try {
+    const profile = await getProfileAction();
+    const hasPrefecture = profile?.user?.prefecture_id != null;
+
+    // 都道府県が未設定の場合、オンボーディングへリダイレクト
+    if (!hasPrefecture) {
+      redirect("/onboarding/welcome");
+    }
+  } catch (error) {
+    console.error("オンボーディングチェックエラー:", error);
+    // エラー時もオンボーディングへリダイレクト（安全側に倒す）
+    redirect("/onboarding/welcome");
+  }
+
   let hasNoUserTriggers = false;
   try {
     const userTriggers = await fetchUserTriggers(userId);
