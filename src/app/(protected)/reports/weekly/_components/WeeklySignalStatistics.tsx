@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Activity, BarChart3 } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import type { WeeklyReportSignals } from "../types";
 
 interface WeeklySignalStatisticsProps {
@@ -132,4 +132,3 @@ export function WeeklySignalStatistics({
     </Card>
   );
 }
-
