@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TimeBasedHeader } from "./TimeBasedHeader";
 import { BeforeInputContent } from "./BeforeInputContent";
 import { AfterInputContent } from "./AfterInputContent";
+import { ForecastTableAutoScroll } from "./ForecastTable";
 import { getTodayDailyLog, getSuggestions, getTodaySignals } from "../actions";
 
 export async function TodayArea() {
@@ -24,6 +25,7 @@ export async function TodayArea() {
     <Card>
       <TimeBasedHeader hasDailyLog={hasDailyLog} />
       <CardContent className="space-y-6">
+        <ForecastTableAutoScroll />
         {!todayDailyLog ? (
           <BeforeInputContent envSignals={envSignals} />
         ) : (
