@@ -38,37 +38,44 @@ export function useOnboardingWizard({
       stepCompletion.prefecture &&
       currentStepIndex === totalSteps - 1
     ) {
+      // オンボーディング完了後はダッシュボードへリダイレクト
       router.push("/dashboard");
     }
   }, [stepCompletion, currentStepIndex, router, totalSteps]);
 
-  const handleStepComplete = useCallback((key: StepKey) => {
-    setStepCompletion((prev) => ({
-      ...prev,
-      [key]: true,
-    }));
+  const handleStepComplete = useCallback(
+    (key: StepKey) => {
+      setStepCompletion((prev) => ({
+        ...prev,
+        [key]: true,
+      }));
 
-    setCurrentStepIndex((prev) => {
-      if (prev < totalSteps - 1) {
-        return prev + 1;
-      }
-      return prev;
-    });
-  }, [totalSteps]);
+      setCurrentStepIndex((prev) => {
+        if (prev < totalSteps - 1) {
+          return prev + 1;
+        }
+        return prev;
+      });
+    },
+    [totalSteps]
+  );
 
-  const handleStepSkip = useCallback((key: StepKey) => {
-    setStepCompletion((prev) => ({
-      ...prev,
-      [key]: true,
-    }));
+  const handleStepSkip = useCallback(
+    (key: StepKey) => {
+      setStepCompletion((prev) => ({
+        ...prev,
+        [key]: true,
+      }));
 
-    setCurrentStepIndex((prev) => {
-      if (prev < totalSteps - 1) {
-        return prev + 1;
-      }
-      return prev;
-    });
-  }, [totalSteps]);
+      setCurrentStepIndex((prev) => {
+        if (prev < totalSteps - 1) {
+          return prev + 1;
+        }
+        return prev;
+      });
+    },
+    [totalSteps]
+  );
 
   const handleGoBack = useCallback(() => {
     setCurrentStepIndex((prev) => Math.max(0, prev - 1));
@@ -84,5 +91,3 @@ export function useOnboardingWizard({
     handleGoBack,
   };
 }
-
-
