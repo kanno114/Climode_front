@@ -30,6 +30,15 @@ type HourForecast = {
   pressureHpa: number;
 };
 
+// API (/api/v1/forecast) から返ってくる 1 点分のデータ形
+type ForecastPointFromApi = {
+  time: string;
+  temperature_c: number | null;
+  humidity_pct: number | null;
+  pressure_hpa: number | null;
+  weather_code: number | null;
+};
+
 const DEFAULT_LABEL_W = 120;
 const DEFAULT_CELL_W = 84; // だいたい1.2倍くらいの見た目を狙う
 
@@ -60,6 +69,28 @@ function getDeltaIcon(delta: number) {
   if (Math.abs(delta) < 0.05) return { Icon: Minus, className: "text-slate-400" };
   if (delta > 0) return { Icon: ArrowUp, className: "text-emerald-600" };
   return { Icon: ArrowDown, className: "text-orange-600" };
+}
+
+function mapWeatherCodeToCondition(
+  code: number | null | undefined
+): WeatherCondition {
+  if (code == null) return "clear";
+
+  // Open-Meteo weather_code にざっくり対応
+  if (code === 0) return "clear";
+  if ([1, 2].includes(code)) return "partly_cloudy";
+  if ([3, 45, 48].includes(code)) return "cloudy";
+  if (
+    [
+      51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82,
+    ].includes(code)
+  ) {
+    return "rain";
+  }
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "snow";
+  if ([95, 96, 99].includes(code)) return "thunder";
+
+  return "clear";
 }
 
 function buildDummyForecast(): HourForecast[] {
@@ -296,9 +327,35 @@ export function ForecastTable({
 }
 
 // 副作用（現在時刻取得 / 自動スクロール）だけを持つラッパー
-export function ForecastTableAutoScroll() {
+export function ForecastTableAutoScroll({
+  forecast,
+}: {
+  forecast: ForecastPointFromApi[] | null;
+}) {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const forecast = useMemo(() => buildDummyForecast(), []);
+  const hourForecast = useMemo<HourForecast[]>(() => {
+    if (!Array.isArray(forecast) || forecast.length === 0) {
+      // バックエンドやネットワークに問題があっても UI 自体は確認できるようダミーにフォールバック
+      return buildDummyForecast();
+    }
+
+    return forecast.map((point, index) => {
+      // SSR/CSR 間のタイムゾーン差による hydration mismatch を避けるため、
+      // 表示用の hour / timeLabel は Date ではなくインデックスから決め打ちする。
+      const hour = index % 24;
+      const timeLabel = `${String(hour).padStart(2, "0")}:00`;
+      const condition = mapWeatherCodeToCondition(point.weather_code ?? null);
+
+      return {
+        hour,
+        timeLabel,
+        condition,
+        tempC: typeof point.temperature_c === "number" ? point.temperature_c : NaN,
+        pressureHpa:
+          typeof point.pressure_hpa === "number" ? point.pressure_hpa : NaN,
+      };
+    });
+  }, [forecast]);
   const [currentHour, setCurrentHour] = useState<number | null>(null);
 
   useEffect(() => {
@@ -331,7 +388,7 @@ export function ForecastTableAutoScroll() {
 
   return (
     <ForecastTable
-      forecast={forecast}
+      forecast={hourForecast}
       currentHour={currentHour}
       scrollContainerRef={scrollRef}
     />

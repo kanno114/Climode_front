@@ -3,6 +3,14 @@
 import { auth } from "@/auth";
 import { apiFetch } from "@/lib/api/api-fetch";
 
+export type ForecastPoint = {
+  time: string;
+  temperature_c: number | null;
+  humidity_pct: number | null;
+  pressure_hpa: number | null;
+  weather_code: number | null;
+};
+
 export async function getTodaySignals(category?: "env" | "body") {
   const session = await auth();
   if (!session?.user) {
@@ -112,6 +120,46 @@ export async function getTodayDailyLog() {
     }
   } catch (error) {
     console.error("今日の記録取得エラー:", error);
+    return null;
+  }
+}
+
+export async function getForecastSeries(): Promise<ForecastPoint[] | null> {
+  const session = await auth();
+  if (!session?.user) {
+    return null;
+  }
+
+  try {
+    const res = await apiFetch(
+      `${process.env.API_BASE_URL_SERVER}/api/v1/forecast`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "User-Id": session.user.id,
+        },
+        // 予報なので、10分程度のキャッシュで十分
+        next: { revalidate: 600 },
+      }
+    );
+
+    if (res.ok) {
+      const json = (await res.json()) as ForecastPoint[];
+      return Array.isArray(json) ? json : [];
+    } else if (res.status === 422) {
+      console.error("予報取得失敗 - 都道府県が未設定です");
+      return null;
+    } else if (res.status === 401) {
+      console.error("認証エラー - セッションが無効です");
+      return null;
+    } else {
+      console.error("予報データ取得失敗:", res.status);
+      return null;
+    }
+  } catch (error) {
+    console.error("予報データ取得エラー:", error);
     return null;
   }
 }

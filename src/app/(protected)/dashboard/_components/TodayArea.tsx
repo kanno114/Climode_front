@@ -3,15 +3,22 @@ import { TimeBasedHeader } from "./TimeBasedHeader";
 import { BeforeInputContent } from "./BeforeInputContent";
 import { AfterInputContent } from "./AfterInputContent";
 import { ForecastTableAutoScroll } from "./ForecastTable";
-import { getTodayDailyLog, getSuggestions, getTodaySignals } from "../actions";
+import {
+  getTodayDailyLog,
+  getSuggestions,
+  getTodaySignals,
+  getForecastSeries,
+} from "../actions";
 
 export async function TodayArea() {
   // すべてのデータを並列で取得（Fetch-then-Render）
-  const [todayDailyLog, suggestions, allSignals] = await Promise.all([
-    getTodayDailyLog(),
-    getSuggestions(),
-    getTodaySignals(), // カテゴリー指定なしで全件取得
-  ]);
+  const [todayDailyLog, suggestions, allSignals, forecastSeries] =
+    await Promise.all([
+      getTodayDailyLog(),
+      getSuggestions(),
+      getTodaySignals(), // カテゴリー指定なしで全件取得
+      getForecastSeries(),
+    ]);
 
   const normalizedSuggestions = Array.isArray(suggestions) ? suggestions : [];
   const hasDailyLog = todayDailyLog !== null;
@@ -25,7 +32,7 @@ export async function TodayArea() {
     <Card>
       <TimeBasedHeader hasDailyLog={hasDailyLog} />
       <CardContent className="space-y-6">
-        <ForecastTableAutoScroll />
+        <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
         {!todayDailyLog ? (
           <BeforeInputContent envSignals={envSignals} />
         ) : (
