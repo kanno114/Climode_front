@@ -4,6 +4,17 @@ import { useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import {
   Activity,
   Heart,
   Thermometer,
@@ -114,6 +125,8 @@ export default function Suggestions({
   emptyTitle = "今日の行動提案",
   emptyMessage = "今日は特別な提案はありません",
 }: SuggestionsProps) {
+  const canHover = useMediaQuery("(hover: hover)");
+
   const getCategoryStyle = useCallback((category: string) => {
     return (
       categoryConfig[category as keyof typeof categoryConfig] ||
@@ -129,6 +142,36 @@ export default function Suggestions({
     const IconComponent = tagIconMap[tag as keyof typeof tagIconMap] || Zap;
     return <IconComponent className="w-3 h-3" />;
   }, []);
+
+  const renderDetailContent = useCallback(
+    (suggestion: Suggestion) => (
+      <>
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+          {suggestion.message}
+        </p>
+        {suggestion.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {suggestion.tags.map((tag) => {
+              const tagStyle = getTagStyle(tag);
+              return (
+                <Badge
+                  key={tag}
+                  variant="outline"
+                  className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
+                >
+                  <span className="flex items-center gap-1">
+                    {getTagIcon(tag)}
+                    {tag}
+                  </span>
+                </Badge>
+              );
+            })}
+          </div>
+        )}
+      </>
+    ),
+    [getTagStyle, getTagIcon]
+  );
 
   if (suggestions.length === 0) {
     return (
@@ -151,58 +194,60 @@ export default function Suggestions({
   }
 
   return (
-    <Card>
+    <Card className="py-4 gap-4">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Zap className="w-5 h-5" />
           {title}
         </CardTitle>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          ホバーまたはタップで詳細を表示
+        </p>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {suggestions
           .sort((a, b) => b.severity - a.severity)
           .map((suggestion) => {
             const categoryStyle = getCategoryStyle(suggestion.category);
-
-            return (
+            const trigger = (
               <article
-                key={suggestion.key}
-                className={`p-3 rounded border ${categoryStyle.cardBgColor} ${categoryStyle.borderColor}`}
+                className={`flex items-center justify-between gap-2 p-2 rounded border cursor-pointer ${categoryStyle.cardBgColor} ${categoryStyle.borderColor}`}
+                title={canHover ? "ホバーで詳細を表示" : "タップで詳細を表示"}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold text-base text-gray-900 dark:text-white">
-                    {suggestion.title}
-                  </h4>
-                  <Badge
-                    variant="secondary"
-                    className={`text-xs ${categoryStyle.color} ${categoryStyle.bgColor}`}
-                  >
-                    {suggestion.severity}
-                  </Badge>
-                </div>
-
-                <p className="text-sm text-gray-700 mb-2">
-                  {suggestion.message}
-                </p>
-
-                <div className="flex flex-wrap gap-1">
-                  {suggestion.tags.map((tag) => {
-                    const tagStyle = getTagStyle(tag);
-                    return (
-                      <Badge
-                        key={tag}
-                        variant="outline"
-                        className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
-                      >
-                        <span className="flex items-center gap-1">
-                          {getTagIcon(tag)}
-                          {tag}
-                        </span>
-                      </Badge>
-                    );
-                  })}
-                </div>
+                <h4 className="font-semibold text-sm text-gray-900 dark:text-white truncate min-w-0">
+                  {suggestion.title}
+                </h4>
+                <Badge
+                  variant="secondary"
+                  className={`text-xs shrink-0 ${categoryStyle.color} ${categoryStyle.bgColor}`}
+                >
+                  {suggestion.severity}
+                </Badge>
               </article>
+            );
+
+            return canHover ? (
+              <HoverCard key={suggestion.key} openDelay={300} closeDelay={100}>
+                <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
+                <HoverCardContent
+                  className="w-80"
+                  side="top"
+                  align="start"
+                >
+                  {renderDetailContent(suggestion)}
+                </HoverCardContent>
+              </HoverCard>
+            ) : (
+              <Popover key={suggestion.key}>
+                <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+                <PopoverContent
+                  className="w-80"
+                  side="top"
+                  align="start"
+                >
+                  {renderDetailContent(suggestion)}
+                </PopoverContent>
+              </Popover>
             );
           })}
       </CardContent>
