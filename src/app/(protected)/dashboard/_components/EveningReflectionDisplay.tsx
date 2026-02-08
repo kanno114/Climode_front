@@ -37,7 +37,7 @@ export function EveningReflectionDisplay({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900/50">
+    <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/50">
       <div className="flex items-center gap-3">
         <NotebookPen className="h-5 w-5 text-indigo-500" />
         <div className="space-y-1">

@@ -23,7 +23,7 @@ export function BeforeInputContent({ envSignals }: BeforeInputContentProps) {
   const normalizedEnvSignals = Array.isArray(envSignals) ? envSignals : [];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="grid gap-4 lg:grid-cols-2">
       <SignalsList
         signals={normalizedEnvSignals}
         hasError={envSignals === null}
@@ -40,7 +40,7 @@ export function BeforeInputContent({ envSignals }: BeforeInputContentProps) {
         <p className="text-sm text-muted-foreground">
           睡眠・気分・疲労感を数タップで記録し、今日のシグナルづくりに役立てます。
         </p>
-        <div className="pt-4">
+        <div className="pt-2">
           <MorningDeclarationForm />
         </div>
       </div>

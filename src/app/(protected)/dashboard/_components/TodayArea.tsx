@@ -29,9 +29,9 @@ export async function TodayArea() {
   const bodySignals = normalizedAllSignals.filter((s) => s.category === "body");
 
   return (
-    <Card>
+    <Card className="py-4 gap-4">
       <TimeBasedHeader hasDailyLog={hasDailyLog} />
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
         {!todayDailyLog ? (
           <BeforeInputContent envSignals={envSignals} />

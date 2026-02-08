@@ -11,7 +11,7 @@ export async function Header() {
 
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <div>
             <Link href="/dashboard">
@@ -23,7 +23,7 @@ export async function Header() {
               </p>
             </Link>
           </div>
-          <div className="flex items-center gap-6 p-4">
+          <div className="flex items-center gap-4 p-2">
             <DashboardMenu user={user.user} />
           </div>
         </div>

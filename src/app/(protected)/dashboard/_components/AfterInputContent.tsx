@@ -89,10 +89,10 @@ export function AfterInputContent({
       )}
       {/* 体調シグナルと提案 */}
       <div>
-        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+        <h2 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">
           今日はこうした方がいいかも
         </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Suggestions suggestions={suggestions} />
           <SignalsList
             signals={combinedSignals}
@@ -103,7 +103,7 @@ export function AfterInputContent({
         {/* 振り返り導線（時間帯に関係なく未実施の場合に表示） */}
         {/* mountedフラグでクライアント側でのみ表示 */}
         {mounted && !hasReflection && (
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end mt-2">
             <Link
               href="/evening"
               className="flex items-center gap-2 text-base text-gray-700 dark:text-gray-300 font-medium underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"

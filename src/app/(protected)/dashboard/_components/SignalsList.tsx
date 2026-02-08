@@ -3,6 +3,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { AlertTriangle, ActivitySquare, Sun, Thermometer } from "lucide-react";
 import { extractMetaText, formatObservedValue } from "@/lib/signal-format";
 
@@ -77,6 +88,8 @@ export function SignalsList({
   emptyMessage = "今日は特に注意する点はありません ☀️",
   emptySubMessage = "穏やかなコンディションで過ごせそうです。",
 }: SignalsListProps) {
+  const canHover = useMediaQuery("(hover: hover)");
+
   if (hasError) {
     return (
       <Card>
@@ -118,14 +131,17 @@ export function SignalsList({
   }
 
   return (
-    <Card>
+    <Card className="py-4 gap-4">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Thermometer className="h-5 w-5 text-slate-600" />
           {title}
         </CardTitle>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          ホバーまたはタップで詳細を表示
+        </p>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-2">
         {signals.map((signal) => {
           const IconComponent =
             categoryIconMap[signal.category] || ActivitySquare;
@@ -133,38 +149,62 @@ export function SignalsList({
           const metaText = extractMetaText(signal.meta);
           const observedValue = formatObservedValue(signal.meta);
 
-          return (
+          const trigger = (
             <article
-              key={`${signal.id}-${signal.trigger_key}`}
-              className={`rounded-lg border p-4 ${style.container}`}
+              className={`flex items-center gap-2 rounded-lg border p-2 cursor-pointer ${style.container}`}
+              title={canHover ? "ホバーで詳細を表示" : "タップで詳細を表示"}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs text-muted-foreground">トリガー</p>
-                  <p className="text-lg font-semibold">
-                    {signal.trigger_key_label || signal.trigger_key}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                    <IconComponent className="h-3.5 w-3.5" />
-                    <span>{signal.category === "env" ? "環境" : "体調"}</span>
-                    <span>優先度 {signal.priority}</span>
-                  </div>
-                </div>
-                <Badge className={`${style.badge} border`}>{style.label}</Badge>
-              </div>
+              <IconComponent className="h-4 w-4 shrink-0 text-slate-600" />
+              <p className="font-medium text-slate-900 dark:text-white truncate min-w-0">
+                {signal.trigger_key_label || signal.trigger_key}
+              </p>
+              <Badge
+                className={`shrink-0 border ${style.badge}`}
+              >
+                {style.label}
+              </Badge>
+            </article>
+          );
+
+          const detailContent = (
+            <div className="space-y-2">
               {observedValue && (
-                <div className="mt-3 p-2 bg-white/60 dark:bg-slate-800/60 rounded text-sm">
+                <div className="p-2 bg-white/60 dark:bg-slate-800/60 rounded text-sm">
                   <p className="font-medium text-slate-900 dark:text-white">
                     {observedValue}
                   </p>
                 </div>
               )}
-              {metaText ? (
-                <p className="mt-3 text-sm text-slate-700 dark:text-slate-300">
+              {metaText && (
+                <p className="text-sm text-slate-700 dark:text-slate-300">
                   {metaText}
                 </p>
-              ) : null}
-            </article>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {signal.category === "env" ? "環境" : "体調"} · 優先度{" "}
+                {signal.priority}
+              </p>
+            </div>
+          );
+
+          return canHover ? (
+            <HoverCard
+              key={`${signal.id}-${signal.trigger_key}`}
+              openDelay={300}
+              closeDelay={100}
+            >
+              <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
+              <HoverCardContent className="w-80" side="top" align="start">
+                {detailContent}
+              </HoverCardContent>
+            </HoverCard>
+          ) : (
+            <Popover key={`${signal.id}-${signal.trigger_key}`}>
+              <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+              <PopoverContent className="w-80" side="top" align="start">
+                {detailContent}
+              </PopoverContent>
+            </Popover>
           );
         })}
       </CardContent>
