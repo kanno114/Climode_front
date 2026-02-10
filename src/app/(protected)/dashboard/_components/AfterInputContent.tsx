@@ -4,19 +4,7 @@ import Link from "next/link";
 import { NotebookPen } from "lucide-react";
 import Suggestions from "./Suggestions";
 import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
-import { SignalsList } from "./SignalsList";
 import { useEffect, useState } from "react";
-
-type SignalEvent = {
-  id: number;
-  trigger_key: string;
-  trigger_key_label?: string;
-  category: string;
-  level: string;
-  priority: number;
-  evaluated_at: string;
-  meta?: Record<string, unknown> | null;
-};
 
 interface AfterInputContentProps {
   dailyLog: {
@@ -48,26 +36,17 @@ interface AfterInputContentProps {
     triggers: Array<string>;
     category: string;
   }>;
-  bodySignals: Array<SignalEvent> | null;
-  envSignals: Array<SignalEvent> | null;
 }
 
 export function AfterInputContent({
   dailyLog,
   suggestions,
-  bodySignals,
-  envSignals,
 }: AfterInputContentProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const normalizedBodySignals = Array.isArray(bodySignals) ? bodySignals : [];
-  const normalizedEnvSignals = Array.isArray(envSignals) ? envSignals : [];
-  const combinedSignals = [...normalizedEnvSignals, ...normalizedBodySignals];
-  const hasSignalError = bodySignals === null || envSignals === null;
 
   const hasReflection =
     !!dailyLog.note ||
@@ -92,14 +71,7 @@ export function AfterInputContent({
         <h2 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">
           今日はこうした方がいいかも
         </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <Suggestions suggestions={suggestions} />
-          <SignalsList
-            signals={combinedSignals}
-            hasError={hasSignalError}
-            title="今日のシグナル"
-          />
-        </div>
+        <Suggestions suggestions={suggestions} />
         {/* 振り返り導線（時間帯に関係なく未実施の場合に表示） */}
         {/* mountedフラグでクライアント側でのみ表示 */}
         {mounted && !hasReflection && (

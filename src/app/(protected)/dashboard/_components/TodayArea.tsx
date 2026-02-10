@@ -3,30 +3,18 @@ import { TimeBasedHeader } from "./TimeBasedHeader";
 import { BeforeInputContent } from "./BeforeInputContent";
 import { AfterInputContent } from "./AfterInputContent";
 import { ForecastTableAutoScroll } from "./ForecastTable";
-import {
-  getTodayDailyLog,
-  getSuggestions,
-  getTodaySignals,
-  getForecastSeries,
-} from "../actions";
+import { getTodayDailyLog, getSuggestions, getForecastSeries } from "../actions";
 
 export async function TodayArea() {
   // すべてのデータを並列で取得（Fetch-then-Render）
-  const [todayDailyLog, suggestions, allSignals, forecastSeries] =
-    await Promise.all([
-      getTodayDailyLog(),
-      getSuggestions(),
-      getTodaySignals(), // カテゴリー指定なしで全件取得
-      getForecastSeries(),
-    ]);
+  const [todayDailyLog, suggestions, forecastSeries] = await Promise.all([
+    getTodayDailyLog(),
+    getSuggestions(),
+    getForecastSeries(),
+  ]);
 
   const normalizedSuggestions = Array.isArray(suggestions) ? suggestions : [];
   const hasDailyLog = todayDailyLog !== null;
-
-  // フロントエンドでカテゴリーごとに分ける
-  const normalizedAllSignals = Array.isArray(allSignals) ? allSignals : [];
-  const envSignals = normalizedAllSignals.filter((s) => s.category === "env");
-  const bodySignals = normalizedAllSignals.filter((s) => s.category === "body");
 
   return (
     <Card className="py-4 gap-4">
@@ -34,13 +22,11 @@ export async function TodayArea() {
       <CardContent className="space-y-4">
         <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
         {!todayDailyLog ? (
-          <BeforeInputContent envSignals={envSignals} />
+          <BeforeInputContent />
         ) : (
           <AfterInputContent
             dailyLog={todayDailyLog}
             suggestions={normalizedSuggestions}
-            bodySignals={bodySignals}
-            envSignals={envSignals}
           />
         )}
       </CardContent>
