@@ -1,9 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TodayArea } from "./_components/TodayArea";
-import { TriggerSetupAlert } from "./_components/TriggerSetupAlert";
 import { UpcomingFeatures } from "./_components/UpcomingFeatures";
 import { auth } from "@/auth";
-import { fetchUserTriggers } from "@/lib/api/triggers";
 import { Suspense } from "react";
 import { Loading } from "@/components/ui/loading";
 import { redirect } from "next/navigation";
@@ -14,8 +12,6 @@ export default async function DashboardPage() {
   if (!session?.user?.id) {
     redirect("/signin?message=login_required");
   }
-
-  const userId = session.user.id;
 
   // 都道府県の設定状況をチェック
   try {
@@ -32,21 +28,10 @@ export default async function DashboardPage() {
     redirect("/onboarding/welcome");
   }
 
-  let hasNoUserTriggers = false;
-  try {
-    const userTriggers = await fetchUserTriggers(userId);
-    hasNoUserTriggers = userTriggers.length === 0;
-  } catch {
-    // API失敗時は未登録扱いのUIを出す（厳密でなくUX優先）
-    hasNoUserTriggers = true;
-  }
-
   return (
     <div className="min-h-screen bg-[#f2f6ff] dark:bg-[#0d111c]">
       <div className="container mx-auto px-4 py-4 lg:px-8">
         <div className="space-y-4">
-          <TriggerSetupAlert hasNoUserTriggers={hasNoUserTriggers} />
-
           <Suspense fallback={<TodayAreaSkeleton />}>
             <TodayArea />
           </Suspense>

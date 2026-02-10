@@ -1,7 +1,7 @@
 import type React from "react";
-import { Thermometer, Calendar, Bell } from "lucide-react";
+import { Thermometer, Bell } from "lucide-react";
 
-export type StepKey = "prefecture" | "trigger" | "notification";
+export type StepKey = "prefecture" | "notification";
 
 export type StepDefinition = {
   key: StepKey;
@@ -32,32 +32,6 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
         </ul>
         <p className="pt-2">
           あとから設定ページでも変更できますが、最初に登録しておくと提案がスムーズです。
-        </p>
-      </div>
-    ),
-  },
-  {
-    key: "trigger",
-    title: "気になるトリガーを選ぶ",
-    description:
-      "身体や環境の「ゆらぎ」をトリガーとして登録すると、通知や提案が自分用になります。",
-    required: false,
-    icon: Calendar,
-    tutorial: (
-      <div className="space-y-3 text-sm text-muted-foreground">
-        <p>
-          「気圧の低下」「寝不足」など、体調に影響しやすい要因をトリガーとして登録できます。
-        </p>
-        <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>当てはまるものを選ぶほど、シグナルの精度が上がります</li>
-          <li>あなたに合わせたパーソナライズされた通知や提案を受け取れます</li>
-          <li>
-            登録したトリガーに基づいて、体調管理のアドバイスがより的確になります
-          </li>
-          <li>あとから何度でも追加・削除が可能です</li>
-        </ul>
-        <p className="pt-2">
-          まだ分からない場合はスキップしても大丈夫。慣れてきたら設定してみましょう。
         </p>
       </div>
     ),

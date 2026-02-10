@@ -1,7 +1,5 @@
 "use client";
 
-import type { Trigger } from "@/lib/schemas/triggers";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +11,6 @@ import {
 
 import { TutorialPanel } from "./TutorialPanel";
 import { PrefectureStep } from "./steps/PrefectureStep";
-import { TriggerStep } from "./steps/TriggerStep";
 import { NotificationStep } from "./steps/NotificationStep";
 import { STEP_DEFINITIONS } from "./onboarding-steps.config";
 import { useOnboardingWizard } from "./hooks/useOnboardingWizard";
@@ -27,15 +24,11 @@ type PrefectureOption = {
 type OnboardingWizardProps = {
   prefectures: PrefectureOption[];
   initialPrefectureId?: number | null;
-  triggerPresets: Trigger[];
-  initialSelectedTriggerKeys: string[];
 };
 
 export function OnboardingWizard({
   prefectures,
   initialPrefectureId,
-  triggerPresets,
-  initialSelectedTriggerKeys,
 }: OnboardingWizardProps) {
   const {
     currentStepIndex,
@@ -47,7 +40,6 @@ export function OnboardingWizard({
     handleStepSkip,
   } = useOnboardingWizard({
     initialPrefectureCompleted: Boolean(initialPrefectureId),
-    initialTriggerCompleted: initialSelectedTriggerKeys.length > 0,
   });
 
   const formContent = (() => {
@@ -58,15 +50,6 @@ export function OnboardingWizard({
             prefectures={prefectures}
             initialPrefectureId={initialPrefectureId}
             onComplete={() => handleStepComplete("prefecture")}
-          />
-        );
-      case "trigger":
-        return (
-          <TriggerStep
-            triggerPresets={triggerPresets}
-            initialSelectedKeys={initialSelectedTriggerKeys}
-            onComplete={() => handleStepComplete("trigger")}
-            onSkip={() => handleStepSkip("trigger")}
           />
         );
       case "notification":

@@ -17,7 +17,6 @@ import {
   LogOut,
   Home,
   Settings,
-  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -64,12 +63,6 @@ export default function DashboardMenu({ user }: Props) {
           label: "週間レポート",
           href: "/reports/weekly",
           description: "週間サマリーと週次レポートを確認",
-        },
-        {
-          icon: Zap,
-          label: "トリガー設定",
-          href: "/settings/triggers",
-          description: "通知に使う要因を設定・編集",
         },
       ];
 

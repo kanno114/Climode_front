@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/lib/api/api-fetch";
 
-type PrefectureUpdateResult =
+type ActionResult =
   | {
       status: "success";
     }
@@ -14,8 +14,8 @@ type PrefectureUpdateResult =
     };
 
 export async function updateOnboardingPrefecture(
-  prefectureId: number
-): Promise<PrefectureUpdateResult> {
+  prefectureId: number,
+): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user?.id) {
     return {
@@ -44,7 +44,7 @@ export async function updateOnboardingPrefecture(
             prefecture_id: prefectureId,
           },
         }),
-      }
+      },
     );
 
     if (!res.ok) {
