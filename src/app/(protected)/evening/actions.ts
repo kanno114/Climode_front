@@ -22,7 +22,7 @@ export async function getTodaySuggestions() {
           Accept: "application/json",
           "User-Id": session.user.id,
         },
-      }
+      },
     );
 
     if (res.ok) {
@@ -54,7 +54,7 @@ export async function getTodayDailyLog() {
           Accept: "application/json",
           "User-Id": session.user.id,
         },
-      }
+      },
     );
 
     if (res.ok) {
@@ -110,7 +110,7 @@ export async function submitEveningReflection(_: unknown, formData: FormData) {
           self_score: data.self_score || null,
           suggestion_feedbacks: data.suggestion_feedbacks || [],
         }),
-      }
+      },
     );
 
     if (!res.ok) {
