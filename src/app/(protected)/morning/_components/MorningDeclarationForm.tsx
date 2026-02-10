@@ -63,7 +63,7 @@ export function MorningDeclarationForm() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 w-full">
       {form.errors && form.errors.length > 0 && (
         <Alert variant="destructive">
           <AlertDescription>
@@ -79,7 +79,7 @@ export function MorningDeclarationForm() {
         onSubmit={form.onSubmit}
         action={action}
         noValidate
-        className="space-y-6"
+        className="space-y-4 w-full"
       >
         {/* 睡眠時間 */}
         <div className="space-y-2">
@@ -87,7 +87,7 @@ export function MorningDeclarationForm() {
             <Bed className="inline mr-2 h-4 w-4" />
             睡眠時間（時間）
           </Label>
-          <div className="space-y-4">
+          <div className="space-y-2">
             <Slider
               value={sleepHours}
               onValueChange={setSleepHours}

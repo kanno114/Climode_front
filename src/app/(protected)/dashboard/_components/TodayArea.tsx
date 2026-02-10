@@ -17,9 +17,9 @@ export async function TodayArea() {
   const hasDailyLog = todayDailyLog !== null;
 
   return (
-    <Card className="py-4 gap-4">
+    <Card className="py-3 gap-3">
       <TimeBasedHeader hasDailyLog={hasDailyLog} />
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
         <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
         {!todayDailyLog ? (
           <BeforeInputContent />
