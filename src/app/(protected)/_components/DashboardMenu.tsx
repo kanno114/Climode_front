@@ -17,6 +17,7 @@ import {
   LogOut,
   Home,
   Settings,
+  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -63,6 +64,12 @@ export default function DashboardMenu({ user }: Props) {
           label: "週間レポート",
           href: "/reports/weekly",
           description: "週間サマリーと週次レポートを確認",
+        },
+        {
+          icon: Heart,
+          label: "関心ワード",
+          href: "/concern-topics",
+          description: "気になる体調・環境を登録",
         },
       ];
 
