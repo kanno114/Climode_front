@@ -74,7 +74,6 @@ export interface HealthMetrics {
   sleep_hours: Statistics;
   mood: Statistics;
   fatigue_level: Statistics;
-  score: Statistics;
 }
 
 export interface WeatherMetrics {
@@ -86,10 +85,10 @@ export interface WeatherMetrics {
 }
 
 export interface WeeklyComparison {
-  score_diff: number | null;
-  score_change_rate: number | null;
-  current_avg: number | null;
-  previous_avg: number | null;
+  score_diff?: number | null;
+  score_change_rate?: number | null;
+  current_avg?: number | null;
+  previous_avg?: number | null;
 }
 
 export interface WeeklyStatistics {
@@ -99,29 +98,17 @@ export interface WeeklyStatistics {
 }
 
 export interface WeatherHealthCorrelations {
-  pressure_score: number | null;
-  pressure_drop_24h_score: number | null;
-  pressure_drop_6h_score: number | null;
-  humidity_score: number | null;
-  temperature_score: number | null;
+  [key: string]: number | null;
 }
 
 export interface HealthHealthCorrelations {
-  sleep_score: number | null;
   mood_fatigue: number | null;
   sleep_mood: number | null;
 }
 
 export interface ConditionalAverages {
-  pressure_drop_low_score: number | null;
-  pressure_drop_high_score: number | null;
-  high_humidity_score: number | null;
-  low_humidity_score: number | null;
-  rapid_pressure_drop_score: number | null;
-  rapid_pressure_rise_score: number | null;
-  sleep_insufficient_score: number | null;
-  sleep_sufficient_score: number | null;
   low_mood_fatigue: number | null;
+  [key: string]: number | null | undefined;
 }
 
 export interface SignalHealthAnalysis {
@@ -138,7 +125,6 @@ export interface Correlations {
 }
 
 export interface WeekdayStats {
-  avg_score: number | null;
   avg_sleep_hours: number | null;
   avg_mood: number | null;
   count: number;
