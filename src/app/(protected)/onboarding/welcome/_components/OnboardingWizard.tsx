@@ -11,6 +11,7 @@ import {
 
 import { TutorialPanel } from "./TutorialPanel";
 import { PrefectureStep } from "./steps/PrefectureStep";
+import { ConcernTopicsStep } from "./steps/ConcernTopicsStep";
 import { NotificationStep } from "./steps/NotificationStep";
 import { STEP_DEFINITIONS } from "./onboarding-steps.config";
 import { useOnboardingWizard } from "./hooks/useOnboardingWizard";
@@ -50,6 +51,13 @@ export function OnboardingWizard({
             prefectures={prefectures}
             initialPrefectureId={initialPrefectureId}
             onComplete={() => handleStepComplete("prefecture")}
+          />
+        );
+      case "concern_topics":
+        return (
+          <ConcernTopicsStep
+            onComplete={() => handleStepComplete("concern_topics")}
+            onSkip={() => handleStepSkip("concern_topics")}
           />
         );
       case "notification":
