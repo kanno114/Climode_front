@@ -23,7 +23,6 @@ export function formatMetric(metric: string): string {
     pressure_hpa: "気圧",
     sleep_hours: "睡眠時間",
     mood: "気分",
-    score: "体調スコア",
   };
   return metricMap[metric] || metric;
 }
@@ -34,13 +33,13 @@ export function getUnit(metric: string): string {
   if (metric.includes("temperature") || metric.includes("_c")) return "℃";
   if (metric.includes("humidity") || metric.includes("pct")) return "%";
   if (metric.includes("sleep_hours")) return "時間";
-  if (metric === "mood" || metric === "score") return "点";
+  if (metric === "mood") return "点";
   return "";
 }
 
 // 観測値を自然な文章形式でフォーマット
 export function formatObservedValue(
-  meta?: Record<string, unknown> | null
+  meta?: Record<string, unknown> | null,
 ): string | null {
   if (!meta) return null;
 
@@ -95,7 +94,7 @@ export function formatObservedValue(
     return `${metricLabel}が${absValue}${unit}${direction}。`;
   }
 
-  // 値系メトリック（睡眠時間、気分、体調スコアなど）
+  // 値系メトリック（睡眠時間、気分など）
   if (threshold !== null && operator) {
     let judgment = "";
     if (operator === "lte" && observed <= threshold) {
@@ -113,4 +112,3 @@ export function formatObservedValue(
 
   return `${metricLabel}が${observed}${unit}でした。`;
 }
-
