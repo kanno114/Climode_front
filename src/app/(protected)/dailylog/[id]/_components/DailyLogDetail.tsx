@@ -11,7 +11,6 @@ interface DailyLogDetailProps {
     sleep_hours: number;
     mood: number;
     memo?: string;
-    score: number;
     self_score?: number;
     fatigue?: number | null;
     helpfulness?: number | null;

@@ -19,17 +19,17 @@ export default async function DailyLogPage({
       <div className="container mx-auto px-4 py-8 space-y-6">
         <Suspense
           fallback={
-          <Card>
-            <CardHeader>
+            <Card>
+              <CardHeader>
                 <CardTitle>記録を読み込み中...</CardTitle>
                 <CardDescription>
                   その日の入力内容・シグナル・行動提案を準備しています。
                 </CardDescription>
-            </CardHeader>
+              </CardHeader>
               <CardContent className="flex items-center justify-center py-10">
                 <Loading text="少しお待ちください…" />
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
           }
         >
           <DailyLogDetailArea id={params.id} />

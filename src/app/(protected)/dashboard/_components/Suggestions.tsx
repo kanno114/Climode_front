@@ -170,7 +170,7 @@ export default function Suggestions({
         )}
       </>
     ),
-    [getTagStyle, getTagIcon]
+    [getTagStyle, getTagIcon],
   );
 
   if (suggestions.length === 0) {
@@ -229,22 +229,14 @@ export default function Suggestions({
             return canHover ? (
               <HoverCard key={suggestion.key} openDelay={300} closeDelay={100}>
                 <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
-                <HoverCardContent
-                  className="w-80"
-                  side="top"
-                  align="start"
-                >
+                <HoverCardContent className="w-80" side="top" align="start">
                   {renderDetailContent(suggestion)}
                 </HoverCardContent>
               </HoverCard>
             ) : (
               <Popover key={suggestion.key}>
                 <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                <PopoverContent
-                  className="w-80"
-                  side="top"
-                  align="start"
-                >
+                <PopoverContent className="w-80" side="top" align="start">
                   {renderDetailContent(suggestion)}
                 </PopoverContent>
               </Popover>

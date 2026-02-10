@@ -11,45 +11,6 @@ export type ForecastPoint = {
   weather_code: number | null;
 };
 
-export async function getTodaySignals(category?: "env" | "body") {
-  const session = await auth();
-  if (!session?.user) {
-    return null;
-  }
-
-  try {
-    const url = new URL(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/signal_events`
-    );
-    if (category) {
-      url.searchParams.set("category", category);
-    }
-
-    const res = await apiFetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "User-Id": session.user.id,
-      },
-      next: { revalidate: 3600 },
-    });
-
-    if (res.ok) {
-      return await res.json();
-    } else if (res.status === 401) {
-      console.error("認証エラー - セッションが無効です");
-      return null;
-    } else {
-      console.error("シグナルデータ取得失敗:", res.status);
-      return null;
-    }
-  } catch (error) {
-    console.error("シグナルデータ取得エラー:", error);
-    return null;
-  }
-}
-
 export async function getSuggestions() {
   const session = await auth();
   if (!session?.user) {
@@ -66,7 +27,7 @@ export async function getSuggestions() {
           Accept: "application/json",
           "User-Id": session.user.id,
         },
-      }
+      },
     );
 
     if (res.ok) {
@@ -103,7 +64,7 @@ export async function getTodayDailyLog() {
           Accept: "application/json",
           "User-Id": session.user.id,
         },
-      }
+      },
     );
 
     if (res.ok) {
@@ -142,7 +103,7 @@ export async function getForecastSeries(): Promise<ForecastPoint[] | null> {
         },
         // 予報なので、10分程度のキャッシュで十分
         next: { revalidate: 600 },
-      }
+      },
     );
 
     if (res.ok) {
