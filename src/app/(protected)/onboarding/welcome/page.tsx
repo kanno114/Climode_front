@@ -2,13 +2,11 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { fetchTriggerPresets, fetchUserTriggers } from "@/lib/api/triggers";
 import {
   getProfileAction,
   getPrefectures,
 } from "@/app/(protected)/profile/actions";
 import { OnboardingWizard } from "./_components/OnboardingWizard";
-import type { Trigger, UserTrigger } from "@/lib/schemas/triggers";
 
 type PrefectureOption = {
   id: number;
@@ -24,19 +22,6 @@ export default async function OnboardingWelcomePage() {
 
   const prefectureList = (await getPrefectures()) ?? [];
   const prefectures: PrefectureOption[] = prefectureList;
-  let triggerPresets: Trigger[] = [];
-  let userTriggers: UserTrigger[] = [];
-
-  try {
-    const [presets, triggers] = await Promise.all([
-      fetchTriggerPresets(session.user.id),
-      fetchUserTriggers(session.user.id),
-    ]);
-    triggerPresets = presets;
-    userTriggers = triggers;
-  } catch (error) {
-    console.error("Failed to load onboarding data:", error);
-  }
 
   let profile = null;
   try {
@@ -45,9 +30,6 @@ export default async function OnboardingWelcomePage() {
     console.error("Failed to load profile:", error);
   }
   const initialPrefectureId = profile?.user?.prefecture_id ?? null;
-  const initialTriggerKeys = (userTriggers ?? []).map(
-    (item) => item.trigger.key
-  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -55,8 +37,6 @@ export default async function OnboardingWelcomePage() {
         <OnboardingWizard
           prefectures={prefectures}
           initialPrefectureId={initialPrefectureId}
-          triggerPresets={triggerPresets}
-          initialSelectedTriggerKeys={initialTriggerKeys}
         />
       </div>
     </div>

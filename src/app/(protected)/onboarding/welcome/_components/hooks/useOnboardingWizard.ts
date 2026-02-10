@@ -8,18 +8,15 @@ type StepCompletion = Record<StepKey, boolean>;
 
 type UseOnboardingWizardOptions = {
   initialPrefectureCompleted: boolean;
-  initialTriggerCompleted: boolean;
 };
 
 export function useOnboardingWizard({
   initialPrefectureCompleted,
-  initialTriggerCompleted,
 }: UseOnboardingWizardOptions) {
   const router = useRouter();
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [stepCompletion, setStepCompletion] = useState<StepCompletion>({
     prefecture: initialPrefectureCompleted,
-    trigger: initialTriggerCompleted,
     notification: false,
   });
 
