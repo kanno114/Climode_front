@@ -1,7 +1,7 @@
 import type React from "react";
-import { Thermometer, Bell } from "lucide-react";
+import { Thermometer, Heart, Bell } from "lucide-react";
 
-export type StepKey = "prefecture" | "notification";
+export type StepKey = "prefecture" | "concern_topics" | "notification";
 
 export type StepDefinition = {
   key: StepKey;
@@ -32,6 +32,29 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
         </ul>
         <p className="pt-2">
           あとから設定ページでも変更できますが、最初に登録しておくと提案がスムーズです。
+        </p>
+      </div>
+    ),
+  },
+  {
+    key: "concern_topics",
+    title: "関心ワードを登録する",
+    description:
+      "気になる体調・環境を選ぶと、よりあなたに合った提案をお届けします。",
+    required: false,
+    icon: Heart,
+    tutorial: (
+      <div className="space-y-3 text-sm text-muted-foreground">
+        <p>
+          熱中症、ヒートショック、気象病、乾燥・感染リスク、睡眠時間など、
+          あなたが気になりそうな項目を選びます。
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>選んだ項目に合わせた行動提案を優先的に表示</li>
+          <li>気になることがなければ選ばなくても大丈夫です</li>
+        </ul>
+        <p className="pt-2">
+          あとから関心ワードページでいつでも変更できます。
         </p>
       </div>
     ),

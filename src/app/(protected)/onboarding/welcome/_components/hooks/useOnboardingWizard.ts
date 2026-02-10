@@ -17,6 +17,7 @@ export function useOnboardingWizard({
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [stepCompletion, setStepCompletion] = useState<StepCompletion>({
     prefecture: initialPrefectureCompleted,
+    concern_topics: false,
     notification: false,
   });
 
@@ -30,11 +31,12 @@ export function useOnboardingWizard({
   const currentStep = STEP_DEFINITIONS[currentStepIndex];
 
   useEffect(() => {
-    if (
-      stepCompletion.notification &&
+    const allCompleted =
       stepCompletion.prefecture &&
-      currentStepIndex === totalSteps - 1
-    ) {
+      stepCompletion.concern_topics &&
+      stepCompletion.notification &&
+      currentStepIndex === totalSteps - 1;
+    if (allCompleted) {
       // オンボーディング完了後はダッシュボードへリダイレクト
       router.push("/dashboard");
     }
