@@ -7,14 +7,13 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import jaLocale from "@/lib/fullcalendar-locale";
-import { Smile, Meh, Frown, Heart } from "lucide-react";
+import { Meh, Frown, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getDailyLogsByMonth } from "../actions";
 
 interface DailyLog {
   id: number;
   date: string;
-  score: number;
   self_score?: number | null;
 }
 
@@ -41,14 +40,12 @@ export default function DailyLogCalendar({
     []
   );
 
-  // スコアに応じてアイコンと色を決定する関数
+  // self_scoreに応じてアイコンと色を決定する関数（記録のみの場合は「記録あり」表示）
   const getScoreConfig = useCallback(
-    (score: number, selfScore?: number | null) => {
-      // self_scoreがある場合はそれを使用、ない場合はscoreを使用
+    (selfScore?: number | null) => {
       const isSelfScore = selfScore !== null && selfScore !== undefined;
 
       if (isSelfScore) {
-        // self_scoreの場合（1-3）
         const emoji = getSelfScoreEmoji(selfScore);
         if (selfScore === 3) {
           return {
@@ -69,7 +66,6 @@ export default function DailyLogCalendar({
             emoji: emoji,
           };
         } else {
-          // selfScore === 1
           return {
             icon: Frown,
             backgroundColor: "rgba(239, 68, 68, 0.2)",
@@ -79,55 +75,16 @@ export default function DailyLogCalendar({
             emoji: emoji,
           };
         }
-      } else {
-        // scoreの場合（0-100）
-    if (score >= 80) {
-      return {
-        icon: Heart,
-        backgroundColor: "rgba(34, 197, 94, 0.2)", // 緑色（透明）
-        borderColor: "#22c55e",
-        textColor: "#166534",
-        title: `😊 ${score}点`,
-            emoji: "😊",
-      };
-    } else if (score >= 60) {
-      return {
-        icon: Smile,
-        backgroundColor: "rgba(59, 130, 246, 0.2)", // 青色（透明）
-        borderColor: "#3b82f6",
-        textColor: "#1e40af",
-        title: `🙂 ${score}点`,
-            emoji: "🙂",
-      };
-    } else if (score >= 40) {
+      }
+      // self_scoreがない場合は記録ありのみ表示
       return {
         icon: Meh,
-        backgroundColor: "rgba(245, 158, 11, 0.2)", // オレンジ色（透明）
-        borderColor: "#f59e0b",
-        textColor: "#92400e",
-        title: `😐 ${score}点`,
-            emoji: "😐",
+        backgroundColor: "rgba(148, 163, 184, 0.2)",
+        borderColor: "#94a3b8",
+        textColor: "#475569",
+        title: "記録",
+        emoji: "•",
       };
-    } else if (score >= 20) {
-      return {
-        icon: Frown,
-        backgroundColor: "rgba(239, 68, 68, 0.2)", // 赤色（透明）
-        borderColor: "#ef4444",
-        textColor: "#991b1b",
-        title: `😞 ${score}点`,
-            emoji: "😞",
-      };
-    } else {
-      return {
-        icon: Frown,
-        backgroundColor: "rgba(107, 114, 128, 0.2)", // グレー（透明）
-        borderColor: "#6b7280",
-        textColor: "#374151",
-        title: `😢 ${score}点`,
-            emoji: "😢",
-      };
-    }
-      }
     },
     [getSelfScoreEmoji]
   );
@@ -139,7 +96,7 @@ export default function DailyLogCalendar({
         return [];
       }
       return logs.map((log) => {
-        const config = getScoreConfig(log.score, log.self_score);
+        const config = getScoreConfig(log.self_score);
         return {
           id: log.id.toString(),
           title: config.title,
@@ -149,7 +106,6 @@ export default function DailyLogCalendar({
           textColor: config.textColor,
           extendedProps: {
             logId: log.id,
-            score: log.score,
             selfScore: log.self_score,
             config: config,
           },
@@ -229,28 +185,18 @@ export default function DailyLogCalendar({
         eventDisplay="block"
         eventContent={(arg) => {
           const config = arg.event.extendedProps.config;
-          const IconComponent = config.icon;
           const selfScore = arg.event.extendedProps.selfScore;
 
           return (
             <div className="flex items-center justify-center cursor-pointer hover:opacity-50 transition-opacity duration-200">
               {selfScore ? (
-                // self_scoreがある場合は絵文字のみ表示
                 <span style={{ color: config.textColor, fontSize: "20px" }}>
                   {config.emoji}
                 </span>
               ) : (
-                // self_scoreがない場合はアイコンと点数を表示
-                <>
-              <IconComponent
-                size={25}
-                className="mr-1"
-                style={{ color: config.textColor }}
-              />
-              <span style={{ color: config.textColor, fontSize: "12px" }}>
-                {arg.event.extendedProps.score}点
-              </span>
-                </>
+                <span style={{ color: config.textColor, fontSize: "14px" }}>
+                  {config.emoji}
+                </span>
               )}
             </div>
           );
