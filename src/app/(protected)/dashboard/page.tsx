@@ -30,8 +30,8 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#f2f6ff] dark:bg-[#0d111c]">
-      <div className="container mx-auto px-4 py-4 lg:px-8">
-        <div className="space-y-4">
+      <div className="container mx-auto px-4 py-3 lg:px-8">
+        <div className="space-y-3">
           <Suspense fallback={<TodayAreaSkeleton />}>
             <TodayArea />
           </Suspense>

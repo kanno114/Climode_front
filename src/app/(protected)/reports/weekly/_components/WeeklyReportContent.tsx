@@ -2,14 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getWeeklyReport } from "../actions";
 import { WeeklyReportNavigation } from "./WeeklyReportNavigation";
-import { WeeklySignalStatistics } from "./WeeklySignalStatistics";
-// import { WeeklySignalTrends } from "./WeeklySignalTrends";
-import { WeeklySignalChart } from "./WeeklySignalChart";
 import { WeeklyMorningStatistics } from "./WeeklyMorningStatistics";
-// import { WeeklyMorningTrends } from "./WeeklyMorningTrends";
 import { WeeklyMorningChart } from "./WeeklyMorningChart";
 import { WeeklyEveningStatistics } from "./WeeklyEveningStatistics";
-// import { WeeklyEveningTrends } from "./WeeklyEveningTrends";
 import { WeeklyEveningChart } from "./WeeklyEveningChart";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
@@ -62,27 +57,11 @@ export async function WeeklyReportContent({
       </div>
 
       {/* タブ */}
-      <Tabs defaultValue="signals" className="w-full">
+      <Tabs defaultValue="morning" className="w-full">
         <TabsList className="mb-6">
-          <TabsTrigger value="signals">シグナル</TabsTrigger>
           <TabsTrigger value="morning">朝の自己申告</TabsTrigger>
           <TabsTrigger value="evening">夜の振り返り</TabsTrigger>
         </TabsList>
-
-        {/* シグナルセクション */}
-        <TabsContent value="signals" className="mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <div>
-              <WeeklySignalStatistics signals={report.signals} />
-            </div>
-            {/* <div>
-              <WeeklySignalTrends signals={report.signals} />
-            </div> */}
-            <div>
-              <WeeklySignalChart signals={report.signals} />
-            </div>
-          </div>
-        </TabsContent>
 
         {/* 朝の自己申告セクション */}
         <TabsContent value="morning" className="mt-0">
@@ -92,11 +71,6 @@ export async function WeeklyReportContent({
                 <WeeklyMorningStatistics statistics={report.statistics} />
               </div>
             )}
-            {/* {report.patterns && (
-              <div>
-                <WeeklyMorningTrends patterns={report.patterns} />
-              </div>
-            )} */}
             <div>
               <WeeklyMorningChart daily={report.daily} />
             </div>
@@ -109,9 +83,6 @@ export async function WeeklyReportContent({
             <div>
               <WeeklyEveningStatistics feedback={report.feedback} />
             </div>
-            {/* <div>
-              <WeeklyEveningTrends feedback={report.feedback} />
-            </div> */}
             <div>
               <WeeklyEveningChart feedback={report.feedback} />
             </div>
