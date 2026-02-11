@@ -46,7 +46,8 @@ export const EVIDENCE_CATEGORIES: EvidenceCategory[] = [
       },
       {
         name: "鹿児島大学 法医学分野（林敬人教授ら）の研究",
-        description: "研究内容：浴室内突然死（ヒートショック等）の発生予測モデル",
+        description:
+          "研究内容：浴室内突然死（ヒートショック等）の発生予測モデル",
       },
     ],
   },
