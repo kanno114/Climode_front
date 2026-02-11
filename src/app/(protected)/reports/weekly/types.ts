@@ -122,10 +122,28 @@ export interface WeeklyPatterns {
   week_half_comparison: WeekHalfComparison | null;
 }
 
+export interface WeeklyReportSuggestionItem {
+  suggestion_key: string;
+  title: string;
+  message: string;
+  helpfulness: boolean | null;
+  category: string;
+}
+
+export interface WeeklyReportSuggestionsByDay {
+  date: string;
+  items: WeeklyReportSuggestionItem[];
+}
+
+export interface WeeklyReportSuggestions {
+  by_day: WeeklyReportSuggestionsByDay[];
+}
+
 export interface WeeklyReport {
   range: WeeklyReportRange;
   daily: WeeklyReportDaily;
   feedback: WeeklyReportFeedback;
+  suggestions?: WeeklyReportSuggestions;
   insight: string;
   statistics: WeeklyStatistics;
   correlations: Correlations;
