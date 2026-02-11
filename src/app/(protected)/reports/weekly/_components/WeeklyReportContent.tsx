@@ -6,6 +6,7 @@ import { WeeklyMorningStatistics } from "./WeeklyMorningStatistics";
 import { WeeklyMorningChart } from "./WeeklyMorningChart";
 import { WeeklyEveningStatistics } from "./WeeklyEveningStatistics";
 import { WeeklyEveningChart } from "./WeeklyEveningChart";
+import { WeeklySuggestionsSection } from "./WeeklySuggestionsSection";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
@@ -57,8 +58,9 @@ export async function WeeklyReportContent({
       </div>
 
       {/* タブ */}
-      <Tabs defaultValue="morning" className="w-full">
+      <Tabs defaultValue="suggestions" className="w-full">
         <TabsList className="mb-6">
+          <TabsTrigger value="suggestions">提案</TabsTrigger>
           <TabsTrigger value="morning">朝の自己申告</TabsTrigger>
           <TabsTrigger value="evening">夜の振り返り</TabsTrigger>
         </TabsList>
@@ -87,6 +89,11 @@ export async function WeeklyReportContent({
               <WeeklyEveningChart feedback={report.feedback} />
             </div>
           </div>
+        </TabsContent>
+
+        {/* 提案セクション */}
+        <TabsContent value="suggestions" className="mt-0">
+          <WeeklySuggestionsSection suggestions={report.suggestions} />
         </TabsContent>
       </Tabs>
     </>
