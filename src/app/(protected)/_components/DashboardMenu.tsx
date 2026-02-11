@@ -18,6 +18,7 @@ import {
   Home,
   Settings,
   Heart,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -70,6 +71,12 @@ export default function DashboardMenu({ user }: Props) {
           label: "関心ワード",
           href: "/concern-topics",
           description: "気になる体調・環境を登録",
+        },
+        {
+          icon: Info,
+          label: "About",
+          href: "/about",
+          description: "提案ロジックと参照エビデンス",
         },
       ];
 

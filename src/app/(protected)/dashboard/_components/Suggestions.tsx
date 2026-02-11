@@ -25,6 +25,7 @@ import {
   Bed,
   Zap,
 } from "lucide-react";
+import { SuggestionEvidence } from "./SuggestionEvidence";
 
 interface Suggestion {
   key: string;
@@ -32,8 +33,10 @@ interface Suggestion {
   message: string;
   tags: string[];
   severity: number;
-  triggers: string[];
+  triggers?: Record<string, number | string>;
   category: string;
+  reason_text?: string | null;
+  evidence_text?: string | null;
 }
 
 // categoryによる色分け
@@ -168,6 +171,11 @@ export default function Suggestions({
             })}
           </div>
         )}
+        <SuggestionEvidence
+          triggers={suggestion.triggers}
+          reason_text={suggestion.reason_text}
+          evidence_text={suggestion.evidence_text}
+        />
       </>
     ),
     [getTagStyle, getTagIcon],
