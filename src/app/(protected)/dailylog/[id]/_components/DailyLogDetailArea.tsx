@@ -1,7 +1,7 @@
 import { DailyLogDetail } from "./DailyLogDetail";
 import Suggestions from "@/app/(protected)/dashboard/_components/Suggestions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDailyLog, getSuggestionsByDate } from "../actions";
+import { getDailyLog } from "../actions";
 
 interface DailyLogDetailAreaProps {
   id: string;
@@ -14,8 +14,9 @@ export async function DailyLogDetailArea({ id }: DailyLogDetailAreaProps) {
     return null;
   }
 
-  const suggestions = await getSuggestionsByDate(dailyLog.date);
-  const normalizedSuggestions = Array.isArray(suggestions) ? suggestions : [];
+  const suggestions = Array.isArray(dailyLog.daily_log_suggestions)
+    ? dailyLog.daily_log_suggestions
+    : [];
 
   const dateLabel = new Date(dailyLog.date).toLocaleDateString("ja-JP", {
     month: "long",
@@ -31,7 +32,7 @@ export async function DailyLogDetailArea({ id }: DailyLogDetailAreaProps) {
         <DailyLogDetail dailyLog={dailyLog} />
 
         <Suggestions
-          suggestions={normalizedSuggestions}
+          suggestions={suggestions}
           title="行動提案"
           emptyTitle="行動提案"
           emptyMessage="この日は特別な提案はありませんでした"
