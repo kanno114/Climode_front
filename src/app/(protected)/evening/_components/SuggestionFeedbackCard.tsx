@@ -20,7 +20,9 @@ interface Suggestion {
   message: string;
   tags: string[];
   severity: number;
-  triggers: string[];
+  triggers?: Record<string, number | string>;
+  reason_text?: string | null;
+  evidence_text?: string | null;
 }
 
 interface SuggestionFeedbackCardProps {

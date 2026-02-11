@@ -33,8 +33,10 @@ interface AfterInputContentProps {
     message: string;
     tags: Array<string>;
     severity: number;
-    triggers: Array<string>;
+    triggers?: Record<string, number | string>;
     category: string;
+    reason_text?: string | null;
+    evidence_text?: string | null;
   }>;
 }
 
