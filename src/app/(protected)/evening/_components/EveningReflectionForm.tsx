@@ -32,7 +32,7 @@ type Suggestion = {
 export function EveningReflectionForm() {
   const [lastResult, action, pending] = useActionState(
     submitEveningReflection,
-    undefined
+    undefined,
   );
   const [isPending, startTransition] = useTransition();
 
@@ -93,7 +93,7 @@ export function EveningReflectionForm() {
                 ) {
                   feedbacksMap[feedback.suggestion_key] = feedback.helpfulness;
                 }
-              }
+              },
             );
             setSuggestionFeedbacks(feedbacksMap);
           }
@@ -137,7 +137,7 @@ export function EveningReflectionForm() {
 
   const handleSuggestionHelpfulnessChange = (
     suggestionKey: string,
-    value: boolean
+    value: boolean,
   ) => {
     setSuggestionFeedbacks((prev) => ({
       ...prev,
@@ -161,7 +161,7 @@ export function EveningReflectionForm() {
 
     const suggestionFeedbacksArray = Object.entries(suggestionFeedbacks)
       .filter(
-        ([, helpfulness]) => helpfulness !== null && helpfulness !== undefined
+        ([, helpfulness]) => helpfulness !== null && helpfulness !== undefined,
       )
       .map(([key, helpfulness]) => ({
         key,
@@ -169,7 +169,7 @@ export function EveningReflectionForm() {
       }));
     formData.append(
       "suggestion_feedbacks",
-      JSON.stringify(suggestionFeedbacksArray)
+      JSON.stringify(suggestionFeedbacksArray),
     );
 
     startTransition(() => {
@@ -262,8 +262,8 @@ export function EveningReflectionForm() {
                     {score === 1
                       ? "😕 悪い"
                       : score === 2
-                      ? "😐 普通"
-                      : "😊 良い"}
+                        ? "😐 普通"
+                        : "😊 良い"}
                   </Button>
                 ))}
               </div>
