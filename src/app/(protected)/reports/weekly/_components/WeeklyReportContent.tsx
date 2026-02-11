@@ -7,6 +7,7 @@ import { WeeklyMorningChart } from "./WeeklyMorningChart";
 import { WeeklyEveningStatistics } from "./WeeklyEveningStatistics";
 import { WeeklyEveningChart } from "./WeeklyEveningChart";
 import { WeeklySuggestionsSection } from "./WeeklySuggestionsSection";
+import { WeeklySuggestionsChart } from "./WeeklySuggestionsChart";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
@@ -93,7 +94,17 @@ export async function WeeklyReportContent({
 
         {/* 提案セクション */}
         <TabsContent value="suggestions" className="mt-0">
-          <WeeklySuggestionsSection suggestions={report.suggestions} />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <WeeklySuggestionsChart
+                suggestions={report.suggestions}
+                range={report.range}
+              />
+            </div>
+            <div>
+              <WeeklySuggestionsSection suggestions={report.suggestions} />
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </>
