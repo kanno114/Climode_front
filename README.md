@@ -61,7 +61,6 @@ npm run dev
 ### 設定
 
 - `/profile` - プロフィール編集
-- `/settings/triggers` - トリガー設定（登録・削除）
 
 ### その他
 
