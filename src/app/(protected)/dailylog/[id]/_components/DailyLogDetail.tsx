@@ -10,7 +10,7 @@ interface DailyLogDetailProps {
     date: string;
     sleep_hours: number;
     mood: number;
-    memo?: string;
+    note?: string | null;
     self_score?: number;
     fatigue?: number | null;
     helpfulness?: number | null;
@@ -208,14 +208,14 @@ export function DailyLogDetail({ dailyLog }: DailyLogDetailProps) {
           </div>
         )}
 
-        {/* メモ */}
-        {dailyLog.memo && (
+        {/* 振り返りメモ */}
+        {dailyLog.note && (
           <div className="space-y-1 pt-2 border-t">
             <div className="text-sm font-medium text-muted-foreground">
-              メモ
+              振り返りメモ
             </div>
             <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
-              {dailyLog.memo}
+              {dailyLog.note}
             </p>
           </div>
         )}
