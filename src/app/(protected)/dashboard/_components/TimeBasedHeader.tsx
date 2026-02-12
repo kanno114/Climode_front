@@ -31,9 +31,12 @@ export function TimeBasedHeader({
     setTimeOfDay(getTimeOfDay());
 
     // 時間帯が変わる可能性があるので、1時間ごとにチェック
-    const interval = setInterval(() => {
-      setTimeOfDay(getTimeOfDay());
-    }, 60 * 60 * 1000); // 1時間ごと
+    const interval = setInterval(
+      () => {
+        setTimeOfDay(getTimeOfDay());
+      },
+      60 * 60 * 1000,
+    ); // 1時間ごと
 
     return () => clearInterval(interval);
   }, []);
@@ -44,8 +47,7 @@ export function TimeBasedHeader({
   }
 
   const message = getTimeBasedMessage(timeOfDay, hasDailyLog, hasReflection);
-  const isEveningOrNight =
-    timeOfDay === "evening" || timeOfDay === "night";
+  const isEveningOrNight = timeOfDay === "evening" || timeOfDay === "night";
   const showReflectionLinkInHeader =
     hasDailyLog && !hasReflection && isEveningOrNight;
 

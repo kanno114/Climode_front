@@ -24,7 +24,7 @@ import {
   Coffee,
   Bed,
   Zap,
-  Info,
+  CircleHelp,
 } from "lucide-react";
 import { SuggestionEvidence } from "./SuggestionEvidence";
 import {
@@ -170,9 +170,17 @@ export default function Suggestions({
         <CardTitle className="flex items-center gap-2 text-xl">
           <Zap className="w-5 h-5" />
           {title}
+          <span className="text-sm font-normal text-muted-foreground">
+            （{suggestions.length}件）
+          </span>
         </CardTitle>
+        {canHover && (
+          <p className="text-xs text-muted-foreground mt-1 text-right">
+            ?ボタンで判定の根拠を表示
+          </p>
+        )}
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 max-h-[min(50vh,24rem)] overflow-y-auto">
         {suggestions
           .sort((a, b) => b.severity - a.severity)
           .map((suggestion) => {
@@ -181,10 +189,14 @@ export default function Suggestions({
               <button
                 type="button"
                 className="shrink-0 p-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                aria-label="エビデンスを表示"
-                title={canHover ? "ホバーでエビデンスを表示" : "クリックでエビデンスを表示"}
+                aria-label="判定の根拠を表示"
+                title={
+                  canHover
+                    ? "ホバーで判定の根拠・参照元を表示"
+                    : "クリックで判定の根拠・参照元を表示"
+                }
               >
-                <Info className="h-4 w-4 text-muted-foreground" />
+                <CircleHelp className="h-5 w-5 text-muted-foreground" />
               </button>
             );
 
@@ -200,7 +212,9 @@ export default function Suggestions({
                   <div className="flex items-center gap-1 shrink-0">
                     {canHover ? (
                       <HoverCard openDelay={300} closeDelay={100}>
-                        <HoverCardTrigger asChild>{evidenceTrigger}</HoverCardTrigger>
+                        <HoverCardTrigger asChild>
+                          {evidenceTrigger}
+                        </HoverCardTrigger>
                         <HoverCardContent
                           className="w-96 max-h-[min(80vh,28rem)] overflow-y-auto p-4"
                           side="top"
@@ -211,7 +225,9 @@ export default function Suggestions({
                       </HoverCard>
                     ) : (
                       <Popover>
-                        <PopoverTrigger asChild>{evidenceTrigger}</PopoverTrigger>
+                        <PopoverTrigger asChild>
+                          {evidenceTrigger}
+                        </PopoverTrigger>
                         <PopoverContent
                           className="w-96 max-h-[min(80vh,28rem)] overflow-y-auto p-4"
                           side="top"
