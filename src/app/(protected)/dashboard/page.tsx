@@ -29,9 +29,9 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f2f6ff] dark:bg-[#0d111c]">
-      <div className="container mx-auto px-4 py-3 lg:px-8">
-        <div className="space-y-3">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <div className="container mx-auto px-4 py-4 lg:px-8">
+        <div className="space-y-6">
           <Suspense fallback={<TodayAreaSkeleton />}>
             <TodayArea />
           </Suspense>
@@ -48,7 +48,7 @@ function TodayAreaSkeleton() {
   return (
     <Card>
       <CardHeader>
-        <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+        <div className="h-6 w-48 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
       </CardHeader>
       <CardContent className="py-12">
         <Loading size="lg" text="データを読み込み中..." />

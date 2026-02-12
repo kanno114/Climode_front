@@ -3,6 +3,8 @@ import { TimeBasedHeader } from "./TimeBasedHeader";
 import { BeforeInputContent } from "./BeforeInputContent";
 import { AfterInputContent } from "./AfterInputContent";
 import { ForecastTableAutoScroll } from "./ForecastTable";
+import { ReflectionLinkFooter } from "./ReflectionLinkFooter";
+import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
 import { getTodayDailyLog, getSuggestions, getForecastSeries } from "../actions";
 
 export async function TodayArea() {
@@ -15,12 +17,30 @@ export async function TodayArea() {
 
   const normalizedSuggestions = Array.isArray(suggestions) ? suggestions : [];
   const hasDailyLog = todayDailyLog !== null;
+  const hasReflection =
+    hasDailyLog &&
+    (!!todayDailyLog.note ||
+      (todayDailyLog.suggestion_feedbacks?.length ?? 0) > 0 ||
+      !!todayDailyLog.helpfulness ||
+      !!todayDailyLog.match_score);
 
   return (
-    <Card className="py-3 gap-3">
-      <TimeBasedHeader hasDailyLog={hasDailyLog} />
-      <CardContent className="space-y-3">
-        <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
+    <Card className="py-4">
+      <TimeBasedHeader
+        hasDailyLog={hasDailyLog}
+        hasReflection={!!hasReflection}
+        reflectionSlot={
+          hasReflection && todayDailyLog ? (
+            <EveningReflectionDisplay
+              note={todayDailyLog.note}
+              suggestion_feedbacks={todayDailyLog.suggestion_feedbacks}
+              helpfulness={todayDailyLog.helpfulness}
+              match_score={todayDailyLog.match_score}
+            />
+          ) : undefined
+        }
+      />
+      <CardContent className="space-y-6">
         {!todayDailyLog ? (
           <BeforeInputContent />
         ) : (
@@ -28,6 +48,10 @@ export async function TodayArea() {
             dailyLog={todayDailyLog}
             suggestions={normalizedSuggestions}
           />
+        )}
+        <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
+        {hasDailyLog && (
+          <ReflectionLinkFooter hasReflection={!!hasReflection} />
         )}
       </CardContent>
     </Card>

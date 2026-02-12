@@ -191,7 +191,7 @@ export function MorningDeclarationForm() {
               送信中...
             </>
           ) : (
-            "今日のシグナルを見る"
+            "今日の提案を見てみる"
           )}
         </Button>
       </form>

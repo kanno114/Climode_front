@@ -4,8 +4,9 @@ import { Sun, Moon, Sunset, Sunrise } from "lucide-react";
 export type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
 
 export function getTimeOfDay(): TimeOfDay {
-  const override = process.env
-    .NEXT_PUBLIC_TIME_OF_DAY_OVERRIDE as TimeOfDay | undefined;
+  const override = process.env.NEXT_PUBLIC_TIME_OF_DAY_OVERRIDE as
+    | TimeOfDay
+    | undefined;
 
   if (
     override === "morning" ||
@@ -32,7 +33,8 @@ export function getTimeOfDay(): TimeOfDay {
 
 export function getTimeBasedMessage(
   timeOfDay: TimeOfDay,
-  hasDailyLog: boolean
+  hasDailyLog: boolean,
+  hasReflection: boolean = false,
 ): {
   title: string;
   description: string;
@@ -71,13 +73,15 @@ export function getTimeBasedMessage(
       if (hasDailyLog) {
         return {
           title: "こんばんは",
-          description: "今日一日お疲れ様でした。体調を振り返りましょう",
+          description: hasReflection
+            ? "今日一日お疲れ様でした。ゆっくり休んでください"
+            : "今日一日お疲れ様でした。一日を振り返りましょう",
           icon: <Sunset className="h-6 w-6 text-orange-500" />,
         };
       } else {
         return {
           title: "こんばんは",
-          description: "今日の体調を記録して、一日を振り返りましょう",
+          description: "今日の体調を記録してみませんか？",
           icon: <Sunset className="h-6 w-6 text-orange-500" />,
         };
       }
@@ -85,7 +89,9 @@ export function getTimeBasedMessage(
       if (hasDailyLog) {
         return {
           title: "おやすみなさい",
-          description: "今日もお疲れ様でした。ゆっくり休んでください",
+          description: hasReflection
+            ? "今日もお疲れ様でした。ゆっくり休んでください"
+            : "今日一日を振り返って、一日を締めくくりましょう",
           icon: <Moon className="h-6 w-6 text-indigo-500" />,
         };
       } else {

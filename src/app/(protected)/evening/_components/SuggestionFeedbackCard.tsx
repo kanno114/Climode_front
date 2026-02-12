@@ -13,6 +13,11 @@ import {
   Bed,
   Zap,
 } from "lucide-react";
+import {
+  getLevelLabel,
+  getTagLabel,
+  LEVEL_COLOR_MAP,
+} from "@/lib/suggestion-constants";
 
 interface Suggestion {
   key: string;
@@ -20,6 +25,7 @@ interface Suggestion {
   message: string;
   tags: string[];
   severity: number;
+  level?: string | null;
   triggers?: Record<string, number | string>;
   reason_text?: string | null;
   evidence_text?: string | null;
@@ -88,12 +94,18 @@ export function SuggestionFeedbackCard({
       <CardContent className="p-4 space-y-4">
         <div className="flex items-start justify-between mb-2">
           <h4 className="font-medium text-sm">{suggestion.title}</h4>
-          <Badge
-            variant="secondary"
-            className={`text-xs ${severityStyle.color} ${severityStyle.bgColor}`}
-          >
-            {suggestion.severity}
-          </Badge>
+          <div className="flex items-center gap-1 shrink-0">
+            {suggestion.level && (
+              <Badge
+                variant="secondary"
+                className={`text-xs ${
+                  LEVEL_COLOR_MAP[suggestion.level]?.color ?? "text-gray-700"
+                } ${LEVEL_COLOR_MAP[suggestion.level]?.bgColor ?? "bg-gray-100"}`}
+              >
+                {getLevelLabel(suggestion.level)}
+              </Badge>
+            )}
+          </div>
         </div>
 
         <p className="text-sm text-gray-700 mb-2">{suggestion.message}</p>
@@ -103,7 +115,7 @@ export function SuggestionFeedbackCard({
             <Badge key={tag} variant="outline" className="text-xs">
               <span className="flex items-center gap-1">
                 {getTagIcon(tag)}
-                {tag}
+                {getTagLabel(tag)}
               </span>
             </Badge>
           ))}

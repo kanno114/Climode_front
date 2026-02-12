@@ -17,9 +17,9 @@ const upcomingFeatures = [
 
 export function UpcomingFeatures() {
   return (
-    <Card className="border-dashed border-blue-200 bg-white/80 shadow-sm dark:border-blue-900 dark:bg-slate-900/40">
+    <Card className="border-dashed border-slate-200 bg-white/80 shadow-sm dark:border-slate-700 dark:bg-slate-900/40">
       <CardHeader>
-        <CardTitle>今後の機能予定</CardTitle>
+        <CardTitle className="text-xl">今後の機能予定</CardTitle>
         <CardDescription>
           現在開発中のアップデートを先行でご紹介します
         </CardDescription>
