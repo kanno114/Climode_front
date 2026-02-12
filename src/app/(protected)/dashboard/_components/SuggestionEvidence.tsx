@@ -75,46 +75,53 @@ export function SuggestionEvidence({
   }
 
   return (
-    <div className="mt-3 space-y-3 border-t pt-3 text-sm">
+    <div className="space-y-4 text-sm">
       {hasTriggers && (
-        <div>
-          <h5 className="mb-1 font-medium text-gray-700 dark:text-gray-300">
+        <section>
+          <h5 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             根拠となったデータ
           </h5>
-          <ul className="list-inside list-disc space-y-0.5 text-gray-600 dark:text-gray-400">
-            {Object.entries(triggers || {}).map(([key, value]) => {
-              const config = METRIC_LABEL_MAP[key] || {
-                label: formatMetricKey(key),
-                unit: "",
-              };
-              return (
-                <li key={key}>
-                  {config.label}: {formatValue(value, config.unit)}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+          <div className="rounded-md bg-muted/50 p-3">
+            <dl className="grid gap-2 sm:grid-cols-1">
+              {Object.entries(triggers || {}).map(([key, value]) => {
+                const config = METRIC_LABEL_MAP[key] || {
+                  label: formatMetricKey(key),
+                  unit: "",
+                };
+                return (
+                  <div key={key} className="flex justify-between gap-4">
+                    <dt className="text-muted-foreground">{config.label}</dt>
+                    <dd className="font-medium tabular-nums">
+                      {formatValue(value, config.unit)}
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </div>
+        </section>
       )}
 
       {hasReason && (
-        <div>
-          <h5 className="mb-1 font-medium text-gray-700 dark:text-gray-300">
-            なぜその提案が出たか
+        <section>
+          <h5 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            判定理由
           </h5>
-          <p className="text-gray-600 dark:text-gray-400">{reason_text}</p>
-        </div>
+          <p className="leading-relaxed text-slate-700 dark:text-slate-300">
+            {reason_text}
+          </p>
+        </section>
       )}
 
       {hasEvidence && (
-        <div>
-          <h5 className="mb-1 font-medium text-gray-700 dark:text-gray-300">
-            そのエビデンス
+        <section>
+          <h5 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            参考文献・出典
           </h5>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="leading-relaxed text-slate-700 dark:text-slate-300">
             {linkifyText(evidence_text)}
           </p>
-        </div>
+        </section>
       )}
     </div>
   );

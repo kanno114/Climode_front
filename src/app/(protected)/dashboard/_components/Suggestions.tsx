@@ -24,8 +24,14 @@ import {
   Coffee,
   Bed,
   Zap,
+  Info,
 } from "lucide-react";
 import { SuggestionEvidence } from "./SuggestionEvidence";
+import {
+  getLevelLabel,
+  getLevelStyle,
+  getTagLabel,
+} from "@/lib/suggestion-constants";
 
 interface Suggestion {
   key: string;
@@ -35,31 +41,10 @@ interface Suggestion {
   severity: number;
   triggers?: Record<string, number | string>;
   category: string;
+  level?: string | null;
   reason_text?: string | null;
   evidence_text?: string | null;
 }
-
-// categoryによる色分け
-const categoryConfig = {
-  env: {
-    color: "text-blue-700",
-    bgColor: "bg-blue-100",
-    borderColor: "border-blue-200",
-    cardBgColor: "bg-blue-50",
-  },
-  body: {
-    color: "text-pink-700",
-    bgColor: "bg-pink-100",
-    borderColor: "border-pink-200",
-    cardBgColor: "bg-pink-50",
-  },
-  default: {
-    color: "text-gray-700",
-    bgColor: "bg-gray-100",
-    borderColor: "border-gray-200",
-    cardBgColor: "bg-gray-50",
-  },
-} as const;
 
 // tagsによる色分け（Badge用）
 const tagColorMap = {
@@ -99,9 +84,9 @@ const tagColorMap = {
     borderColor: "border-red-300",
   },
   default: {
-    color: "text-gray-700",
-    bgColor: "bg-gray-100",
-    borderColor: "border-gray-300",
+    color: "text-slate-700",
+    bgColor: "bg-slate-100",
+    borderColor: "border-slate-300",
   },
 } as const;
 
@@ -130,13 +115,6 @@ export default function Suggestions({
 }: SuggestionsProps) {
   const canHover = useMediaQuery("(hover: hover)");
 
-  const getCategoryStyle = useCallback((category: string) => {
-    return (
-      categoryConfig[category as keyof typeof categoryConfig] ||
-      categoryConfig.default
-    );
-  }, []);
-
   const getTagStyle = useCallback((tag: string) => {
     return tagColorMap[tag as keyof typeof tagColorMap] || tagColorMap.default;
   }, []);
@@ -146,52 +124,37 @@ export default function Suggestions({
     return <IconComponent className="w-3 h-3" />;
   }, []);
 
-  const renderDetailContent = useCallback(
-    (suggestion: Suggestion) => (
-      <>
-        <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-          {suggestion.message}
-        </p>
-        {suggestion.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {suggestion.tags.map((tag) => {
-              const tagStyle = getTagStyle(tag);
-              return (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
-                >
-                  <span className="flex items-center gap-1">
-                    {getTagIcon(tag)}
-                    {tag}
-                  </span>
-                </Badge>
-              );
-            })}
-          </div>
-        )}
+  const renderDetailContent = useCallback((suggestion: Suggestion) => {
+    return (
+      <div className="space-y-4">
+        <div className="border-b pb-3">
+          <h4 className="font-semibold text-slate-900 dark:text-white">
+            {suggestion.title}
+          </h4>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {suggestion.message}
+          </p>
+        </div>
         <SuggestionEvidence
           triggers={suggestion.triggers}
           reason_text={suggestion.reason_text}
           evidence_text={suggestion.evidence_text}
         />
-      </>
-    ),
-    [getTagStyle, getTagIcon],
-  );
+      </div>
+    );
+  }, []);
 
   if (suggestions.length === 0) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-xl">
             <Zap className="w-5 h-5" />
             {emptyTitle}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-6 text-gray-500">
+          <div className="text-center py-6 text-slate-500">
             <Coffee className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>{emptyMessage}</p>
             <p className="text-sm">体調が良好なようです！</p>
@@ -204,50 +167,91 @@ export default function Suggestions({
   return (
     <Card className="py-4 gap-4">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-xl">
           <Zap className="w-5 h-5" />
           {title}
         </CardTitle>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          ホバーまたはタップで詳細を表示
-        </p>
       </CardHeader>
       <CardContent className="space-y-2">
         {suggestions
           .sort((a, b) => b.severity - a.severity)
           .map((suggestion) => {
-            const categoryStyle = getCategoryStyle(suggestion.category);
-            const trigger = (
-              <article
-                className={`flex items-center justify-between gap-2 p-2 rounded border cursor-pointer ${categoryStyle.cardBgColor} ${categoryStyle.borderColor}`}
-                title={canHover ? "ホバーで詳細を表示" : "タップで詳細を表示"}
+            const levelStyle = getLevelStyle(suggestion.level);
+            const evidenceTrigger = (
+              <button
+                type="button"
+                className="shrink-0 p-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                aria-label="エビデンスを表示"
+                title={canHover ? "ホバーでエビデンスを表示" : "クリックでエビデンスを表示"}
               >
-                <h4 className="font-semibold text-sm text-gray-900 dark:text-white truncate min-w-0">
-                  {suggestion.title}
-                </h4>
-                <Badge
-                  variant="secondary"
-                  className={`text-xs shrink-0 ${categoryStyle.color} ${categoryStyle.bgColor}`}
-                >
-                  {suggestion.severity}
-                </Badge>
-              </article>
+                <Info className="h-4 w-4 text-muted-foreground" />
+              </button>
             );
 
-            return canHover ? (
-              <HoverCard key={suggestion.key} openDelay={300} closeDelay={100}>
-                <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
-                <HoverCardContent className="w-80" side="top" align="start">
-                  {renderDetailContent(suggestion)}
-                </HoverCardContent>
-              </HoverCard>
-            ) : (
-              <Popover key={suggestion.key}>
-                <PopoverTrigger asChild>{trigger}</PopoverTrigger>
-                <PopoverContent className="w-80" side="top" align="start">
-                  {renderDetailContent(suggestion)}
-                </PopoverContent>
-              </Popover>
+            return (
+              <article
+                key={suggestion.key}
+                className={`flex flex-col gap-2 p-3 rounded border ${levelStyle.cardBgColor} ${levelStyle.borderColor}`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-semibold text-sm text-slate-900 dark:text-white min-w-0">
+                    {suggestion.title}
+                  </h4>
+                  <div className="flex items-center gap-1 shrink-0">
+                    {canHover ? (
+                      <HoverCard openDelay={300} closeDelay={100}>
+                        <HoverCardTrigger asChild>{evidenceTrigger}</HoverCardTrigger>
+                        <HoverCardContent
+                          className="w-96 max-h-[min(80vh,28rem)] overflow-y-auto p-4"
+                          side="top"
+                          align="end"
+                        >
+                          {renderDetailContent(suggestion)}
+                        </HoverCardContent>
+                      </HoverCard>
+                    ) : (
+                      <Popover>
+                        <PopoverTrigger asChild>{evidenceTrigger}</PopoverTrigger>
+                        <PopoverContent
+                          className="w-96 max-h-[min(80vh,28rem)] overflow-y-auto p-4"
+                          side="top"
+                          align="end"
+                        >
+                          {renderDetailContent(suggestion)}
+                        </PopoverContent>
+                      </Popover>
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-slate-700 dark:text-slate-300">
+                  {suggestion.message}
+                </p>
+                <div className="flex flex-wrap gap-1 justify-end">
+                  {suggestion.level && (
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${levelStyle.color} ${levelStyle.bgColor}`}
+                    >
+                      {getLevelLabel(suggestion.level)}
+                    </Badge>
+                  )}
+                  {suggestion.tags.map((tag) => {
+                    const tagStyle = getTagStyle(tag);
+                    return (
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
+                      >
+                        <span className="flex items-center gap-1">
+                          {getTagIcon(tag)}
+                          {getTagLabel(tag)}
+                        </span>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              </article>
             );
           })}
       </CardContent>
