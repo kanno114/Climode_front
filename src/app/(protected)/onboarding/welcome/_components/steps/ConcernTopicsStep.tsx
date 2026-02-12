@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ConcernTopicCheckboxList } from "@/app/(protected)/concern-topics/_components/ConcernTopicCheckboxList";
 import type { ConcernTopic } from "@/lib/schemas/concern-topics";
 import {
   getConcernTopicsAction,
@@ -84,7 +84,7 @@ export function ConcernTopicsStep({
 
   if (loading) {
     return (
-      <div className="rounded-lg border p-6 flex items-center justify-center min-h-[200px]">
+      <div className="rounded-lg border border-border bg-card p-6 flex items-center justify-center min-h-[200px]">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
@@ -92,7 +92,7 @@ export function ConcernTopicsStep({
 
   if (topics.length === 0) {
     return (
-      <div className="rounded-lg border p-6 space-y-4">
+      <div className="rounded-lg border border-border bg-card p-6 space-y-4">
         <p className="text-sm text-muted-foreground">
           登録できる関心ワードはありません
         </p>
@@ -104,32 +104,16 @@ export function ConcernTopicsStep({
   }
 
   return (
-    <div className="rounded-lg border p-6 space-y-4">
-      <div className="space-y-3 max-h-[300px] overflow-y-auto">
-        {topics.map((topic) => (
-          <label
-            key={topic.key}
-            className="flex items-start gap-3 p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors"
-          >
-            <Checkbox
-              checked={selectedKeys.has(topic.key)}
-              onCheckedChange={(checked) =>
-                handleToggle(topic.key, checked === true)
-              }
-            />
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
-                {topic.label_ja}
-              </p>
-              {topic.description_ja && (
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {topic.description_ja}
-                </p>
-              )}
-            </div>
-          </label>
-        ))}
-      </div>
+    <div className="rounded-lg border border-border bg-card p-6 space-y-4">
+      <ConcernTopicCheckboxList
+        topics={topics}
+        selectedKeys={selectedKeys}
+        onToggle={handleToggle}
+        disabled={saving}
+        compact
+        showSelectionCount
+        maxHeight="300px"
+      />
 
       <Button
         className="w-full"
