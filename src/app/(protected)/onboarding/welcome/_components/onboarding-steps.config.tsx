@@ -15,15 +15,15 @@ export type StepDefinition = {
 export const STEP_DEFINITIONS: StepDefinition[] = [
   {
     key: "prefecture",
-    title: "シグナルで体調の変化を知る",
+    title: "地域に合わせた提案を受け取る",
     description:
-      "地域の気象データをもとに、あなたの体調に影響するシグナルを検出します。",
+      "地域の気象データをもとに、あなたの体調に合った提案をお届けします。",
     required: true,
     icon: Thermometer,
     tutorial: (
       <div className="space-y-3 text-sm text-muted-foreground">
         <p>
-          気圧や温度の変化など、地域ごとの環境シグナルを取得するために、
+          気圧や温度の変化など、地域ごとの環境データをもとに提案を受け取るために、
           まずは「取得地域（都道府県）」を設定します。
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">

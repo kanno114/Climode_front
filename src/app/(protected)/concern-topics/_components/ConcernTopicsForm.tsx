@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import type { ConcernTopic } from "@/lib/schemas/concern-topics";
 import {
@@ -18,6 +17,7 @@ import {
   getUserConcernTopicsAction,
   updateUserConcernTopicsAction,
 } from "../actions";
+import { ConcernTopicCheckboxList } from "./ConcernTopicCheckboxList";
 
 export function ConcernTopicsForm() {
   const [topics, setTopics] = useState<ConcernTopic[]>([]);
@@ -117,31 +117,13 @@ export function ConcernTopicsForm() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-3">
-          {topics.map((topic) => (
-            <label
-              key={topic.key}
-              className="flex items-start gap-3 p-4 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors"
-            >
-              <Checkbox
-                checked={selectedKeys.has(topic.key)}
-                onCheckedChange={(checked) =>
-                  handleToggle(topic.key, checked === true)
-                }
-              />
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 dark:text-gray-100">
-                  {topic.label_ja}
-                </p>
-                {topic.description_ja && (
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    {topic.description_ja}
-                  </p>
-                )}
-              </div>
-            </label>
-          ))}
-        </div>
+        <ConcernTopicCheckboxList
+          topics={topics}
+          selectedKeys={selectedKeys}
+          onToggle={handleToggle}
+          disabled={saving}
+          showSelectionCount
+        />
 
         <div className="flex justify-end pt-4">
           <Button onClick={handleSave} disabled={saving}>
