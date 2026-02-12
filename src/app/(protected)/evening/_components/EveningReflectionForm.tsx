@@ -251,22 +251,37 @@ export function EveningReflectionForm() {
             <div className="space-y-2">
               <Label>セルフスコア</Label>
               <div className="flex gap-2">
-                {[1, 2, 3].map((score) => (
-                  <Button
-                    key={score}
-                    type="button"
-                    variant={selfScore === score ? "default" : "outline"}
-                    onClick={() => setSelfScore(score)}
-                    className="flex-1"
-                    disabled={pending || isPending}
-                  >
-                    {score === 1
-                      ? "😕 悪い"
-                      : score === 2
-                        ? "😐 普通"
-                        : "😊 良い"}
-                  </Button>
-                ))}
+                {/* 良い→普通→悪いの順で表示（色分け: 緑・黄・赤） */}
+                {[3, 2, 1].map((score) => {
+                  const isSelected = selfScore === score;
+                  const scoreStyles = {
+                    3: isSelected
+                      ? "border-green-500 bg-green-50 text-green-700 dark:border-green-600 dark:bg-green-950/50 dark:text-green-400"
+                      : "hover:border-green-300 dark:hover:border-green-800",
+                    2: isSelected
+                      ? "border-amber-500 bg-amber-50 text-amber-700 dark:border-amber-600 dark:bg-amber-950/50 dark:text-amber-400"
+                      : "hover:border-amber-300 dark:hover:border-amber-800",
+                    1: isSelected
+                      ? "border-red-500 bg-red-50 text-red-700 dark:border-red-600 dark:bg-red-950/50 dark:text-red-400"
+                      : "hover:border-red-300 dark:hover:border-red-800",
+                  };
+                  return (
+                    <Button
+                      key={score}
+                      type="button"
+                      variant="outline"
+                      onClick={() => setSelfScore(score)}
+                      className={`flex-1 border-2 ${scoreStyles[score as 1 | 2 | 3]}`}
+                      disabled={pending || isPending}
+                    >
+                      {score === 1
+                        ? "😕 悪い"
+                        : score === 2
+                          ? "😐 普通"
+                          : "😊 良い"}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           </CardContent>

@@ -128,6 +128,8 @@ export interface WeeklyReportSuggestionItem {
   message: string;
   helpfulness: boolean | null;
   category: string;
+  level?: string | null;
+  tags?: string[];
 }
 
 export interface WeeklyReportSuggestionsByDay {
