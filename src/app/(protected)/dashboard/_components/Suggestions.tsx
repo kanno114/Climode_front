@@ -170,6 +170,9 @@ export default function Suggestions({
         <CardTitle className="flex items-center gap-2 text-xl">
           <Zap className="w-5 h-5" />
           {title}
+          <span className="text-sm font-normal text-muted-foreground">
+            （{suggestions.length}件）
+          </span>
         </CardTitle>
         {canHover && (
           <p className="text-xs text-muted-foreground mt-1 text-right">
