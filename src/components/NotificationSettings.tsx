@@ -87,7 +87,7 @@ export function NotificationSettings() {
       setSubscribed(true);
       toast.success("通知を有効にしました", {
         description:
-          "朝7時にシグナルのお知らせ、夜20時に振り返りのリマインドが届きます",
+          "朝8時は行動提案、夜20時は振り返りのリマインドが届きます",
       });
     } catch (error) {
       console.error("Subscribe error:", error);
@@ -133,7 +133,7 @@ export function NotificationSettings() {
 
       // Delete subscription from backend via Server Action
       const result = await unsubscribePushNotificationAction(
-        subscription.endpoint
+        subscription.endpoint,
       );
 
       if (result.status === "error") {
@@ -174,7 +174,7 @@ export function NotificationSettings() {
           プッシュ通知
         </CardTitle>
         <CardDescription>
-          朝7時はシグナルのお知らせ、夜20時は振り返りのリマインドを受け取る
+          朝8時は行動提案、夜20時は振り返りのリマインドを受け取る
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -185,8 +185,8 @@ export function NotificationSettings() {
             </p>
             <p className="text-sm text-muted-foreground">
               {subscribed
-                ? "朝7時に今日のシグナルと行動のヒント、夜20時に振り返りのリマインドが届きます"
-                : "通知を有効にすると朝7時と夜20時にリマインダーが届きます"}
+                ? "朝8時に今日の行動提案、夜20時に振り返りのリマインドが届きます"
+                : "通知を有効にすると朝8時と夜20時にリマインダーが届きます"}
             </p>
           </div>
           <Button
@@ -214,8 +214,8 @@ export function NotificationSettings() {
           <div className="rounded-lg bg-muted p-4 text-sm">
             <p className="font-medium mb-2">通知を有効にすると：</p>
             <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-              <li>朝7時：今日のシグナルと行動のヒントが届きます</li>
-              <li>夜20時：1分で終わる振り返りフォームへのご案内が届きます</li>
+              <li>朝8時：今日の行動提案</li>
+              <li>夜20時：1分で終わる振り返りフォームへのご案内</li>
               <li>記録忘れを防ぐことができます</li>
               <li>継続的な健康管理をサポートします</li>
             </ul>

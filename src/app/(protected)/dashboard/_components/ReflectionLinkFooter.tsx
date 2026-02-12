@@ -21,9 +21,12 @@ export function ReflectionLinkFooter({
     setMounted(true);
     setTimeOfDay(getTimeOfDay());
 
-    const interval = setInterval(() => {
-      setTimeOfDay(getTimeOfDay());
-    }, 60 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        setTimeOfDay(getTimeOfDay());
+      },
+      60 * 60 * 1000,
+    );
     return () => clearInterval(interval);
   }, []);
 
