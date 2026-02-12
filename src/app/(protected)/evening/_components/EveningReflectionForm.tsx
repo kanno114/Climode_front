@@ -24,6 +24,7 @@ type Suggestion = {
   message: string;
   tags: string[];
   severity: number;
+  level?: string | null;
   triggers?: Record<string, number | string>;
   reason_text?: string | null;
   evidence_text?: string | null;
