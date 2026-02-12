@@ -65,7 +65,7 @@ describe("MorningDeclarationForm", () => {
     expect(screen.getByText("気分（1〜5）")).toBeInTheDocument();
     expect(screen.getByText("疲労感（1〜5）")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "今日のシグナルを見る" })
+      screen.getByRole("button", { name: "今日の提案を見てみる" })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /とても悪い/i })
