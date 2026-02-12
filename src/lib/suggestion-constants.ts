@@ -96,6 +96,19 @@ export const LEVEL_COLOR_MAP: Record<
   },
 };
 
+/** Chart.js用のlevel別色（RGBA） */
+export const LEVEL_CHART_COLORS: Record<string, string> = {
+  Danger: "rgba(239, 68, 68, 0.8)",
+  Warning: "rgba(249, 115, 22, 0.8)",
+  Caution: "rgba(234, 179, 8, 0.8)",
+  Notice: "rgba(245, 158, 11, 0.8)",
+  Optimal: "rgba(34, 197, 94, 0.8)",
+  Good: "rgba(34, 197, 94, 0.8)",
+  Temperature: "rgba(20, 184, 166, 0.8)",
+  Humidity: "rgba(20, 184, 166, 0.8)",
+  Pressure: "rgba(20, 184, 166, 0.8)",
+};
+
 const LEVEL_DEFAULT = {
   color: "text-slate-700",
   bgColor: "bg-slate-100",
