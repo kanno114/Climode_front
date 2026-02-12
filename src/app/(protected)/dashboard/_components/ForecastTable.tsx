@@ -276,7 +276,10 @@ export function ForecastTable({
                 gridLine,
               ].join(" ")}
             >
-              気圧(hPa)
+              <div>気圧(hPa)</div>
+              <div className="text-xs font-normal text-slate-500 dark:text-slate-400 mt-0.5">
+                前時間比
+              </div>
             </div>
             {forecast.map((h, idx) => {
               const isNow = currentHour != null && h.hour === currentHour;
