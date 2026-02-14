@@ -65,6 +65,15 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
               新規登録
             </Link>
           </div>
+
+          <div className="text-center text-xs">
+            <Link
+              href="/privacy-policy"
+              className="text-muted-foreground hover:underline"
+            >
+              プライバシーポリシー
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -46,6 +46,15 @@ export default async function Home() {
         {/* アプリ説明セクション */}
         <AppDescription />
       </main>
+
+      <footer className="text-center py-8">
+        <Link
+          href="/privacy-policy"
+          className="text-sm text-muted-foreground hover:underline"
+        >
+          プライバシーポリシー
+        </Link>
+      </footer>
     </div>
   );
 }
