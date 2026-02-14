@@ -20,9 +20,7 @@ export async function TodayArea() {
   const hasReflection =
     hasDailyLog &&
     (!!todayDailyLog.note ||
-      (todayDailyLog.suggestion_feedbacks?.length ?? 0) > 0 ||
-      !!todayDailyLog.helpfulness ||
-      !!todayDailyLog.match_score);
+      (todayDailyLog.suggestion_feedbacks?.length ?? 0) > 0);
 
   return (
     <Card className="py-4">
@@ -34,8 +32,6 @@ export async function TodayArea() {
             <EveningReflectionDisplay
               note={todayDailyLog.note}
               suggestion_feedbacks={todayDailyLog.suggestion_feedbacks}
-              helpfulness={todayDailyLog.helpfulness}
-              match_score={todayDailyLog.match_score}
             />
           ) : undefined
         }

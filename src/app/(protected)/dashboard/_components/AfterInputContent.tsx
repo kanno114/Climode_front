@@ -11,8 +11,6 @@ interface AfterInputContentProps {
     memo?: string;
     note?: string | null;
     score: number;
-    helpfulness?: number | null;
-    match_score?: number | null;
     prefecture?: {
       id: number;
       name_ja: string;

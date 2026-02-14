@@ -13,8 +13,6 @@ interface DailyLogDetailProps {
     note?: string | null;
     self_score?: number;
     fatigue?: number | null;
-    helpfulness?: number | null;
-    match_score?: number | null;
     prefecture?: {
       id: number;
       name_ja: string;
@@ -35,16 +33,7 @@ export function DailyLogDetail({ dailyLog }: DailyLogDetailProps) {
     return labels[score] || null;
   };
 
-  const getFiveLevelLabel = (value: number | null | undefined) => {
-    if (value == null) return null;
-    if (value <= 2) return "低い";
-    if (value === 3) return "普通";
-    return "高い";
-  };
-
   const selfScoreLabel = getSelfScoreLabel(dailyLog.self_score);
-  const helpfulnessLabel = getFiveLevelLabel(dailyLog.helpfulness);
-  const matchScoreLabel = getFiveLevelLabel(dailyLog.match_score);
   const fatigueLabel = (() => {
     if (dailyLog.fatigue == null) return null;
     if (dailyLog.fatigue >= 4) return "とても軽い";
@@ -170,43 +159,6 @@ export function DailyLogDetail({ dailyLog }: DailyLogDetailProps) {
             </div>
           )}
         </div>
-
-        {/* 提案の役立ち度 / シグナルのマッチ度 */}
-        {(dailyLog.helpfulness || dailyLog.match_score) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t">
-            {dailyLog.helpfulness && (
-              <div className="space-y-1">
-                <div className="text-xs text-muted-foreground">
-                  提案の役立ち度
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">{dailyLog.helpfulness}/5</Badge>
-                  {helpfulnessLabel && (
-                    <span className="text-xs text-muted-foreground">
-                      {helpfulnessLabel}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {dailyLog.match_score && (
-              <div className="space-y-1">
-                <div className="text-xs text-muted-foreground">
-                  シグナルのマッチ度
-                </div>
-          <div className="flex items-center gap-2">
-                  <Badge variant="outline">{dailyLog.match_score}/5</Badge>
-                  {matchScoreLabel && (
-                    <span className="text-xs text-muted-foreground">
-                      {matchScoreLabel}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
 
         {/* 振り返りメモ */}
         {dailyLog.note && (

@@ -6,21 +6,14 @@ import { NotebookPen } from "lucide-react";
 interface EveningReflectionDisplayProps {
   note?: string | null;
   suggestion_feedbacks?: Array<{ id: number; suggestion_key: string; helpfulness: boolean }>;
-  helpfulness?: number | null;
-  match_score?: number | null;
 }
 
 export function EveningReflectionDisplay({
   note,
   suggestion_feedbacks = [],
-  helpfulness,
-  match_score,
 }: EveningReflectionDisplayProps) {
   const hasReflection =
-    !!note ||
-    suggestion_feedbacks.length > 0 ||
-    helpfulness != null ||
-    match_score != null;
+    !!note || suggestion_feedbacks.length > 0;
 
   if (!hasReflection) {
     return null;
