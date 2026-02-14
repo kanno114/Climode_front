@@ -32,7 +32,13 @@ export default async function SignUpPage() {
             </Link>
           </div>
 
-          <div className="text-center text-xs">
+          <div className="text-center text-xs space-x-3">
+            <Link
+              href="/terms-of-service"
+              className="text-muted-foreground hover:underline"
+            >
+              利用規約
+            </Link>
             <Link
               href="/privacy-policy"
               className="text-muted-foreground hover:underline"
