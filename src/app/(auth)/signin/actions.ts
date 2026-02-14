@@ -5,6 +5,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { signInSchema } from "@/lib/schemas/signin";
 import { setAuthCookies } from "@/lib/auth/cookies";
+import { parseApiError } from "@/lib/api/parse-error";
 
 export async function signInAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signInSchema });
@@ -33,17 +34,11 @@ export async function signInAction(_: unknown, formData: FormData) {
 
     // Rails APIからのレスポンスを処理
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("Rails API認証失敗:", {
-        status: res.status,
-        error: errorData.error || errorData.details,
-      });
-
-      // Rails側のエラーメッセージをそのまま使用
-      const errorMessage =
-        errorData.error ||
-        errorData.details ||
-        "メールアドレスまたはパスワードが正しくありません";
+      const errorMessage = await parseApiError(
+        res,
+        "メールアドレスまたはパスワードが正しくありません",
+      );
+      console.error("Rails API認証失敗:", { status: res.status });
 
       return submission.reply({
         formErrors: [errorMessage],

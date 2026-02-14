@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/lib/api/api-fetch";
 import { profileSchema } from "@/lib/schemas/profile";
+import { parseApiError } from "@/lib/api/parse-error";
 
 export async function getPrefectures() {
   const session = await auth();
@@ -105,15 +106,13 @@ export async function updateProfileAction(_: unknown, formData: FormData) {
       revalidatePath("/profile");
       return { status: "success" as const };
     } else {
-      const errorData = await res.json();
+      const errorMessage = await parseApiError(
+        res,
+        "プロファイルの更新に失敗しました",
+      );
       return {
         status: "error" as const,
-        error: {
-          message:
-            errorData.errors?.[0] ||
-            errorData.message ||
-            "プロファイルの更新に失敗しました",
-        },
+        error: { message: errorMessage },
       };
     }
   } catch (error) {
@@ -155,15 +154,13 @@ export async function subscribePushNotificationAction(subscription: {
     if (res.ok) {
       return { status: "success" as const };
     } else {
-      const errorData = await res.json();
+      const errorMessage = await parseApiError(
+        res,
+        "通知の登録に失敗しました",
+      );
       return {
         status: "error" as const,
-        error: {
-          message:
-            errorData.errors?.[0] ||
-            errorData.message ||
-            "通知の登録に失敗しました",
-        },
+        error: { message: errorMessage },
       };
     }
   } catch (error) {
@@ -201,13 +198,13 @@ export async function unsubscribePushNotificationAction(endpoint: string) {
     if (res.ok) {
       return { status: "success" as const };
     } else {
-      const errorData = await res.json();
+      const errorMessage = await parseApiError(
+        res,
+        "通知の解除に失敗しました",
+      );
       return {
         status: "error" as const,
-        error: {
-          message:
-            errorData.error || errorData.message || "通知の解除に失敗しました",
-        },
+        error: { message: errorMessage },
       };
     }
   } catch (error) {

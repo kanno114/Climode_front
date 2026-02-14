@@ -5,6 +5,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { signUpSchema } from "@/lib/schemas/signup";
 import { setAuthCookies } from "@/lib/auth/cookies";
+import { parseApiError } from "@/lib/api/parse-error";
 
 export async function signUpAction(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, { schema: signUpSchema });
@@ -39,39 +40,14 @@ export async function signUpAction(_: unknown, formData: FormData) {
     );
 
     if (!backendSignUpResponse.ok) {
-      const errorData = await backendSignUpResponse.json();
-      console.error("登録失敗:", errorData.errors || errorData);
-
-      // Railsからのエラーメッセージを処理
-      let errorMessages: string[] = [];
-
-      if (errorData.errors) {
-        // Railsのバリデーションエラーの場合
-        if (typeof errorData.errors === "object") {
-          // フィールド別のエラーメッセージを配列に変換
-          Object.values(errorData.errors).forEach((fieldErrors: unknown) => {
-            if (Array.isArray(fieldErrors)) {
-              errorMessages.push(...fieldErrors);
-            } else if (typeof fieldErrors === "string") {
-              errorMessages.push(fieldErrors);
-            }
-          });
-        } else if (Array.isArray(errorData.errors)) {
-          errorMessages = errorData.errors;
-        }
-      } else if (errorData.error) {
-        // 単一のエラーメッセージの場合
-        errorMessages = [errorData.error];
-      } else if (errorData.message) {
-        // messageフィールドの場合
-        errorMessages = [errorData.message];
-      } else {
-        // デフォルトエラーメッセージ
-        errorMessages = ["登録に失敗しました"];
-      }
+      const errorMessage = await parseApiError(
+        backendSignUpResponse,
+        "登録に失敗しました",
+      );
+      console.error("登録失敗:", { status: backendSignUpResponse.status });
 
       return submission.reply({
-        formErrors: errorMessages,
+        formErrors: [errorMessage],
       });
     }
 
@@ -92,17 +68,11 @@ export async function signUpAction(_: unknown, formData: FormData) {
 
     // Rails APIからのレスポンスを処理
     if (!backendSignInResponse.ok) {
-      const errorData = await backendSignInResponse.json().catch(() => ({}));
-      console.error("Rails API認証失敗:", {
-        status: backendSignInResponse.status,
-        error: errorData.error || errorData.details,
-      });
-
-      // Rails側のエラーメッセージをそのまま使用
-      const errorMessage =
-        errorData.error ||
-        errorData.details ||
-        "メールアドレスまたはパスワードが正しくありません";
+      const errorMessage = await parseApiError(
+        backendSignInResponse,
+        "メールアドレスまたはパスワードが正しくありません",
+      );
+      console.error("Rails API認証失敗:", { status: backendSignInResponse.status });
 
       return submission.reply({
         formErrors: [errorMessage],

@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { apiFetch } from "@/lib/api/api-fetch";
+import { parseApiError } from "@/lib/api/parse-error";
 
 type ActionResult =
   | {
@@ -48,14 +49,13 @@ export async function updateOnboardingPrefecture(
     );
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      const message =
-        errorData.errors?.[0] ||
-        errorData.message ||
-        "取得地域の保存に失敗しました";
+      const errorMessage = await parseApiError(
+        res,
+        "取得地域の保存に失敗しました",
+      );
       return {
         status: "error",
-        error: message,
+        error: errorMessage,
       };
     }
 

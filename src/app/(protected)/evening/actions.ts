@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { apiFetch } from "@/lib/api/api-fetch";
+import { parseApiError } from "@/lib/api/parse-error";
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation";
 import { eveningReflectionSchema } from "@/lib/schemas/evening-reflection";
@@ -114,18 +115,11 @@ export async function submitEveningReflection(_: unknown, formData: FormData) {
     );
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("夜の振り返り保存失敗:", {
-        status: res.status,
-        statusText: res.statusText,
-        error: errorData.error || errorData.errors,
-        fullError: errorData,
-      });
-
-      const errorMessage =
-        errorData.error ||
-        errorData.errors?.join(", ") ||
-        `夜の振り返りの保存に失敗しました (${res.status})`;
+      const errorMessage = await parseApiError(
+        res,
+        "夜の振り返りの保存に失敗しました",
+      );
+      console.error("夜の振り返り保存失敗:", { status: res.status });
 
       return submission.reply({
         formErrors: [errorMessage],
