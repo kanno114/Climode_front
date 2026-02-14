@@ -41,17 +41,15 @@ export const callbacks: NextAuthConfig["callbacks"] = {
 
         // RailsからのJWTを保存してRails側のサインイン状態を確立
         const access_token = data?.access_token;
-        const refresh_token = data?.refresh_token;
         const expires_in = data?.expires_in;
 
-        if (access_token && refresh_token) {
+        if (access_token) {
           await setAuthCookies({
             accessToken: access_token,
-            refreshToken: refresh_token,
             accessTokenMaxAgeSec:
               typeof expires_in === "number"
-                ? Math.max(60, Math.min(expires_in, 60 * 60))
-                : 60 * 10,
+                ? expires_in
+                : 60 * 60 * 24 * 30,
           });
         }
       } catch (err) {

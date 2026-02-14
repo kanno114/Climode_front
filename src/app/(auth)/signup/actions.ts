@@ -113,19 +113,15 @@ export async function signUpAction(_: unknown, formData: FormData) {
     const {
       user: signedInUser,
       access_token,
-      refresh_token,
       expires_in,
     } = userData;
 
-    // Railsトークンをクッキーへ保存（Railsサインイン確立）
-    if (access_token && refresh_token) {
+    // Railsトークンをクッキーへ保存
+    if (access_token) {
       await setAuthCookies({
         accessToken: access_token,
-        refreshToken: refresh_token,
         accessTokenMaxAgeSec:
-          typeof expires_in === "number"
-            ? Math.max(60, Math.min(expires_in, 60 * 60))
-            : 60 * 10,
+          typeof expires_in === "number" ? expires_in : 60 * 60 * 24 * 30,
       });
     }
 
