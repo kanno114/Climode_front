@@ -17,14 +17,6 @@ export async function GET(request: Request) {
     maxAge: 0,
   });
 
-  cs.set("refresh_token", "", {
-    httpOnly: true,
-    secure: isProd,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 0,
-  });
-
   // NextAuth のセッションも破棄してリダイレクト
   const redirectTo =
     reason === "session_expired"

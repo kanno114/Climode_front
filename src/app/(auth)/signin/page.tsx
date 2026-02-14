@@ -41,13 +41,6 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
               duration={5000}
             />
           )}
-          {params.message === "token_refresh_failed" && (
-            <ToastMessage
-              message="認証の更新に失敗しました"
-              description="再度ログインしてください。"
-              duration={5000}
-            />
-          )}
           {params.message === "invalid_token" && (
             <ToastMessage
               message="無効な認証情報です"
