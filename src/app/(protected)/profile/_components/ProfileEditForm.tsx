@@ -51,9 +51,10 @@ export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
   // バックエンドエラーをtoastで表示
   useEffect(() => {
     if (lastResult?.status === "error") {
-      toast.error(
-        lastResult.error?.message || "プロファイルの更新に失敗しました。"
-      );
+      const errorMessage =
+        lastResult.error?.formErrors?.[0] ||
+        "プロファイルの更新に失敗しました。";
+      toast.error(errorMessage);
     } else if (lastResult?.status === "success") {
       toast.success("プロファイルを更新しました。");
     }

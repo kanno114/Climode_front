@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { morningDeclarationSchema } from "@/lib/schemas/morning-declaration";
 import { auth } from "@/auth";
 import { apiFetch } from "@/lib/api/api-fetch";
+import { parseApiError } from "@/lib/api/parse-error";
 
 export async function submitMorningDeclaration(_: unknown, formData: FormData) {
   const submission = parseWithZod(formData, {
@@ -45,16 +46,11 @@ export async function submitMorningDeclaration(_: unknown, formData: FormData) {
     );
 
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      console.error("朝の自己申告保存失敗:", {
-        status: res.status,
-        error: errorData.error || errorData.errors,
-      });
-
-      const errorMessage =
-        errorData.error ||
-        errorData.errors?.join(", ") ||
-        "朝の自己申告の保存に失敗しました";
+      const errorMessage = await parseApiError(
+        res,
+        "朝の自己申告の保存に失敗しました",
+      );
+      console.error("朝の自己申告保存失敗:", { status: res.status });
 
       return submission.reply({
         formErrors: [errorMessage],
