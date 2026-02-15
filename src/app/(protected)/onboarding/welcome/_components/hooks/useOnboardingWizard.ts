@@ -1,10 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { STEP_DEFINITIONS, type StepKey } from "../onboarding-steps.config";
 
 type StepCompletion = Record<StepKey, boolean>;
+type SkippedSteps = Partial<Record<StepKey, boolean>>;
+type WizardPhase = "welcome" | "steps" | "complete";
 
 type UseOnboardingWizardOptions = {
   initialPrefectureCompleted: boolean;
@@ -14,19 +16,22 @@ export function useOnboardingWizard({
   initialPrefectureCompleted,
 }: UseOnboardingWizardOptions) {
   const router = useRouter();
+
+  const [phase, setPhase] = useState<WizardPhase>(
+    initialPrefectureCompleted ? "steps" : "welcome"
+  );
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [stepCompletion, setStepCompletion] = useState<StepCompletion>({
     prefecture: initialPrefectureCompleted,
     concern_topics: false,
     notification: false,
   });
+  const [skippedSteps, setSkippedSteps] = useState<SkippedSteps>({});
 
   const totalSteps = STEP_DEFINITIONS.length;
 
-  const progress = useMemo(
-    () => ((currentStepIndex + 1) / totalSteps) * 100,
-    [currentStepIndex, totalSteps]
-  );
+  const completedCount = Object.values(stepCompletion).filter(Boolean).length;
+  const progress = (completedCount / totalSteps) * 100;
 
   const currentStep = STEP_DEFINITIONS[currentStepIndex];
 
@@ -36,11 +41,14 @@ export function useOnboardingWizard({
       stepCompletion.concern_topics &&
       stepCompletion.notification &&
       currentStepIndex === totalSteps - 1;
-    if (allCompleted) {
-      // オンボーディング完了後はダッシュボードへリダイレクト
-      router.push("/dashboard");
+    if (allCompleted && phase === "steps") {
+      setPhase("complete");
     }
-  }, [stepCompletion, currentStepIndex, router, totalSteps]);
+  }, [stepCompletion, currentStepIndex, totalSteps, phase]);
+
+  const handleStartOnboarding = useCallback(() => {
+    setPhase("steps");
+  }, []);
 
   const handleStepComplete = useCallback(
     (key: StepKey) => {
@@ -65,6 +73,10 @@ export function useOnboardingWizard({
         ...prev,
         [key]: true,
       }));
+      setSkippedSteps((prev) => ({
+        ...prev,
+        [key]: true,
+      }));
 
       setCurrentStepIndex((prev) => {
         if (prev < totalSteps - 1) {
@@ -80,13 +92,33 @@ export function useOnboardingWizard({
     setCurrentStepIndex((prev) => Math.max(0, prev - 1));
   }, []);
 
+  const handleGoToStep = useCallback(
+    (index: number) => {
+      const step = STEP_DEFINITIONS[index];
+      if (step && stepCompletion[step.key]) {
+        setCurrentStepIndex(index);
+      }
+    },
+    [stepCompletion]
+  );
+
+  const handleGoToDashboard = useCallback(() => {
+    router.push("/dashboard");
+  }, [router]);
+
   return {
+    phase,
     currentStepIndex,
     currentStep,
     totalSteps,
     progress,
+    stepCompletion,
+    skippedSteps,
+    handleStartOnboarding,
     handleStepComplete,
     handleStepSkip,
     handleGoBack,
+    handleGoToStep,
+    handleGoToDashboard,
   };
 }

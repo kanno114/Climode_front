@@ -25,7 +25,7 @@ type PrefectureOption = {
 type PrefectureStepProps = {
   prefectures: PrefectureOption[];
   initialPrefectureId?: number | null;
-  onComplete: () => void;
+  onComplete: (prefectureId?: number) => void;
 };
 
 export function PrefectureStep({
@@ -60,7 +60,7 @@ export function PrefectureStep({
           }
           toast.success("取得地域を保存しました");
         }
-        onComplete();
+        onComplete(Number(selectedPrefecture));
       } catch {
         setError("取得地域の保存に失敗しました");
       }

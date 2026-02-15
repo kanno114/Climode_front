@@ -5,10 +5,16 @@ import type React from "react";
 type TutorialPanelProps = {
   icon: React.ElementType;
   title: string;
+  subtitle: string;
   content: React.ReactNode;
 };
 
-export function TutorialPanel({ icon: Icon, title, content }: TutorialPanelProps) {
+export function TutorialPanel({
+  icon: Icon,
+  title,
+  subtitle,
+  content,
+}: TutorialPanelProps) {
   return (
     <div className="rounded-lg border bg-muted/30 p-6 space-y-4">
       <div className="flex items-center gap-3">
@@ -17,14 +23,10 @@ export function TutorialPanel({ icon: Icon, title, content }: TutorialPanelProps
         </div>
         <div>
           <p className="text-lg font-semibold">{title}</p>
-          <p className="text-sm text-muted-foreground">
-            Climodeの体験の流れを確認しましょう
-          </p>
+          <p className="text-sm text-muted-foreground">{subtitle}</p>
         </div>
       </div>
       {content}
     </div>
   );
 }
-
-
