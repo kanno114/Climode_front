@@ -38,8 +38,6 @@ export async function signInAction(_: unknown, formData: FormData) {
         res,
         "メールアドレスまたはパスワードが正しくありません",
       );
-      console.error("Rails API認証失敗:", { status: res.status });
-
       return submission.reply({
         formErrors: [errorMessage],
       });
@@ -67,14 +65,11 @@ export async function signInAction(_: unknown, formData: FormData) {
     });
 
     if (result?.error) {
-      console.error("Auth.jsセッション確立失敗:", result.error);
       return submission.reply({
         formErrors: ["セッションの確立に失敗しました。再度お試しください"],
       });
     }
-  } catch (error: unknown) {
-    console.error("予期しないエラーが発生しました:", error);
-
+  } catch {
     // エラーの種類に応じてメッセージを分ける
     const errorMessage =
       "ログインに失敗しました。しばらく時間をおいて再度お試しください";

@@ -42,7 +42,6 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   }
 
   const registration = await navigator.serviceWorker.register("/sw.js");
-  console.log("Service Worker registered:", registration);
 
   // Wait for the service worker to be ready
   await navigator.serviceWorker.ready;
@@ -61,8 +60,7 @@ export async function isSubscribed(): Promise<boolean> {
     const subscription = await registration.pushManager.getSubscription();
 
     return subscription !== null;
-  } catch (error) {
-    console.error("Error checking subscription status:", error);
+  } catch {
     return false;
   }
 }

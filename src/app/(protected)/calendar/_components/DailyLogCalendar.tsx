@@ -134,8 +134,7 @@ export default function DailyLogCalendar({
       try {
         const data = await getDailyLogsByMonth(year, month);
         setEvents(convertToEvents(data));
-      } catch (error) {
-        console.error("データ取得エラー:", error);
+      } catch {
         setEvents([]);
       } finally {
         setLoading(false);

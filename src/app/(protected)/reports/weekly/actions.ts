@@ -46,11 +46,9 @@ export async function getWeeklyReport(
     if (res.ok) {
       return await res.json();
     } else {
-      console.error("週次レポート取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("週次レポート取得エラー:", error);
+  } catch {
     return null;
   }
 }

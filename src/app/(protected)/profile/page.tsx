@@ -8,12 +8,8 @@ export default async function ProfilePage() {
     getPrefectures(),
   ]);
 
-  // デバッグ用
-  console.log("Profile data:", profile);
-
-  // プロファイルが取得できない場合はログインページにリダイレクト
   if (!profile) {
-    console.error("プロファイルデータが取得できませんでした");
+    return null;
   }
 
   return (

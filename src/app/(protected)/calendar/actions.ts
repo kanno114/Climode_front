@@ -24,11 +24,9 @@ export async function getDailyLogs() {
     if (res.ok) {
       return await res.json();
     } else {
-      console.error("カレンダーイベント取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("カレンダーイベント取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -54,11 +52,9 @@ export async function getDailyLogsByMonth(year: number, month: number) {
     if (res.ok) {
       return await res.json();
     } else {
-      console.error("カレンダー（月別）イベント取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("カレンダー（月別）イベント取得エラー:", error);
+  } catch {
     return null;
   }
 }

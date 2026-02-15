@@ -30,7 +30,6 @@ export const callbacks: NextAuthConfig["callbacks"] = {
         );
 
         if (!response.ok) {
-          console.error("RailsへのOAuth登録失敗:", await response.text());
           return false;
         }
 
@@ -52,8 +51,7 @@ export const callbacks: NextAuthConfig["callbacks"] = {
                 : 60 * 60 * 24 * 30,
           });
         }
-      } catch (err) {
-        console.error("RailsへのOAuth登録失敗:", err);
+      } catch {
         return false;
       }
     }

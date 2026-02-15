@@ -25,8 +25,6 @@ export function NotificationSettings() {
           "朝8時は行動提案、夜20時は振り返りのリマインドが届きます",
       });
     } catch (error) {
-      console.error("Subscribe error:", error);
-
       if (error instanceof Error) {
         if (error.message.includes("permission denied")) {
           toast.error("通知の許可が必要です", {
@@ -49,8 +47,7 @@ export function NotificationSettings() {
     try {
       await unsubscribe();
       toast.success("通知を無効にしました");
-    } catch (error) {
-      console.error("Unsubscribe error:", error);
+    } catch {
       toast.error("通知の解除に失敗しました");
     }
   };

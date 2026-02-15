@@ -38,8 +38,7 @@ export const providers = [
           name: credentials?.name as string | null,
           image: credentials?.image as string | null,
         };
-      } catch (error) {
-        console.error("認証エラー:", error);
+      } catch {
         return null;
       }
     },

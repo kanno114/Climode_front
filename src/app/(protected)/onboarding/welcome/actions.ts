@@ -61,8 +61,7 @@ export async function updateOnboardingPrefecture(
 
     revalidatePath("/profile");
     return { status: "success" };
-  } catch (error) {
-    console.error("Failed to update prefecture:", error);
+  } catch {
     return {
       status: "error",
       error: "取得地域の保存に失敗しました",
