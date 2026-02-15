@@ -1,8 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, Bed, Heart, Star } from "lucide-react";
+import { Bed, Heart, Star, Activity } from "lucide-react";
 
 interface DailyLogDetailProps {
   dailyLog: {
@@ -20,158 +18,214 @@ interface DailyLogDetailProps {
   };
 }
 
+const SELF_SCORE_CONFIG: Record<
+  number,
+  { label: string; color: string; bgColor: string }
+> = {
+  1: {
+    label: "悪い",
+    color: "bg-red-500",
+    bgColor: "bg-red-100 dark:bg-red-900/30",
+  },
+  2: {
+    label: "普通",
+    color: "bg-yellow-500",
+    bgColor: "bg-yellow-100 dark:bg-yellow-900/30",
+  },
+  3: {
+    label: "良い",
+    color: "bg-green-500",
+    bgColor: "bg-green-100 dark:bg-green-900/30",
+  },
+};
+
+function ScoreBar({
+  value,
+  max,
+  color,
+}: {
+  value: number;
+  max: number;
+  color: string;
+}) {
+  const percentage = Math.min((value / max) * 100, 100);
+  return (
+    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+      <div
+        className={`h-full rounded-full transition-all ${color}`}
+        style={{ width: `${percentage}%` }}
+      />
+    </div>
+  );
+}
+
+function ScaleDots({
+  value,
+  max,
+  activeColor,
+}: {
+  value: number;
+  max: number;
+  activeColor: string;
+}) {
+  return (
+    <div className="flex gap-1">
+      {Array.from({ length: max }, (_, i) => (
+        <div
+          key={i}
+          className={`h-2.5 w-2.5 rounded-full transition-all ${
+            i < value ? activeColor : "bg-muted"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function getSleepBarColor(hours: number): string {
+  if (hours >= 7) return "bg-green-500";
+  if (hours >= 6) return "bg-yellow-500";
+  if (hours >= 4) return "bg-orange-500";
+  return "bg-red-500";
+}
+
+function getSleepLabel(hours: number | null | undefined): string | null {
+  if (hours == null || hours === 0) return null;
+  if (hours >= 8) return "十分";
+  if (hours >= 7) return "適切";
+  if (hours >= 6) return "やや短め";
+  if (hours >= 4) return "短め";
+  return "かなり短い";
+}
+
+function getMoodColor(value: number): string {
+  if (value >= 4) return "bg-green-500";
+  if (value >= 3) return "bg-yellow-500";
+  if (value >= 2) return "bg-orange-500";
+  return "bg-red-500";
+}
+
+function getFatigueColor(value: number): string {
+  // 疲労度: 高い値 = 軽い（良い状態）
+  if (value >= 4) return "bg-green-500";
+  if (value >= 3) return "bg-yellow-500";
+  if (value >= 2) return "bg-orange-500";
+  return "bg-red-500";
+}
+
+function getFatigueLabel(value: number | null | undefined): string | null {
+  if (value == null) return null;
+  if (value >= 4) return "とても軽い";
+  if (value >= 3) return "軽い";
+  if (value >= 2) return "普通";
+  if (value >= 1) return "重い";
+  return "とても重い";
+}
+
 export function DailyLogDetail({ dailyLog }: DailyLogDetailProps) {
-  const moodScore = dailyLog.mood;
-
-  const getSelfScoreLabel = (score: number | null | undefined) => {
-    if (!score) return null;
-    const labels: Record<number, string> = {
-      1: "悪い",
-      2: "普通",
-      3: "良い",
-    };
-    return labels[score] || null;
-  };
-
-  const selfScoreLabel = getSelfScoreLabel(dailyLog.self_score);
-  const fatigueLabel = (() => {
-    if (dailyLog.fatigue == null) return null;
-    if (dailyLog.fatigue >= 4) return "とても軽い";
-    if (dailyLog.fatigue >= 3) return "軽い";
-    if (dailyLog.fatigue >= 2) return "普通";
-    if (dailyLog.fatigue >= 1) return "重い";
-    return "とても重い";
-  })();
-
-  // 睡眠時間の視覚要素
-  const getSleepEmoji = (hours: number | null | undefined) => {
-    if (hours == null || hours === 0) return "😴"; // デフォルト
-    if (hours >= 8) return "😴";
-    if (hours >= 6) return "😌";
-    if (hours >= 4) return "😪";
-    return "😵";
-  };
-
-  const getSleepLabel = (hours: number | null | undefined) => {
-    if (hours == null || hours === 0) return null;
-    if (hours >= 8) return "十分";
-    if (hours >= 6) return "やや短め";
-    if (hours >= 4) return "短め";
-    return "かなり短い";
-  };
-
-  // 気分スコアの視覚要素（1〜5）
-  const getMoodEmoji = (value: number | null | undefined) => {
-    if (value == null) return "😐"; // デフォルト
-    if (value >= 4) return "😊"; // 4-5: 良い
-    if (value >= 3) return "🙂"; // 3: 普通
-    if (value >= 2) return "😕"; // 2: やや悪い
-    return "😢"; // 1: 悪い
-  };
-
+  const selfScoreConfig = dailyLog.self_score
+    ? SELF_SCORE_CONFIG[dailyLog.self_score]
+    : null;
   const sleepLabel = getSleepLabel(dailyLog.sleep_hours);
+  const fatigueLabel = getFatigueLabel(dailyLog.fatigue);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-          <Calendar className="h-4 w-4" />
-          <span>記録</span>
-          </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* セルフスコア（バッジ＋3段階ラベル） */}
-        {dailyLog.self_score !== undefined && selfScoreLabel && (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm">
-              <Star className="h-4 w-4 text-yellow-500" />
-              <span className="font-medium">セルフスコア</span>
-            </div>
-            <Badge variant="outline" className="flex items-center gap-1">
-              <span className="text-sm font-semibold">
-                {dailyLog.self_score}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                ({selfScoreLabel})
-              </span>
-            </Badge>
+    <div className="space-y-4">
+      {/* セルフスコア */}
+      {dailyLog.self_score != null && selfScoreConfig && (
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-sm shrink-0">
+            <Star className="h-4 w-4 text-yellow-500" />
+            <span className="font-medium">セルフスコア</span>
           </div>
-        )}
+          <div className="flex items-center gap-2 ml-auto">
+            <ScaleDots
+              value={dailyLog.self_score}
+              max={3}
+              activeColor={selfScoreConfig.color}
+            />
+            <span className="text-sm font-medium ml-1">
+              {selfScoreConfig.label}
+            </span>
+          </div>
+        </div>
+      )}
 
-        {/* 詳細グリッド: 睡眠時間 / 気分スコア / 疲労度 */}
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-muted-foreground">
+      {/* メトリクスグリッド */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* 睡眠時間 */}
+        <div className="space-y-2 rounded-lg bg-muted/30 p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Bed className="h-4 w-4" />
               <span className="font-medium">睡眠時間</span>
             </div>
-            <div className="text-base flex items-center gap-2">
-              <span className="text-xl" role="img" aria-label="睡眠状態">
-                {getSleepEmoji(dailyLog.sleep_hours)}
-              </span>
-              <span>
+            <div className="flex items-center gap-1 text-sm">
+              <span className="text-lg font-semibold">
                 {dailyLog.sleep_hours ?? "-"}
-                <span className="ml-1 text-xs text-muted-foreground">時間</span>
               </span>
+              <span className="text-xs text-muted-foreground">時間</span>
               {sleepLabel && (
-                <span className="ml-1 text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground ml-1">
                   ({sleepLabel})
                 </span>
               )}
             </div>
           </div>
+          <ScoreBar
+            value={dailyLog.sleep_hours ?? 0}
+            max={10}
+            color={getSleepBarColor(dailyLog.sleep_hours ?? 0)}
+          />
+        </div>
 
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-muted-foreground">
+        {/* 気分スコア */}
+        <div className="space-y-2 rounded-lg bg-muted/30 p-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Heart className="h-4 w-4" />
-              <span className="font-medium">気分スコア</span>
+              <span className="font-medium">気分</span>
             </div>
-            <div className="text-base flex items-center gap-2">
-              <span className="text-xl" role="img" aria-label="気分状態">
-                {getMoodEmoji(moodScore)}
-              </span>
-              <span>
-                {moodScore ?? "-"}
-                <span className="ml-1 text-xs text-muted-foreground">
-                  （1〜5）
-                </span>
-              </span>
-            </div>
+            <span className="text-lg font-semibold">
+              {dailyLog.mood ?? "-"}
+              <span className="text-xs text-muted-foreground ml-1">/ 5</span>
+            </span>
           </div>
+          <ScaleDots
+            value={dailyLog.mood ?? 0}
+            max={5}
+            activeColor={getMoodColor(dailyLog.mood ?? 0)}
+          />
+        </div>
 
-          {dailyLog.fatigue != null && (
-            <div className="space-y-1 col-span-2 sm:col-span-1">
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="inline-block h-2 w-2 rounded-full bg-orange-400" />
+        {/* 疲労度 */}
+        {dailyLog.fatigue != null && (
+          <div className="space-y-2 rounded-lg bg-muted/30 p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Activity className="h-4 w-4" />
                 <span className="font-medium">疲労度</span>
               </div>
-              <div className="text-base">
-                {dailyLog.fatigue}
-                <span className="ml-1 text-xs text-muted-foreground">
-                  （1〜5）
+              <div className="flex items-center gap-1 text-sm">
+                <span className="text-lg font-semibold">
+                  {dailyLog.fatigue}
                 </span>
+                <span className="text-xs text-muted-foreground">/ 5</span>
                 {fatigueLabel && (
-                  <span className="ml-2 text-xs text-muted-foreground">
-                    {fatigueLabel}
+                  <span className="text-xs text-muted-foreground ml-1">
+                    ({fatigueLabel})
                   </span>
                 )}
               </div>
             </div>
-          )}
-        </div>
-
-        {/* 振り返りメモ */}
-        {dailyLog.note && (
-          <div className="space-y-1 pt-2 border-t">
-            <div className="text-sm font-medium text-muted-foreground">
-              振り返りメモ
-            </div>
-            <p className="text-sm text-muted-foreground bg-muted/50 p-2 rounded">
-              {dailyLog.note}
-            </p>
+            <ScaleDots
+              value={dailyLog.fatigue}
+              max={5}
+              activeColor={getFatigueColor(dailyLog.fatigue)}
+            />
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
