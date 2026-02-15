@@ -120,3 +120,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .step-enter-from-right {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  .step-enter-from-left {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  .step-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+  .step-exit-to-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 150ms ease-in, transform 150ms ease-in;
+  }
+  .step-exit-to-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 150ms ease-in, transform 150ms ease-in;
+  }
+}

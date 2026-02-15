@@ -1,54 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ConcernTopicCheckboxList } from "@/app/(protected)/concern-topics/_components/ConcernTopicCheckboxList";
 import type { ConcernTopic } from "@/lib/schemas/concern-topics";
-import {
-  getConcernTopicsAction,
-  getUserConcernTopicsAction,
-  updateUserConcernTopicsAction,
-} from "@/app/(protected)/concern-topics/actions";
+import { updateUserConcernTopicsAction } from "@/app/(protected)/concern-topics/actions";
 
 type ConcernTopicsStepProps = {
-  onComplete: () => void;
+  topics: ConcernTopic[];
+  initialSelectedKeys: string[];
+  onComplete: (count?: number) => void;
   onSkip: () => void;
 };
 
 export function ConcernTopicsStep({
+  topics,
+  initialSelectedKeys,
   onComplete,
   onSkip,
 }: ConcernTopicsStepProps) {
-  const [topics, setTopics] = useState<ConcernTopic[]>([]);
-  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
+  const [selectedKeys, setSelectedKeys] = useState<Set<string>>(
+    new Set(initialSelectedKeys)
+  );
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      try {
-        const [topicsData, userKeys] = await Promise.all([
-          getConcernTopicsAction(),
-          getUserConcernTopicsAction(),
-        ]);
-        if (topicsData) {
-          setTopics(topicsData);
-        }
-        if (userKeys) {
-          setSelectedKeys(new Set(userKeys));
-        }
-      } catch {
-        toast.error("関心ワードの取得に失敗しました");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetch();
-  }, []);
 
   const handleToggle = (key: string, checked: boolean) => {
     setSelectedKeys((prev) => {
@@ -70,7 +47,7 @@ export function ConcernTopicsStep({
       );
       if (result.status === "success") {
         toast.success("関心ワードを登録しました");
-        onComplete();
+        onComplete(selectedKeys.size);
       } else {
         toast.error(result.error?.message ?? "登録に失敗しました");
       }
@@ -80,14 +57,6 @@ export function ConcernTopicsStep({
       setSaving(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="rounded-lg border border-border bg-card p-6 flex items-center justify-center min-h-[200px]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
 
   if (topics.length === 0) {
     return (
