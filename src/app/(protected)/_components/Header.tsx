@@ -1,5 +1,5 @@
 import DashboardMenu from "./DashboardMenu";
-import { getProfileAction } from "../profile/actions";
+import { getProfileAction } from "../settings/actions";
 import Link from "next/link";
 
 export async function Header() {
