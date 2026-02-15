@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { NotebookPen } from "lucide-react";
-import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   getTimeOfDay,
@@ -52,27 +51,27 @@ export function TimeBasedHeader({
     hasDailyLog && !hasReflection && isEveningOrNight;
 
   return (
-    <CardHeader>
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          {message.icon}
-          <div>
-            <CardTitle className="text-xl">{message.title}</CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
-              {message.description}
-            </p>
-          </div>
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3 min-w-0">
+        {message.icon}
+        <div>
+          <h2 className="text-xl font-semibold tracking-tight">
+            {message.title}
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            {message.description}
+          </p>
         </div>
-        {reflectionSlot}
-        {!reflectionSlot && showReflectionLinkInHeader && (
-          <Button asChild variant="outline" size="sm" className="shrink-0">
-            <Link href="/evening" className="flex items-center gap-2">
-              <NotebookPen className="h-4 w-4" />
-              1日を振り返る
-            </Link>
-          </Button>
-        )}
       </div>
-    </CardHeader>
+      {reflectionSlot}
+      {!reflectionSlot && showReflectionLinkInHeader && (
+        <Button asChild variant="outline" size="sm" className="shrink-0">
+          <Link href="/evening" className="flex items-center gap-2">
+            <NotebookPen className="h-4 w-4" />
+            1日を振り返る
+          </Link>
+        </Button>
+      )}
+    </div>
   );
 }
