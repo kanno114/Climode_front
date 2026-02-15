@@ -10,11 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Zap, MessageSquare, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  submitEveningReflection,
-  getTodaySuggestions,
-  getTodayDailyLog,
-} from "@/app/(protected)/evening/actions";
+import { submitEveningReflection } from "@/app/(protected)/evening/actions";
 import { eveningReflectionSchema } from "@/lib/schemas/evening-reflection";
 import { SuggestionFeedbackCard } from "./SuggestionFeedbackCard";
 
@@ -30,87 +26,51 @@ type Suggestion = {
   evidence_text?: string | null;
 };
 
-export function EveningReflectionForm() {
+type DailyLog = {
+  note?: string;
+  self_score?: number | null;
+  suggestion_feedbacks?: Array<{
+    suggestion_key: string;
+    helpfulness: boolean;
+  }>;
+};
+
+interface EveningReflectionFormProps {
+  initialSuggestions: Suggestion[];
+  initialDailyLog: DailyLog | null;
+}
+
+function buildInitialFeedbacks(
+  dailyLog: DailyLog | null,
+): Record<string, boolean> {
+  if (!dailyLog?.suggestion_feedbacks) return {};
+  const map: Record<string, boolean> = {};
+  for (const fb of dailyLog.suggestion_feedbacks) {
+    if (fb.suggestion_key && fb.helpfulness !== null && fb.helpfulness !== undefined) {
+      map[fb.suggestion_key] = fb.helpfulness;
+    }
+  }
+  return map;
+}
+
+export function EveningReflectionForm({
+  initialSuggestions,
+  initialDailyLog,
+}: EveningReflectionFormProps) {
   const [lastResult, action, pending] = useActionState(
     submitEveningReflection,
     undefined,
   );
   const [isPending, startTransition] = useTransition();
 
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   // フィードバック状態
   const [suggestionFeedbacks, setSuggestionFeedbacks] = useState<
     Record<string, boolean>
-  >({});
-  const [note, setNote] = useState("");
-  const [selfScore, setSelfScore] = useState<number | null>(null);
-
-  // データ取得
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        // 提案データと既存の振り返りデータを並列取得
-        const [suggestionsData, dailyLogData] = await Promise.all([
-          getTodaySuggestions(),
-          getTodayDailyLog(),
-        ]);
-
-        if (suggestionsData) {
-          setSuggestions(suggestionsData);
-        }
-
-        // 既存の振り返りデータがあればフォームに反映
-        if (dailyLogData) {
-          // メモを設定
-          if (dailyLogData.note) {
-            setNote(dailyLogData.note);
-          }
-
-          // セルフスコアを設定
-          if (
-            dailyLogData.self_score !== null &&
-            dailyLogData.self_score !== undefined
-          ) {
-            setSelfScore(dailyLogData.self_score);
-          }
-
-          // 提案フィードバックを設定
-          if (
-            dailyLogData.suggestion_feedbacks &&
-            Array.isArray(dailyLogData.suggestion_feedbacks)
-          ) {
-            const feedbacksMap: Record<string, boolean> = {};
-            dailyLogData.suggestion_feedbacks.forEach(
-              (feedback: { suggestion_key: string; helpfulness: boolean }) => {
-                if (
-                  feedback.suggestion_key &&
-                  feedback.helpfulness !== null &&
-                  feedback.helpfulness !== undefined
-                ) {
-                  feedbacksMap[feedback.suggestion_key] = feedback.helpfulness;
-                }
-              },
-            );
-            setSuggestionFeedbacks(feedbacksMap);
-          }
-        }
-
-        setError(null);
-      } catch (err) {
-        console.error("データ取得エラー:", err);
-        setError("データの取得に失敗しました");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+  >(() => buildInitialFeedbacks(initialDailyLog));
+  const [note, setNote] = useState(initialDailyLog?.note ?? "");
+  const [selfScore, setSelfScore] = useState<number | null>(
+    initialDailyLog?.self_score ?? null,
+  );
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {
@@ -178,25 +138,6 @@ export function EveningReflectionForm() {
     });
   };
 
-  if (loading) {
-    return (
-      <Card>
-        <CardContent className="p-8 text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">データを読み込んでいます...</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
   return (
     <div className="space-y-6">
       {form.errors && form.errors.length > 0 && (
@@ -216,7 +157,7 @@ export function EveningReflectionForm() {
         className="space-y-6"
       >
         {/* セクションA: 今日の提案 */}
-        {suggestions.length > 0 && (
+        {initialSuggestions.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -225,7 +166,7 @@ export function EveningReflectionForm() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {suggestions.map((suggestion) => (
+              {initialSuggestions.map((suggestion) => (
                 <SuggestionFeedbackCard
                   key={suggestion.key}
                   suggestion={suggestion}

@@ -6,8 +6,6 @@ jest.mock("@conform-to/react", () => ({
 }));
 
 jest.mock("@/app/(protected)/evening/actions", () => ({
-  getTodaySuggestions: jest.fn(),
-  getTodayDailyLog: jest.fn(),
   submitEveningReflection: jest.fn(),
 }));
 
@@ -27,10 +25,6 @@ jest.mock("sonner", () => ({
 }));
 
 import { EveningReflectionForm } from "../EveningReflectionForm";
-import {
-  getTodaySuggestions,
-  getTodayDailyLog,
-} from "@/app/(protected)/evening/actions";
 import { toast } from "sonner";
 
 describe("EveningReflectionForm", () => {
@@ -38,20 +32,23 @@ describe("EveningReflectionForm", () => {
     {
       key: "pressure_drop_signal_warning",
       title: "気圧低下の警告",
-      description: "気圧が低下しています",
+      message: "気圧が低下しています",
       tags: ["weather"],
       severity: 3,
-      triggers: ["pressure_drop"],
     },
     {
       key: "low_mood",
       title: "気分が低い",
-      description: "気分が低い状態です",
+      message: "気分が低い状態です",
       tags: ["mood"],
       severity: 2,
-      triggers: ["mood"],
     },
   ];
+
+  const defaultProps = {
+    initialSuggestions: mockSuggestions,
+    initialDailyLog: null,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -64,73 +61,52 @@ describe("EveningReflectionForm", () => {
     ]);
     mockUseActionState.mockImplementation(() => [undefined, jest.fn(), false]);
     mockUseTransition.mockImplementation(() => [false, jest.fn()]);
-    (getTodaySuggestions as jest.Mock).mockResolvedValue(mockSuggestions);
-    (getTodayDailyLog as jest.Mock).mockResolvedValue(null);
-  });
-
-  it("ローディング状態が表示される", () => {
-    (getTodaySuggestions as jest.Mock).mockImplementation(
-      () => new Promise(() => {}) // 解決しないPromise
-    );
-
-    render(<EveningReflectionForm />);
-
-    expect(screen.getByText("データを読み込んでいます...")).toBeInTheDocument();
   });
 
   it("提案が表示される", async () => {
-    render(<EveningReflectionForm />);
+    render(<EveningReflectionForm {...defaultProps} />);
 
-    await waitFor(() => {
-      expect(screen.getByText("今日の提案")).toBeInTheDocument();
-    });
-
+    expect(screen.getByText("今日の提案")).toBeInTheDocument();
     expect(screen.getByText("気圧低下の警告")).toBeInTheDocument();
     expect(screen.getByText("気分が低い")).toBeInTheDocument();
   });
 
   it("提案がない場合は提案セクションが表示されない", async () => {
-    (getTodaySuggestions as jest.Mock).mockResolvedValue([]);
+    render(
+      <EveningReflectionForm
+        initialSuggestions={[]}
+        initialDailyLog={null}
+      />
+    );
 
-    render(<EveningReflectionForm />);
-
-    await waitFor(() => {
-      expect(screen.queryByText("今日の提案")).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText("今日の提案")).not.toBeInTheDocument();
   });
 
   it("出来事入力欄が表示される", async () => {
-    render(<EveningReflectionForm />);
+    render(<EveningReflectionForm {...defaultProps} />);
 
-    await waitFor(() => {
-      expect(screen.getByText("出来事")).toBeInTheDocument();
-    });
-
+    expect(screen.getByText("出来事")).toBeInTheDocument();
     expect(
       screen.getByPlaceholderText("今日の出来事や気づきを記録してください...")
     ).toBeInTheDocument();
   });
 
   it("送信ボタンが表示される", async () => {
-    render(<EveningReflectionForm />);
+    render(<EveningReflectionForm {...defaultProps} />);
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "保存してダッシュボードへ" })
-      ).toBeInTheDocument();
-    });
+    expect(
+      screen.getByRole("button", { name: "保存してダッシュボードへ" })
+    ).toBeInTheDocument();
   });
 
   it("pending状態では送信ボタンが無効になる", async () => {
     mockUseActionState.mockImplementation(() => [undefined, jest.fn(), true]);
     mockUseTransition.mockImplementation(() => [true, jest.fn()]);
 
-    render(<EveningReflectionForm />);
+    render(<EveningReflectionForm {...defaultProps} />);
 
-    await waitFor(() => {
-      const submitButton = screen.getByRole("button", { name: /保存中/i });
-      expect(submitButton).toBeDisabled();
-    });
+    const submitButton = screen.getByRole("button", { name: /保存中/i });
+    expect(submitButton).toBeDisabled();
   });
 
   it("エラー時にtoast.errorが呼ばれる", async () => {
@@ -143,7 +119,7 @@ describe("EveningReflectionForm", () => {
       false,
     ]);
 
-    render(<EveningReflectionForm />);
+    render(<EveningReflectionForm {...defaultProps} />);
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("保存に失敗しました");
@@ -159,24 +135,28 @@ describe("EveningReflectionForm", () => {
       },
     ]);
 
-    render(<EveningReflectionForm />);
+    render(<EveningReflectionForm {...defaultProps} />);
 
-    await waitFor(() => {
-      expect(screen.getByText("バリデーションエラー")).toBeInTheDocument();
-    });
+    expect(screen.getByText("バリデーションエラー")).toBeInTheDocument();
   });
 
-  it("データ取得エラー時にエラーメッセージが表示される", async () => {
-    (getTodaySuggestions as jest.Mock).mockRejectedValue(
-      new Error("データ取得エラー")
+  it("既存の振り返りデータが初期値として反映される", () => {
+    render(
+      <EveningReflectionForm
+        initialSuggestions={mockSuggestions}
+        initialDailyLog={{
+          note: "今日は良い日だった",
+          self_score: 3,
+          suggestion_feedbacks: [
+            { suggestion_key: "pressure_drop_signal_warning", helpfulness: true },
+          ],
+        }}
+      />
     );
 
-    render(<EveningReflectionForm />);
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("データの取得に失敗しました")
-      ).toBeInTheDocument();
-    });
+    const textarea = screen.getByPlaceholderText(
+      "今日の出来事や気づきを記録してください..."
+    ) as HTMLTextAreaElement;
+    expect(textarea.value).toBe("今日は良い日だった");
   });
 });

@@ -1,9 +1,12 @@
 import { ProfileEditForm } from "./_components/ProfileEditForm";
-import { getProfileAction } from "./actions";
+import { getProfileAction, getPrefectures } from "./actions";
 import { NotificationSettings } from "@/components/NotificationSettings";
 
 export default async function ProfilePage() {
-  const profile = await getProfileAction();
+  const [profile, prefectures] = await Promise.all([
+    getProfileAction(),
+    getPrefectures(),
+  ]);
 
   // デバッグ用
   console.log("Profile data:", profile);
@@ -27,6 +30,7 @@ export default async function ProfilePage() {
               name: profile?.user?.name || "",
               prefecture_id: profile?.user?.prefecture_id,
             }}
+            prefectures={prefectures ?? []}
           />
 
           <NotificationSettings />
