@@ -17,7 +17,6 @@ import {
   LogOut,
   Home,
   Heart,
-  Info,
   Settings,
 } from "lucide-react";
 import Link from "next/link";
@@ -79,17 +78,6 @@ const menuItemConfigs = [
     activeBg: "bg-rose-50 dark:bg-rose-950/30",
     activeBorder: "border-l-rose-500",
     hoverIconBg: "group-hover:bg-rose-200 dark:group-hover:bg-rose-800/60",
-  },
-  {
-    icon: Info,
-    label: "About",
-    href: "/about",
-    description: "提案ロジックと参照エビデンス",
-    iconBg: "bg-amber-100 dark:bg-amber-900/50",
-    iconColor: "text-amber-600 dark:text-amber-400",
-    activeBg: "bg-amber-50 dark:bg-amber-950/30",
-    activeBorder: "border-l-amber-500",
-    hoverIconBg: "group-hover:bg-amber-200 dark:group-hover:bg-amber-800/60",
   },
 ];
 

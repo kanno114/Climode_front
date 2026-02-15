@@ -6,7 +6,6 @@
 export interface EvidenceSource {
   name: string;
   description?: string;
-  url?: string;
 }
 
 export interface EvidenceCategory {
@@ -30,7 +29,6 @@ export const EVIDENCE_CATEGORIES: EvidenceCategory[] = [
       {
         name: "天気痛ドクター（監修：愛知医科大学 佐藤純医師）",
         description: "気象病・天気痛に関する予報傾向と基礎知識",
-        url: "https://tenki-tsura.com/",
       },
     ],
   },
@@ -42,7 +40,6 @@ export const EVIDENCE_CATEGORIES: EvidenceCategory[] = [
       {
         name: "環境省「熱中症予防情報サイト」",
         description: "暑さ指数(WBGT)の定義および判定基準",
-        url: "https://www.wbgt.env.go.jp/",
       },
       {
         name: "鹿児島大学 法医学分野（林敬人教授ら）の研究",
@@ -59,12 +56,10 @@ export const EVIDENCE_CATEGORIES: EvidenceCategory[] = [
       {
         name: "厚生労働省",
         description: "インフルエンザQ&A（湿度の保持について）",
-        url: "https://www.mhlw.go.jp/bunya/kenkou/kekkaku-kansenshou01/qa.html",
       },
       {
         name: "東京都健康安全研究センター",
         description: "「健康で快適な居住環境のために」（ビル管理・居住環境）",
-        url: "https://www.tokyo-eiken.go.jp/",
       },
     ],
   },
@@ -77,7 +72,6 @@ export const EVIDENCE_CATEGORIES: EvidenceCategory[] = [
         name: "厚生労働省「健康づくりのための睡眠ガイド2023」",
         description:
           "概要：成人・高齢者・こどもごとの推奨睡眠時間および休養指針",
-        url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/suimin/index.html",
       },
     ],
   },
