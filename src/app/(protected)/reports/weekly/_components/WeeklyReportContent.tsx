@@ -2,10 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getWeeklyReport } from "../actions";
 import { WeeklyReportNavigation } from "./WeeklyReportNavigation";
-import { WeeklyMorningStatistics } from "./WeeklyMorningStatistics";
-import { WeeklyMorningChart } from "./WeeklyMorningChart";
-import { WeeklyEveningStatistics } from "./WeeklyEveningStatistics";
-import { WeeklyEveningChart } from "./WeeklyEveningChart";
+import { WeeklyOverview } from "./WeeklyOverview";
+import { WeeklyRecordsChart } from "./WeeklyRecordsChart";
+import { WeeklyRecordsTable } from "./WeeklyRecordsTable";
 import { WeeklySuggestionsSection } from "./WeeklySuggestionsSection";
 import { WeeklySuggestionsChart } from "./WeeklySuggestionsChart";
 import { format } from "date-fns";
@@ -38,61 +37,58 @@ export async function WeeklyReportContent({
 
   const startDate = new Date(report.range.start);
   const endDate = new Date(report.range.end);
-  const dateRange = `${format(startDate, "M/d", { locale: ja })}〜${format(
-    endDate,
-    "M/d",
-    { locale: ja }
-  )}`;
+
+  const year = format(startDate, "yyyy", { locale: ja });
+  const startDay = format(startDate, "M / d", { locale: ja });
+  const endDay = format(endDate, "M / d", { locale: ja });
 
   return (
     <>
-      {/* ヘッダー */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
-              {dateRange}
-            </h2>
-          </div>
+        <div>
+          <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wider uppercase mb-0.5">
+            {year}
+          </p>
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white tracking-tight">
+            {startDay}
+            <span className="mx-1.5 text-gray-400 dark:text-gray-500 font-light">
+              —
+            </span>
+            {endDay}
+          </h2>
         </div>
         <WeeklyReportNavigation currentWeekStart={report.range.start} />
       </div>
 
-      {/* タブ */}
-      <Tabs defaultValue="suggestions" className="w-full">
-        <TabsList className="mb-6">
+      {/* Tabs */}
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="mb-6 flex flex-wrap">
+          <TabsTrigger value="overview">サマリー</TabsTrigger>
+          <TabsTrigger value="records">記録</TabsTrigger>
           <TabsTrigger value="suggestions">提案</TabsTrigger>
-          <TabsTrigger value="morning">朝の自己申告</TabsTrigger>
-          <TabsTrigger value="evening">夜の振り返り</TabsTrigger>
         </TabsList>
 
-        {/* 朝の自己申告セクション */}
-        <TabsContent value="morning" className="mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {report.statistics && (
-              <div>
-                <WeeklyMorningStatistics statistics={report.statistics} />
-              </div>
-            )}
-            <div>
-              <WeeklyMorningChart daily={report.daily} />
-            </div>
+        {/* Overview */}
+        <TabsContent value="overview" className="mt-0">
+          <WeeklyOverview report={report} />
+        </TabsContent>
+
+        {/* Records */}
+        <TabsContent value="records" className="mt-0">
+          <div className="space-y-4 sm:space-y-6">
+            <WeeklyRecordsChart
+              daily={report.daily}
+              feedback={report.feedback}
+            />
+            <WeeklyRecordsTable
+              daily={report.daily}
+              feedback={report.feedback}
+            />
           </div>
         </TabsContent>
 
-        {/* 夜の振り返りセクション */}
-        <TabsContent value="evening" className="mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <div>
-              <WeeklyEveningStatistics feedback={report.feedback} />
-            </div>
-            <div>
-              <WeeklyEveningChart feedback={report.feedback} />
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* 提案セクション */}
+        {/* Suggestions */}
         <TabsContent value="suggestions" className="mt-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <div>
