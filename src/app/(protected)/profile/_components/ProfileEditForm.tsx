@@ -3,7 +3,7 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useActionState } from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, User, MapPin } from "lucide-react";
 import { profileSchema } from "@/lib/schemas/profile";
-import { updateProfileAction, getPrefectures } from "../actions";
+import { updateProfileAction } from "../actions";
 import {
   Select,
   SelectContent,
@@ -21,32 +21,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+type Prefecture = {
+  id: number;
+  code: string;
+  name_ja: string;
+};
+
 interface ProfileEditFormProps {
   initialData: {
     name: string;
     prefecture_id?: number;
   };
+  prefectures: Prefecture[];
 }
 
-export function ProfileEditForm({ initialData }: ProfileEditFormProps) {
+export function ProfileEditForm({ initialData, prefectures }: ProfileEditFormProps) {
   const [lastResult, action, pending] = useActionState(
     updateProfileAction,
     undefined
   );
-  const [prefectures, setPrefectures] = useState<
-    Array<{ id: number; code: string; name_ja: string }>
-  >([]);
-
-  // 都道府県データを取得
-  useEffect(() => {
-    const fetchPrefectures = async () => {
-      const data = await getPrefectures();
-      if (data) {
-        setPrefectures(data);
-      }
-    };
-    fetchPrefectures();
-  }, []);
 
   // バックエンドエラーをtoastで表示
   useEffect(() => {

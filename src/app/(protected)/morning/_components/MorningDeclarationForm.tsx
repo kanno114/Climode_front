@@ -13,6 +13,22 @@ import { Loader2, Bed, Heart, Zap } from "lucide-react";
 import { submitMorningDeclaration } from "@/app/(protected)/morning/actions";
 import { morningDeclarationSchema } from "@/lib/schemas/morning-declaration";
 
+const MOOD_OPTIONS = [
+  { value: 1, emoji: "😢", label: "とても悪い" },
+  { value: 2, emoji: "😕", label: "悪い" },
+  { value: 3, emoji: "😐", label: "普通" },
+  { value: 4, emoji: "🙂", label: "良い" },
+  { value: 5, emoji: "😊", label: "とても良い" },
+] as const;
+
+const FATIGUE_OPTIONS = [
+  { value: 1, label: "とても低い" },
+  { value: 2, label: "低い" },
+  { value: 3, label: "普通" },
+  { value: 4, label: "高い" },
+  { value: 5, label: "とても高い" },
+] as const;
+
 export function MorningDeclarationForm() {
   const [lastResult, action, pending] = useActionState(
     submitMorningDeclaration,
@@ -45,22 +61,6 @@ export function MorningDeclarationForm() {
       fatigue: "3",
     },
   });
-
-  const moodOptions = [
-    { value: 1, emoji: "😢", label: "とても悪い" },
-    { value: 2, emoji: "😕", label: "悪い" },
-    { value: 3, emoji: "😐", label: "普通" },
-    { value: 4, emoji: "🙂", label: "良い" },
-    { value: 5, emoji: "😊", label: "とても良い" },
-  ];
-
-  const fatigueOptions = [
-    { value: 1, label: "とても低い" },
-    { value: 2, label: "低い" },
-    { value: 3, label: "普通" },
-    { value: 4, label: "高い" },
-    { value: 5, label: "とても高い" },
-  ];
 
   return (
     <div className="space-y-4 w-full">
@@ -122,7 +122,7 @@ export function MorningDeclarationForm() {
             気分（1〜5）
           </Label>
           <div className="grid grid-cols-5 gap-2">
-            {moodOptions.map((option) => (
+            {MOOD_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
@@ -156,7 +156,7 @@ export function MorningDeclarationForm() {
             疲労感（1〜5）
           </Label>
           <div className="grid grid-cols-5 gap-2">
-            {fatigueOptions.map((option) => (
+            {FATIGUE_OPTIONS.map((option) => (
               <button
                 key={option.value}
                 type="button"
