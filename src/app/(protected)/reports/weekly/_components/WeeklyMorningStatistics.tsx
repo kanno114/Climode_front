@@ -8,10 +8,80 @@ interface WeeklyMorningStatisticsProps {
   statistics: WeeklyStatistics;
 }
 
+function MetricCard({
+  icon: Icon,
+  label,
+  mean,
+  median,
+  min,
+  max,
+  unit,
+  colorClass,
+  bgClass,
+  borderClass,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  mean: number;
+  median: number | null;
+  min: number | null;
+  max: number | null;
+  unit: string;
+  colorClass: string;
+  bgClass: string;
+  borderClass: string;
+}) {
+  return (
+    <div className={`p-4 ${bgClass} rounded-lg border ${borderClass}`}>
+      <div className="flex items-center gap-2 mb-2">
+        <Icon className={`h-4 w-4 ${colorClass}`} />
+        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {label}
+        </h4>
+      </div>
+      <p className={`text-2xl font-bold ${colorClass}`}>
+        {mean.toFixed(1)}
+        <span className="text-sm font-normal ml-0.5">{unit}</span>
+      </p>
+      {median != null && min != null && max != null && (
+        <div className="flex gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <span>中央値: {median}{unit}</span>
+          <span>
+            範囲: {min}〜{max}{unit}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function WeeklyMorningStatistics({
   statistics,
 }: WeeklyMorningStatisticsProps) {
   const { health_metrics } = statistics;
+
+  const hasAnyData =
+    health_metrics.sleep_hours.mean !== null ||
+    health_metrics.mood.mean !== null ||
+    health_metrics.fatigue_level.mean !== null;
+
+  if (!hasAnyData) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            朝の自己申告統計
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-500 text-center py-8">
+            今週は記録がありませんでした
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -21,157 +91,48 @@ export function WeeklyMorningStatistics({
           朝の自己申告統計
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* 睡眠時間 */}
+      <CardContent className="space-y-3">
         {health_metrics.sleep_hours.mean !== null && (
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
-            <div className="flex items-center gap-2 mb-3">
-              <Moon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <h4 className="text-base font-semibold text-gray-800 dark:text-white">
-                睡眠時間
-              </h4>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                  平均
-                </p>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {health_metrics.sleep_hours.mean}時間
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-blue-200 dark:border-blue-800">
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    中央値
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                    {health_metrics.sleep_hours.median}時間
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    範囲
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                    {health_metrics.sleep_hours.min} -{" "}
-                    {health_metrics.sleep_hours.max}時間
-                  </p>
-                </div>
-                {health_metrics.sleep_hours.std_dev !== null && (
-                  <div className="col-span-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                      標準偏差
-                    </p>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                      {health_metrics.sleep_hours.std_dev.toFixed(2)}時間
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <MetricCard
+            icon={Moon}
+            label="睡眠時間"
+            mean={health_metrics.sleep_hours.mean}
+            median={health_metrics.sleep_hours.median}
+            min={health_metrics.sleep_hours.min}
+            max={health_metrics.sleep_hours.max}
+            unit="h"
+            colorClass="text-blue-600 dark:text-blue-400"
+            bgClass="bg-blue-50 dark:bg-blue-900/20"
+            borderClass="border-blue-100 dark:border-blue-800"
+          />
         )}
-
-        {/* 気分 */}
         {health_metrics.mood.mean !== null && (
-          <div className="p-4 bg-pink-50 dark:bg-pink-900/20 rounded-lg border border-pink-100 dark:border-pink-800">
-            <div className="flex items-center gap-2 mb-3">
-              <Smile className="h-5 w-5 text-pink-600 dark:text-pink-400" />
-              <h4 className="text-base font-semibold text-gray-800 dark:text-white">
-                気分
-              </h4>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                  平均
-                </p>
-                <p className="text-2xl font-bold text-pink-600 dark:text-pink-400">
-                  {health_metrics.mood.mean.toFixed(1)} / 5
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-pink-200 dark:border-pink-800">
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    中央値
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                    {health_metrics.mood.median}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    範囲
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                    {health_metrics.mood.min} - {health_metrics.mood.max}
-                  </p>
-                </div>
-                {health_metrics.mood.std_dev !== null && (
-                  <div className="col-span-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                      標準偏差
-                    </p>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                      {health_metrics.mood.std_dev.toFixed(2)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <MetricCard
+            icon={Smile}
+            label="気分"
+            mean={health_metrics.mood.mean}
+            median={health_metrics.mood.median}
+            min={health_metrics.mood.min}
+            max={health_metrics.mood.max}
+            unit="/5"
+            colorClass="text-pink-600 dark:text-pink-400"
+            bgClass="bg-pink-50 dark:bg-pink-900/20"
+            borderClass="border-pink-100 dark:border-pink-800"
+          />
         )}
-
-        {/* 疲労感 */}
         {health_metrics.fatigue_level.mean !== null && (
-          <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-100 dark:border-orange-800">
-            <div className="flex items-center gap-2 mb-3">
-              <Activity className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-              <h4 className="text-base font-semibold text-gray-800 dark:text-white">
-                疲労感
-              </h4>
-            </div>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                  平均
-                </p>
-                <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                  {health_metrics.fatigue_level.mean.toFixed(1)} / 5
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-orange-200 dark:border-orange-800">
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    中央値
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                    {health_metrics.fatigue_level.median}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    範囲
-                  </p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                    {health_metrics.fatigue_level.min} -{" "}
-                    {health_metrics.fatigue_level.max}
-                  </p>
-                </div>
-                {health_metrics.fatigue_level.std_dev !== null && (
-                  <div className="col-span-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                      標準偏差
-                    </p>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-white">
-                      {health_metrics.fatigue_level.std_dev.toFixed(2)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <MetricCard
+            icon={Activity}
+            label="疲労感"
+            mean={health_metrics.fatigue_level.mean}
+            median={health_metrics.fatigue_level.median}
+            min={health_metrics.fatigue_level.min}
+            max={health_metrics.fatigue_level.max}
+            unit="/5"
+            colorClass="text-orange-600 dark:text-orange-400"
+            bgClass="bg-orange-50 dark:bg-orange-900/20"
+            borderClass="border-orange-100 dark:border-orange-800"
+          />
         )}
       </CardContent>
     </Card>
