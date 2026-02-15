@@ -1,6 +1,7 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { BookOpen } from "lucide-react";
 
 // メトリクスキー → 日本語ラベル・単位
 const METRIC_LABEL_MAP: Record<string, { label: string; unit: string }> = {
@@ -27,29 +28,6 @@ function formatValue(value: number | string, unit: string): string {
   if (isNaN(num)) return `${value}`;
   if (unit === "-" || unit === "（1〜5）") return `${value}`;
   return `${value}${unit}`;
-}
-
-// URLを抽出してリンク化
-function linkifyText(text: string): React.ReactNode {
-  const urlRegex = /(https?:\/\/[^\s\)]+)/g;
-  const parts = text.split(urlRegex);
-  return parts.map((part, i) => {
-    if (part.startsWith("http://") || part.startsWith("https://")) {
-      return (
-        <a
-          key={i}
-          href={part}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-0.5 text-primary underline hover:no-underline"
-        >
-          {part}
-          <ExternalLink className="h-3 w-3 shrink-0" />
-        </a>
-      );
-    }
-    return part;
-  });
 }
 
 interface SuggestionEvidenceProps {
@@ -118,9 +96,13 @@ export function SuggestionEvidence({
           <h5 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             参考文献・出典
           </h5>
-          <p className="leading-relaxed text-slate-700 dark:text-slate-300">
-            {linkifyText(evidence_text)}
-          </p>
+          <Link
+            href="/about"
+            className="inline-flex items-center gap-1.5 text-primary hover:underline"
+          >
+            <BookOpen className="h-3.5 w-3.5" />
+            詳しいエビデンスはこちら
+          </Link>
         </section>
       )}
     </div>
