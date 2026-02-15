@@ -12,7 +12,7 @@ import {
   isSubscribed,
   urlBase64ToUint8Array,
 } from "@/lib/push-notification";
-import { subscribePushNotificationAction } from "@/app/(protected)/profile/actions";
+import { subscribePushNotificationAction } from "@/app/(protected)/settings/notification-actions";
 
 type NotificationStepProps = {
   onComplete: () => void;

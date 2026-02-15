@@ -18,7 +18,7 @@ import {
   Home,
   Heart,
   Info,
-  ChevronRight,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import LogoutButton from "./LogoutButton";
@@ -130,7 +130,7 @@ export default function DashboardMenu({ user }: Props) {
           <DialogTitle className="text-xl font-semibold">メニュー</DialogTitle>
         </DialogHeader>
 
-        <Link href="/profile">
+        <Link href="/settings">
           <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 rounded-xl mb-4 hover:shadow-md transition-shadow">
             <Avatar className="h-12 w-12 ring-2 ring-blue-200 dark:ring-blue-800">
               <AvatarImage src={user.image || ""} alt={user.name || ""} />
@@ -146,7 +146,7 @@ export default function DashboardMenu({ user }: Props) {
                 {user?.email}
               </p>
             </div>
-            <ChevronRight className="h-5 w-5 text-gray-400 dark:text-gray-500 shrink-0" />
+            <Settings className="h-5 w-5 text-gray-400 dark:text-gray-500 shrink-0" />
           </div>
         </Link>
 

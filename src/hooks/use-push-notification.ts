@@ -11,7 +11,7 @@ import {
 import {
   subscribePushNotificationAction,
   unsubscribePushNotificationAction,
-} from "@/app/(protected)/profile/actions";
+} from "@/app/(protected)/settings/notification-actions";
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 

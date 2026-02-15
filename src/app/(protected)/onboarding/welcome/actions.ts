@@ -48,6 +48,6 @@ export async function updateOnboardingPrefecture(
     return failure(errorMessage);
   }
 
-  revalidatePath("/profile");
+  revalidatePath("/settings");
   return successVoid();
 }

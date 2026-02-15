@@ -5,7 +5,7 @@ import { auth } from "@/auth";
 import {
   getProfileAction,
   getPrefectures,
-} from "@/app/(protected)/profile/actions";
+} from "@/app/(protected)/settings/actions";
 import {
   getConcernTopicsAction,
   getUserConcernTopicsAction,

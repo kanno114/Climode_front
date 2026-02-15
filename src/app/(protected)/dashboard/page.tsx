@@ -4,7 +4,7 @@ import { UpcomingFeatures } from "./_components/UpcomingFeatures";
 import { auth } from "@/auth";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getProfileAction } from "@/app/(protected)/profile/actions";
+import { getProfileAction } from "@/app/(protected)/settings/actions";
 
 async function requireOnboardingComplete() {
   const profile = await getProfileAction();
