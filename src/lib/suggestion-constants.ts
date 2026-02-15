@@ -38,61 +38,76 @@ export const LEVEL_LABELS: Record<string, string> = {
 // level → 色（Tailwind classes）
 export const LEVEL_COLOR_MAP: Record<
   string,
-  { color: string; bgColor: string; borderColor: string; cardBgColor: string }
+  {
+    color: string;
+    bgColor: string;
+    borderColor: string;
+    cardBgColor: string;
+    accentBorderColor: string;
+  }
 > = {
   Danger: {
     color: "text-red-700",
     bgColor: "bg-red-100",
     borderColor: "border-red-200",
-    cardBgColor: "bg-red-50",
+    cardBgColor: "bg-red-50 dark:bg-red-950/20",
+    accentBorderColor: "border-l-red-500",
   },
   Warning: {
     color: "text-orange-700",
     bgColor: "bg-orange-100",
     borderColor: "border-orange-200",
-    cardBgColor: "bg-orange-50",
+    cardBgColor: "bg-orange-50 dark:bg-orange-950/20",
+    accentBorderColor: "border-l-orange-500",
   },
   Caution: {
     color: "text-yellow-700",
     bgColor: "bg-yellow-100",
     borderColor: "border-yellow-200",
-    cardBgColor: "bg-yellow-50",
+    cardBgColor: "bg-yellow-50 dark:bg-yellow-950/20",
+    accentBorderColor: "border-l-yellow-500",
   },
   Notice: {
     color: "text-amber-700",
     bgColor: "bg-amber-100",
     borderColor: "border-amber-200",
-    cardBgColor: "bg-amber-50",
+    cardBgColor: "bg-amber-50 dark:bg-amber-950/20",
+    accentBorderColor: "border-l-amber-500",
   },
   Optimal: {
     color: "text-green-700",
     bgColor: "bg-green-100",
     borderColor: "border-green-200",
-    cardBgColor: "bg-green-50",
+    cardBgColor: "bg-green-50 dark:bg-green-950/20",
+    accentBorderColor: "border-l-green-500",
   },
   Good: {
     color: "text-green-700",
     bgColor: "bg-green-100",
     borderColor: "border-green-200",
-    cardBgColor: "bg-green-50",
+    cardBgColor: "bg-green-50 dark:bg-green-950/20",
+    accentBorderColor: "border-l-green-500",
   },
   Temperature: {
     color: "text-teal-700",
     bgColor: "bg-teal-100",
     borderColor: "border-teal-200",
-    cardBgColor: "bg-teal-50",
+    cardBgColor: "bg-teal-50 dark:bg-teal-950/20",
+    accentBorderColor: "border-l-teal-500",
   },
   Humidity: {
     color: "text-teal-700",
     bgColor: "bg-teal-100",
     borderColor: "border-teal-200",
-    cardBgColor: "bg-teal-50",
+    cardBgColor: "bg-teal-50 dark:bg-teal-950/20",
+    accentBorderColor: "border-l-teal-500",
   },
   Pressure: {
     color: "text-teal-700",
     bgColor: "bg-teal-100",
     borderColor: "border-teal-200",
-    cardBgColor: "bg-teal-50",
+    cardBgColor: "bg-teal-50 dark:bg-teal-950/20",
+    accentBorderColor: "border-l-teal-500",
   },
 };
 
@@ -113,7 +128,8 @@ const LEVEL_DEFAULT = {
   color: "text-slate-700",
   bgColor: "bg-slate-100",
   borderColor: "border-slate-200",
-  cardBgColor: "bg-slate-50",
+  cardBgColor: "bg-slate-50 dark:bg-slate-950/20",
+  accentBorderColor: "border-l-slate-400",
 };
 
 export function getLevelStyle(level: string | null | undefined) {

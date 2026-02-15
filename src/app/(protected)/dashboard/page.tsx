@@ -1,9 +1,8 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TodayArea } from "./_components/TodayArea";
 import { UpcomingFeatures } from "./_components/UpcomingFeatures";
 import { auth } from "@/auth";
 import { Suspense } from "react";
-import { Loading } from "@/components/ui/loading";
 import { redirect } from "next/navigation";
 import { getProfileAction } from "@/app/(protected)/profile/actions";
 
@@ -38,16 +37,52 @@ export default async function DashboardPage() {
   );
 }
 
-// ローディングUI
+// ローディングUI（セクション分離レイアウトに対応）
 function TodayAreaSkeleton() {
   return (
-    <Card>
-      <CardHeader>
-        <div className="h-6 w-48 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
-      </CardHeader>
-      <CardContent className="py-12">
-        <Loading size="lg" text="データを読み込み中..." />
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      {/* 挨拶セクション */}
+      <div className="flex items-center gap-3">
+        <Skeleton className="h-6 w-6 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+      </div>
+
+      {/* 提案スケルトン */}
+      <div className="rounded-xl border bg-card py-6 px-6 shadow-sm space-y-4">
+        <Skeleton className="h-6 w-40" />
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="rounded-lg border border-l-4 p-3 space-y-2"
+          >
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded" />
+              <Skeleton className="h-5 w-3/4" />
+            </div>
+            <Skeleton className="h-4 w-full" />
+            <div className="flex gap-2">
+              <Skeleton className="h-5 w-16 rounded-full" />
+              <Skeleton className="h-5 w-16 rounded-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 天気予報スケルトン */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 px-1">
+          <Skeleton className="h-5 w-5 rounded" />
+          <Skeleton className="h-6 w-32" />
+        </div>
+        <div className="rounded-xl border bg-card py-4 px-4 shadow-sm">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-10 w-full mb-2 last:mb-0" />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

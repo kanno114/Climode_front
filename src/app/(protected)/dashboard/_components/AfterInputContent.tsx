@@ -3,24 +3,6 @@
 import Suggestions from "./Suggestions";
 
 interface AfterInputContentProps {
-  dailyLog: {
-    id: number;
-    date: string;
-    sleep_hours: number;
-    mood: number;
-    memo?: string;
-    note?: string | null;
-    score: number;
-    prefecture?: {
-      id: number;
-      name_ja: string;
-    };
-    suggestion_feedbacks?: Array<{
-      id: number;
-      suggestion_key: string;
-      helpfulness: boolean;
-    }>;
-  };
   suggestions: Array<{
     key: string;
     title: string;
@@ -36,12 +18,7 @@ interface AfterInputContentProps {
 }
 
 export function AfterInputContent({
-  dailyLog,
   suggestions,
 }: AfterInputContentProps) {
-  return (
-    <div>
-      <Suggestions suggestions={suggestions} />
-    </div>
-  );
+  return <Suggestions suggestions={suggestions} />;
 }

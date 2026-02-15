@@ -1,11 +1,3 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 const upcomingFeatures = [
   { label: "体調予測機能", description: "1日のリズムから先読み" },
   { label: "SNS共有機能", description: "気づきを家族とシェア" },
@@ -17,28 +9,23 @@ const upcomingFeatures = [
 
 export function UpcomingFeatures() {
   return (
-    <Card className="border-dashed border-slate-200 bg-white/80 shadow-sm dark:border-slate-700 dark:bg-slate-900/40">
-      <CardHeader>
-        <CardTitle className="text-xl">今後の機能予定</CardTitle>
-        <CardDescription>
-          現在開発中のアップデートを先行でご紹介します
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4 md:grid-cols-2">
+    <div className="px-1">
+      <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-700 px-4 py-3">
+        <p className="text-xs text-muted-foreground mb-2">今後の機能予定</p>
+        <div className="flex flex-col gap-1.5">
         {upcomingFeatures.map((feature) => (
           <div
             key={feature.label}
-            className="rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm dark:border-slate-800 dark:bg-slate-900/80"
+            className="flex items-baseline gap-2 text-xs text-slate-600 dark:text-slate-400"
           >
-            <p className="font-semibold text-slate-900 dark:text-white">
+            <span className="font-medium text-slate-700 dark:text-slate-300 shrink-0">
               {feature.label}
-            </p>
-            <p className="text-slate-600 dark:text-slate-300">
-              {feature.description}
-            </p>
+            </span>
+            <span className="text-muted-foreground">— {feature.description}</span>
           </div>
         ))}
-      </CardContent>
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 }

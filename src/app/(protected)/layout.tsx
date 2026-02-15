@@ -1,4 +1,5 @@
 import { Header } from "./_components/Header";
+import { Footer } from "../_components/Footer";
 
 export default async function DashboardLayout({
   children,
@@ -9,6 +10,7 @@ export default async function DashboardLayout({
     <div>
       <Header />
       {children}
+      <Footer />
     </div>
   );
 }

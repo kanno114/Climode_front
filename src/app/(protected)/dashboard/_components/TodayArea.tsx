@@ -1,8 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { TimeBasedHeader } from "./TimeBasedHeader";
+import { GreetingSection } from "./GreetingSection";
 import { BeforeInputContent } from "./BeforeInputContent";
 import { AfterInputContent } from "./AfterInputContent";
-import { ForecastTableAutoScroll } from "./ForecastTable";
+import { WeatherSection } from "./WeatherSection";
 import { ReflectionLinkFooter } from "./ReflectionLinkFooter";
 import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
 import { getTodayDailyLog, getSuggestions, getForecastSeries } from "../actions";
@@ -23,8 +22,8 @@ export async function TodayArea() {
       (todayDailyLog.suggestion_feedbacks?.length ?? 0) > 0);
 
   return (
-    <Card className="py-4">
-      <TimeBasedHeader
+    <div className="space-y-4">
+      <GreetingSection
         hasDailyLog={hasDailyLog}
         hasReflection={!!hasReflection}
         reflectionSlot={
@@ -36,20 +35,20 @@ export async function TodayArea() {
           ) : undefined
         }
       />
-      <CardContent className="space-y-6">
-        {!todayDailyLog ? (
-          <BeforeInputContent />
-        ) : (
-          <AfterInputContent
-            dailyLog={todayDailyLog}
-            suggestions={normalizedSuggestions}
-          />
-        )}
-        <ForecastTableAutoScroll forecast={forecastSeries ?? null} />
-        {hasDailyLog && (
-          <ReflectionLinkFooter hasReflection={!!hasReflection} />
-        )}
-      </CardContent>
-    </Card>
+
+      {!todayDailyLog ? (
+        <BeforeInputContent />
+      ) : (
+        <AfterInputContent
+          suggestions={normalizedSuggestions}
+        />
+      )}
+
+      <WeatherSection forecast={forecastSeries ?? null} />
+
+      {hasDailyLog && (
+        <ReflectionLinkFooter hasReflection={!!hasReflection} />
+      )}
+    </div>
   );
 }
