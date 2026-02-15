@@ -3,9 +3,7 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useActionState } from "react";
-import { useEffect } from "react";
 import { signIn } from "next-auth/react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,18 +11,12 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 import { signUpAction } from "../actions";
 import { signUpSchema } from "@/lib/schemas/signup";
+import { useFormToast } from "@/hooks/use-form-toast";
 export function SignUpForm() {
   const [lastResult, action, pending] = useActionState(signUpAction, undefined);
-
-  // バックエンドエラーをtoastで表示
-  useEffect(() => {
-    if (lastResult?.status === "error") {
-      toast.error(
-        lastResult.error?.message ||
-          "登録に失敗しました。入力内容を確認してください。"
-      );
-    }
-  }, [lastResult]);
+  useFormToast(lastResult, {
+    errorFallback: "登録に失敗しました。入力内容を確認してください。",
+  });
 
   const [form, fields] = useForm({
     id: "signup-form",
