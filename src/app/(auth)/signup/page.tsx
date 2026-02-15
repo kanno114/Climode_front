@@ -45,6 +45,12 @@ export default async function SignUpPage() {
             >
               プライバシーポリシー
             </Link>
+            <Link
+              href="/about"
+              className="text-muted-foreground hover:underline"
+            >
+              About
+            </Link>
           </div>
         </CardContent>
       </Card>
