@@ -1,19 +1,14 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useMediaQuery } from "@/hooks/use-media-query";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Activity,
   Heart,
@@ -24,7 +19,6 @@ import {
   Coffee,
   Bed,
   Zap,
-  CircleHelp,
 } from "lucide-react";
 import { SuggestionEvidence } from "./SuggestionEvidence";
 import {
@@ -113,7 +107,8 @@ export default function Suggestions({
   emptyTitle = "今日の行動提案",
   emptyMessage = "今日は特別な提案はありません",
 }: SuggestionsProps) {
-  const canHover = useMediaQuery("(hover: hover)");
+  const [selectedSuggestion, setSelectedSuggestion] =
+    useState<Suggestion | null>(null);
 
   const getTagStyle = useCallback((tag: string) => {
     return tagColorMap[tag as keyof typeof tagColorMap] || tagColorMap.default;
@@ -122,26 +117,6 @@ export default function Suggestions({
   const getTagIcon = useCallback((tag: string) => {
     const IconComponent = tagIconMap[tag as keyof typeof tagIconMap] || Zap;
     return <IconComponent className="w-3 h-3" />;
-  }, []);
-
-  const renderDetailContent = useCallback((suggestion: Suggestion) => {
-    return (
-      <div className="space-y-4">
-        <div className="border-b pb-3">
-          <h4 className="font-semibold text-slate-900 dark:text-white">
-            {suggestion.title}
-          </h4>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {suggestion.message}
-          </p>
-        </div>
-        <SuggestionEvidence
-          triggers={suggestion.triggers}
-          reason_text={suggestion.reason_text}
-          evidence_text={suggestion.evidence_text}
-        />
-      </div>
-    );
   }, []);
 
   if (suggestions.length === 0) {
@@ -165,112 +140,115 @@ export default function Suggestions({
   }
 
   return (
-    <Card className="py-4 gap-4">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Zap className="w-5 h-5" />
-          {title}
-          <span className="text-sm font-normal text-muted-foreground">
-            （{suggestions.length}件）
-          </span>
-        </CardTitle>
-        {canHover && (
+    <>
+      <Card className="py-4 gap-4">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Zap className="w-5 h-5" />
+            {title}
+            <span className="text-sm font-normal text-muted-foreground">
+              （{suggestions.length}件）
+            </span>
+          </CardTitle>
           <p className="text-xs text-muted-foreground mt-1 text-right">
-            ?ボタンで判定の根拠を表示
+            タップで詳細を表示
           </p>
-        )}
-      </CardHeader>
-      <CardContent className="space-y-2 max-h-[min(50vh,24rem)] overflow-y-auto">
-        {suggestions
-          .sort((a, b) => b.severity - a.severity)
-          .map((suggestion) => {
-            const levelStyle = getLevelStyle(suggestion.level);
-            const evidenceTrigger = (
-              <button
-                type="button"
-                className="shrink-0 p-1 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                aria-label="判定の根拠を表示"
-                title={
-                  canHover
-                    ? "ホバーで判定の根拠・参照元を表示"
-                    : "クリックで判定の根拠・参照元を表示"
-                }
-              >
-                <CircleHelp className="h-5 w-5 text-muted-foreground" />
-              </button>
-            );
+        </CardHeader>
+        <CardContent className="space-y-2 max-h-[min(50vh,24rem)] overflow-y-auto">
+          {suggestions
+            .sort((a, b) => b.severity - a.severity)
+            .map((suggestion) => {
+              const levelStyle = getLevelStyle(suggestion.level);
+              const primaryTag = suggestion.tags[0];
+              const PrimaryIcon = primaryTag
+                ? (tagIconMap[primaryTag as keyof typeof tagIconMap] || Zap)
+                : Zap;
+              const primaryTagStyle = primaryTag
+                ? getTagStyle(primaryTag)
+                : tagColorMap.default;
 
-            return (
-              <article
-                key={suggestion.key}
-                className={`flex flex-col gap-2 p-3 rounded border ${levelStyle.cardBgColor} ${levelStyle.borderColor}`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <h4 className="font-semibold text-sm text-slate-900 dark:text-white min-w-0">
-                    {suggestion.title}
-                  </h4>
-                  <div className="flex items-center gap-1 shrink-0">
-                    {canHover ? (
-                      <HoverCard openDelay={300} closeDelay={100}>
-                        <HoverCardTrigger asChild>
-                          {evidenceTrigger}
-                        </HoverCardTrigger>
-                        <HoverCardContent
-                          className="w-96 max-h-[min(80vh,28rem)] overflow-y-auto p-4"
-                          side="top"
-                          align="end"
+              return (
+                <article
+                  key={suggestion.key}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSelectedSuggestion(suggestion)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSelectedSuggestion(suggestion);
+                    }
+                  }}
+                  className={`flex flex-col gap-2 p-3 rounded-lg border border-l-4 cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/5 ${levelStyle.cardBgColor} ${levelStyle.borderColor} ${levelStyle.accentBorderColor}`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <PrimaryIcon
+                        className={`w-5 h-5 shrink-0 ${primaryTagStyle.color}`}
+                      />
+                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                        {suggestion.title}
+                      </h4>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {suggestion.level && (
+                        <Badge
+                          variant="outline"
+                          className={`text-xs ${levelStyle.color} ${levelStyle.bgColor}`}
                         >
-                          {renderDetailContent(suggestion)}
-                        </HoverCardContent>
-                      </HoverCard>
-                    ) : (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          {evidenceTrigger}
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-96 max-h-[min(80vh,28rem)] overflow-y-auto p-4"
-                          side="top"
-                          align="end"
-                        >
-                          {renderDetailContent(suggestion)}
-                        </PopoverContent>
-                      </Popover>
-                    )}
+                          {getLevelLabel(suggestion.level)}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <p className="text-sm text-slate-700 dark:text-slate-300">
-                  {suggestion.message}
-                </p>
-                <div className="flex flex-wrap gap-1 justify-end">
-                  {suggestion.level && (
-                    <Badge
-                      variant="outline"
-                      className={`text-xs ${levelStyle.color} ${levelStyle.bgColor}`}
-                    >
-                      {getLevelLabel(suggestion.level)}
-                    </Badge>
-                  )}
-                  {suggestion.tags.map((tag) => {
-                    const tagStyle = getTagStyle(tag);
-                    return (
-                      <Badge
-                        key={tag}
-                        variant="outline"
-                        className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
-                      >
-                        <span className="flex items-center gap-1">
-                          {getTagIcon(tag)}
-                          {getTagLabel(tag)}
-                        </span>
-                      </Badge>
-                    );
-                  })}
-                </div>
-              </article>
-            );
-          })}
-      </CardContent>
-    </Card>
+                  <p className="text-sm text-slate-700 dark:text-slate-300">
+                    {suggestion.message}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {suggestion.tags.map((tag) => {
+                      const tagStyle = getTagStyle(tag);
+                      return (
+                        <Badge
+                          key={tag}
+                          variant="outline"
+                          className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
+                        >
+                          <span className="flex items-center gap-1">
+                            {getTagIcon(tag)}
+                            {getTagLabel(tag)}
+                          </span>
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                </article>
+              );
+            })}
+        </CardContent>
+      </Card>
+
+      <Dialog
+        open={selectedSuggestion !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedSuggestion(null);
+        }}
+      >
+        {selectedSuggestion && (
+          <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{selectedSuggestion.title}</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground">
+              {selectedSuggestion.message}
+            </p>
+            <SuggestionEvidence
+              triggers={selectedSuggestion.triggers}
+              reason_text={selectedSuggestion.reason_text}
+              evidence_text={selectedSuggestion.evidence_text}
+            />
+          </DialogContent>
+        )}
+      </Dialog>
+    </>
   );
 }
