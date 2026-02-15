@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/auth";
@@ -8,11 +9,43 @@ import { HowItWorksSection } from "./_components/HowItWorksSection";
 import { Footer } from "./_components/Footer";
 import { FadeInOnScroll } from "./_components/FadeInOnScroll";
 
+export const metadata: Metadata = {
+  title: "Climode - 体調管理アプリ",
+  description:
+    "睡眠・気分・症状などの身体データと、天気・気圧・湿度などの環境データを統合して体調をスコア化。毎朝のシグナルと提案で日々の体調管理をサポートします。",
+  openGraph: {
+    title: "Climode - 体調管理アプリ",
+    description:
+      "睡眠・気分・症状などの身体データと、天気・気圧・湿度などの環境データを統合して体調をスコア化。毎朝のシグナルと提案で日々の体調管理をサポートします。",
+  },
+};
+
 export default async function Home() {
   const session = await auth();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Climode",
+    description:
+      "睡眠・気分・症状などの身体データと、天気・気圧・湿度などの環境データを統合して体調をスコア化する健康管理アプリ",
+    url: "https://climode-front.vercel.app",
+    applicationCategory: "HealthApplication",
+    operatingSystem: "Web",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "JPY",
+    },
+    inLanguage: "ja",
+  };
+
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <HeroSection session={session} />
       <FeaturesSection />
       <AppScreenshotSection />

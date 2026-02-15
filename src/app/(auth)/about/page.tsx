@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { EVIDENCE_CATEGORIES } from "./_data/evidence-sources";
+
+export const metadata: Metadata = {
+  title: "提案ロジックと参照エビデンス",
+  description:
+    "Climodeが体調提案に使用しているロジックと、参照している公的機関のデータ・学術研究・専門家の知見について説明します。",
+};
 
 export default function AboutPage() {
   return (

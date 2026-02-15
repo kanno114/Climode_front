@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Card,
@@ -5,6 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "プライバシーポリシー",
+  description:
+    "Climodeのプライバシーポリシーです。個人情報の取り扱いについてご確認ください。",
+};
 
 export default function PrivacyPolicyPage() {
   return (
