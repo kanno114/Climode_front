@@ -25,41 +25,39 @@ export async function submitMorningDeclaration(_: unknown, formData: FormData) {
 
   const data = submission.payload;
 
-  try {
-    // Rails APIを呼び出して朝の自己申告を保存
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/morning`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
-        body: JSON.stringify({
-          sleep_hours: data.sleep_hours,
-          mood: data.mood,
-          fatigue: data.fatigue,
-        }),
-      }
-    );
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/morning`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
+      },
+      body: JSON.stringify({
+        sleep_hours: data.sleep_hours,
+        mood: data.mood,
+        fatigue: data.fatigue,
+      }),
+    },
+  ).catch(() => null);
 
-    if (!res.ok) {
-      const errorMessage = await parseApiError(
-        res,
-        "朝の自己申告の保存に失敗しました",
-      );
-      return submission.reply({
-        formErrors: [errorMessage],
-      });
-    }
-  } catch {
+  if (!res) {
     return submission.reply({
-      formErrors: ["予期しないエラーが発生しました。もう一度お試しください。"],
+      formErrors: ["通信エラーが発生しました。もう一度お試しください。"],
+    });
+  }
+  if (res.status === 401) redirect("/signin");
+
+  if (!res.ok) {
+    const errorMessage = await parseApiError(
+      res,
+      "朝の自己申告の保存に失敗しました",
+    );
+    return submission.reply({
+      formErrors: [errorMessage],
     });
   }
 
-  // 成功時は /dashboard にリダイレクト
-  // redirect()は内部でエラーをスローするため、try-catchの外で呼び出す
   redirect("/dashboard");
 }

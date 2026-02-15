@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { apiFetch } from "@/lib/api/api-fetch";
+import { redirect } from "next/navigation";
 
 export type ForecastPoint = {
   time: string;
@@ -17,29 +18,23 @@ export async function getSuggestions() {
     return null;
   }
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/suggestions`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/suggestions`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
       },
-    );
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return await res.json();
-    } else if (res.status === 404) {
-      return null;
-    } else {
-      return null;
-    }
-  } catch {
-    return null;
-  }
+  if (!res) return null;
+  if (res.status === 401) redirect("/signin");
+  if (!res.ok) return null;
+
+  return await res.json();
 }
 
 export async function getTodayDailyLog() {
@@ -48,30 +43,25 @@ export async function getTodayDailyLog() {
     return null;
   }
 
-  try {
-    const today = new Date().toISOString().split("T")[0];
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date/${today}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
+  const today = new Date().toISOString().split("T")[0];
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/daily_logs/date/${today}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
       },
-    );
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return await res.json();
-    } else if (res.status === 404) {
-      return null; // 今日の記録が存在しない
-    } else {
-      return null;
-    }
-  } catch {
-    return null;
-  }
+  if (!res) return null;
+  if (res.status === 401) redirect("/signin");
+  if (res.status === 404) return null;
+  if (!res.ok) return null;
+
+  return await res.json();
 }
 
 export async function getForecastSeries(): Promise<ForecastPoint[] | null> {
@@ -80,28 +70,23 @@ export async function getForecastSeries(): Promise<ForecastPoint[] | null> {
     return null;
   }
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/forecast`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
-        // 予報なので、10分程度のキャッシュで十分
-        next: { revalidate: 600 },
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/forecast`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
       },
-    );
+      next: { revalidate: 600 },
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      const json = (await res.json()) as ForecastPoint[];
-      return Array.isArray(json) ? json : [];
-    } else {
-      return null;
-    }
-  } catch {
-    return null;
-  }
+  if (!res) return null;
+  if (res.status === 401) redirect("/signin");
+  if (!res.ok) return null;
+
+  const json = (await res.json()) as ForecastPoint[];
+  return Array.isArray(json) ? json : [];
 }
