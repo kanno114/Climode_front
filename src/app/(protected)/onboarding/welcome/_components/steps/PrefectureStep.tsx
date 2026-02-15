@@ -61,8 +61,7 @@ export function PrefectureStep({
           toast.success("取得地域を保存しました");
         }
         onComplete();
-      } catch (err) {
-        console.error(err);
+      } catch {
         setError("取得地域の保存に失敗しました");
       }
     });

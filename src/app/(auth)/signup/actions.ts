@@ -44,8 +44,6 @@ export async function signUpAction(_: unknown, formData: FormData) {
         backendSignUpResponse,
         "登録に失敗しました",
       );
-      console.error("登録失敗:", { status: backendSignUpResponse.status });
-
       return submission.reply({
         formErrors: [errorMessage],
       });
@@ -72,8 +70,6 @@ export async function signUpAction(_: unknown, formData: FormData) {
         backendSignInResponse,
         "メールアドレスまたはパスワードが正しくありません",
       );
-      console.error("Rails API認証失敗:", { status: backendSignInResponse.status });
-
       return submission.reply({
         formErrors: [errorMessage],
       });
@@ -105,16 +101,11 @@ export async function signUpAction(_: unknown, formData: FormData) {
     });
 
     if (frontendSignInResult?.error) {
-      console.error("ログイン失敗:", frontendSignInResult.error);
       return submission.reply({
         formErrors: ["認証に失敗しました"],
       });
     }
-  } catch (error: unknown) {
-    console.error(
-      "予期しないエラーが発生しました:",
-      error instanceof Error ? error.message : String(error)
-    );
+  } catch {
     return submission.reply({
       formErrors: ["予期しないエラーが発生しました"],
     });

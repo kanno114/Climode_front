@@ -32,8 +32,6 @@ export async function validateAccessToken(): Promise<TokenValidationResult> {
  * 認証に失敗した場合の処理（redirect でログアウトページへ）
  */
 export async function handleAuthFailure(): Promise<void> {
-  console.warn("Authentication failed, redirecting to logout");
-
   // Cookie を触らず、ログアウトページにリダイレクト
   redirect("/auth/logout?reason=session_expired");
 }
@@ -78,8 +76,7 @@ export async function validateTokenWithApi(): Promise<TokenValidationResult> {
       isValid: false,
       accessToken,
     };
-  } catch (error) {
-    console.error("Token validation API error:", error);
+  } catch {
     return {
       isValid: false,
       accessToken,

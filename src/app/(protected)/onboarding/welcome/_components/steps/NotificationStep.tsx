@@ -87,8 +87,7 @@ export function NotificationStep({
       setSubscribed(true);
       setPending(false);
       onComplete();
-    } catch (err) {
-      console.error(err);
+    } catch {
       setError("通知の登録に失敗しました。");
       setPending(false);
     }

@@ -29,11 +29,9 @@ export async function getTodaySuggestions() {
     if (res.ok) {
       return await res.json();
     } else {
-      console.error("提案データ取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("提案データ取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -62,16 +60,10 @@ export async function getTodayDailyLog() {
       return await res.json();
     } else if (res.status === 404) {
       return null; // 今日の記録が存在しない
-    } else if (res.status === 401) {
-      // 認証エラーの場合はnullを返して、ページ側でログインページにリダイレクト
-      console.error("認証エラー - セッションが無効です");
-      return null;
     } else {
-      console.error("今日の記録取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("今日の記録取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -94,7 +86,6 @@ export async function submitEveningReflection(_: unknown, formData: FormData) {
 
   const data = submission.payload;
 
-  let result;
   try {
     // Rails APIを呼び出して夜の振り返りを保存
     const res = await apiFetch(
@@ -119,20 +110,11 @@ export async function submitEveningReflection(_: unknown, formData: FormData) {
         res,
         "夜の振り返りの保存に失敗しました",
       );
-      console.error("夜の振り返り保存失敗:", { status: res.status });
-
       return submission.reply({
         formErrors: [errorMessage],
       });
     }
-
-    result = await res.json();
-    console.log("夜の振り返り保存成功:", result);
-  } catch (error: unknown) {
-    console.error("予期しないエラーが発生しました:", error);
-    if (error instanceof Error) {
-      console.error("エラースタック:", error.stack);
-    }
+  } catch {
     return submission.reply({
       formErrors: ["予期しないエラーが発生しました。もう一度お試しください。"],
     });

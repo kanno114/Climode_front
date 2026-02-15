@@ -25,7 +25,6 @@ export async function submitMorningDeclaration(_: unknown, formData: FormData) {
 
   const data = submission.payload;
 
-  let result;
   try {
     // Rails APIを呼び出して朝の自己申告を保存
     const res = await apiFetch(
@@ -50,17 +49,11 @@ export async function submitMorningDeclaration(_: unknown, formData: FormData) {
         res,
         "朝の自己申告の保存に失敗しました",
       );
-      console.error("朝の自己申告保存失敗:", { status: res.status });
-
       return submission.reply({
         formErrors: [errorMessage],
       });
     }
-
-    result = await res.json();
-    console.log("朝の自己申告保存成功:", result);
-  } catch (error: unknown) {
-    console.error("予期しないエラーが発生しました:", error);
+  } catch {
     return submission.reply({
       formErrors: ["予期しないエラーが発生しました。もう一度お試しください。"],
     });

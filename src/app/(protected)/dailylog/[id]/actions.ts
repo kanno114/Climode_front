@@ -26,16 +26,10 @@ export async function getDailyLog(id: string) {
       return await res.json();
     } else if (res.status === 404) {
       return null; // 今日の記録が存在しない
-    } else if (res.status === 401) {
-      // 認証エラーの場合はnullを返して、ページ側でログインページにリダイレクト
-      console.error("認証エラー - セッションが無効です");
-      return null;
     } else {
-      console.error("今日の記録取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("今日の記録取得エラー:", error);
+  } catch {
     return null;
   }
 }

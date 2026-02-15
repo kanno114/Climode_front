@@ -75,7 +75,6 @@ export function EveningReflectionForm({
   // バックエンドエラーをtoastで表示
   useEffect(() => {
     if (lastResult) {
-      console.log("lastResult:", lastResult);
       if (lastResult.status === "error") {
         const errorMessage =
           lastResult.error?.message ||

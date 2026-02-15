@@ -17,8 +17,7 @@ export async function getConcernTopicsAction(): Promise<ConcernTopic[] | null> {
 
   try {
     return await fetchConcernTopics(session.user.id);
-  } catch (error) {
-    console.error("関心ワードマスタ取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -31,8 +30,7 @@ export async function getUserConcernTopicsAction(): Promise<string[] | null> {
 
   try {
     return await fetchUserConcernTopics(session.user.id);
-  } catch (error) {
-    console.error("ユーザー関心ワード取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -51,7 +49,6 @@ export async function updateUserConcernTopicsAction(keys: string[]) {
     revalidatePath("/concern-topics");
     return { status: "success" as const };
   } catch (error) {
-    console.error("関心ワード更新エラー:", error);
     return {
       status: "error" as const,
       error: {

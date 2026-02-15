@@ -41,8 +41,7 @@ export function ConcernTopicsStep({
         if (userKeys) {
           setSelectedKeys(new Set(userKeys));
         }
-      } catch (error) {
-        console.error("関心ワード取得エラー:", error);
+      } catch {
         toast.error("関心ワードの取得に失敗しました");
       } finally {
         setLoading(false);
@@ -75,7 +74,7 @@ export function ConcernTopicsStep({
       } else {
         toast.error(result.error?.message ?? "登録に失敗しました");
       }
-    } catch (error) {
+    } catch {
       toast.error("関心ワードの登録に失敗しました");
     } finally {
       setSaving(false);

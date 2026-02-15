@@ -29,11 +29,9 @@ export async function getPrefectures() {
     if (res.ok) {
       return await res.json();
     } else {
-      console.error("都道府県データ取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("都道府県データ取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -55,11 +53,9 @@ export async function getProfileAction() {
     if (res.ok) {
       return await res.json();
     } else {
-      console.error("プロファイル取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("プロファイル取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -113,8 +109,7 @@ export async function updateProfileAction(_: unknown, formData: FormData) {
         formErrors: [errorMessage],
       });
     }
-  } catch (error) {
-    console.error("プロファイル更新エラー:", error);
+  } catch {
     return submission.reply({
       formErrors: ["プロファイルの更新に失敗しました"],
     });
@@ -160,8 +155,7 @@ export async function subscribePushNotificationAction(subscription: {
         error: { message: errorMessage },
       };
     }
-  } catch (error) {
-    console.error("通知登録エラー:", error);
+  } catch {
     return {
       status: "error" as const,
       error: { message: "通知の登録に失敗しました" },
@@ -204,8 +198,7 @@ export async function unsubscribePushNotificationAction(endpoint: string) {
         error: { message: errorMessage },
       };
     }
-  } catch (error) {
-    console.error("通知解除エラー:", error);
+  } catch {
     return {
       status: "error" as const,
       error: { message: "通知の解除に失敗しました" },

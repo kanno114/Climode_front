@@ -26,8 +26,8 @@ export default async function OnboardingWelcomePage() {
   let profile = null;
   try {
     profile = await getProfileAction();
-  } catch (error) {
-    console.error("Failed to load profile:", error);
+  } catch {
+    // getProfileAction失敗時はprofile=nullのまま進める
   }
   const initialPrefectureId = profile?.user?.prefecture_id ?? null;
 

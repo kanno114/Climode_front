@@ -34,15 +34,10 @@ export async function getSuggestions() {
       return await res.json();
     } else if (res.status === 404) {
       return null;
-    } else if (res.status === 401) {
-      console.error("認証エラー - セッションが無効です");
-      return null;
     } else {
-      console.error("提案データ取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("提案データ取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -71,16 +66,10 @@ export async function getTodayDailyLog() {
       return await res.json();
     } else if (res.status === 404) {
       return null; // 今日の記録が存在しない
-    } else if (res.status === 401) {
-      // 認証エラーの場合はnullを返して、ページ側でログインページにリダイレクト
-      console.error("認証エラー - セッションが無効です");
-      return null;
     } else {
-      console.error("今日の記録取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("今日の記録取得エラー:", error);
+  } catch {
     return null;
   }
 }
@@ -109,18 +98,10 @@ export async function getForecastSeries(): Promise<ForecastPoint[] | null> {
     if (res.ok) {
       const json = (await res.json()) as ForecastPoint[];
       return Array.isArray(json) ? json : [];
-    } else if (res.status === 422) {
-      console.error("予報取得失敗 - 都道府県が未設定です");
-      return null;
-    } else if (res.status === 401) {
-      console.error("認証エラー - セッションが無効です");
-      return null;
     } else {
-      console.error("予報データ取得失敗:", res.status);
       return null;
     }
-  } catch (error) {
-    console.error("予報データ取得エラー:", error);
+  } catch {
     return null;
   }
 }
