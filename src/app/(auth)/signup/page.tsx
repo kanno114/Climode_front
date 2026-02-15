@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Card,
@@ -7,6 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SignUpForm } from "./_components/SignUpForm";
+
+export const metadata: Metadata = {
+  title: "新規登録",
+  description:
+    "Climodeのアカウントを作成して、体調管理を始めましょう。Googleアカウントでも登録できます。",
+};
 
 export default async function SignUpPage() {
   return (

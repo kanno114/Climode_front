@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Card,
@@ -5,6 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "利用規約",
+  description: "Climodeの利用規約です。サービスのご利用前にご確認ください。",
+};
 
 export default function TermsOfServicePage() {
   return (

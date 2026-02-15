@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Card,
@@ -8,6 +9,11 @@ import {
 } from "@/components/ui/card";
 import { SignInForm } from "./_components/SignInForm";
 import { ToastMessage } from "./_components/ToastMessage";
+
+export const metadata: Metadata = {
+  title: "ログイン",
+  description: "Climodeにログインして、今日の体調シグナルを確認しましょう。",
+};
 
 interface SignInPageProps {
   searchParams: Promise<{ message?: string }>;
