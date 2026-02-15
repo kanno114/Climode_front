@@ -72,6 +72,12 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
             >
               プライバシーポリシー
             </Link>
+            <Link
+              href="/about"
+              className="text-muted-foreground hover:underline"
+            >
+              About
+            </Link>
           </div>
         </CardContent>
       </Card>
