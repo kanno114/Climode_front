@@ -4,6 +4,13 @@ import {
   type ConcernTopic,
 } from "@/lib/schemas/concern-topics";
 
+export class AuthenticationError extends Error {
+  constructor() {
+    super("セッションが無効です。再度ログインしてください。");
+    this.name = "AuthenticationError";
+  }
+}
+
 function getApiBaseUrl() {
   const baseUrl = process.env.API_BASE_URL_SERVER;
   if (!baseUrl) {
@@ -26,6 +33,12 @@ function buildHeaders(userId?: string): HeadersInit {
   return headers;
 }
 
+function checkAuthError(res: Response): void {
+  if (res.status === 401) {
+    throw new AuthenticationError();
+  }
+}
+
 export async function fetchConcernTopics(
   userId: string,
 ): Promise<ConcernTopic[]> {
@@ -34,8 +47,10 @@ export async function fetchConcernTopics(
     headers: buildHeaders(userId),
   });
 
+  checkAuthError(res);
+
   if (!res.ok) {
-    throw new Error(`Failed to fetch concern topics: ${res.statusText}`);
+    throw new Error(`関心ワードの取得に失敗しました: ${res.statusText}`);
   }
 
   const json = await res.json();
@@ -50,8 +65,10 @@ export async function fetchUserConcernTopics(
     headers: buildHeaders(userId),
   });
 
+  checkAuthError(res);
+
   if (!res.ok) {
-    throw new Error(`Failed to fetch user concern topics: ${res.statusText}`);
+    throw new Error(`ユーザーの関心ワード取得に失敗しました: ${res.statusText}`);
   }
 
   const json = await res.json();
@@ -72,7 +89,9 @@ export async function updateUserConcernTopics(
     body: JSON.stringify({ keys }),
   });
 
+  checkAuthError(res);
+
   if (!res.ok) {
-    throw new Error(`Failed to update user concern topics: ${res.statusText}`);
+    throw new Error(`関心ワードの更新に失敗しました: ${res.statusText}`);
   }
 }

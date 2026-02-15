@@ -3,8 +3,7 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useActionState } from "react";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -12,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Bed, Heart, Zap } from "lucide-react";
 import { submitMorningDeclaration } from "@/app/(protected)/morning/actions";
 import { morningDeclarationSchema } from "@/lib/schemas/morning-declaration";
+import { useFormToast } from "@/hooks/use-form-toast";
 
 const MOOD_OPTIONS = [
   { value: 1, emoji: "😢", label: "とても悪い" },
@@ -37,15 +37,9 @@ export function MorningDeclarationForm() {
   const [sleepHours, setSleepHours] = useState<number[]>([6]);
   const [mood, setMood] = useState<number>(3);
   const [fatigue, setFatigue] = useState<number>(3);
-
-  // バックエンドエラーをtoastで表示
-  useEffect(() => {
-    if (lastResult?.status === "error") {
-      toast.error(
-        lastResult.error?.message || "朝の自己申告の保存に失敗しました。"
-      );
-    }
-  }, [lastResult]);
+  useFormToast(lastResult, {
+    errorFallback: "朝の自己申告の保存に失敗しました。",
+  });
 
   const [form, fields] = useForm({
     id: "morning-declaration-form",

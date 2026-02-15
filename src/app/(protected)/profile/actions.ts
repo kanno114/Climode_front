@@ -3,9 +3,15 @@
 import { parseWithZod } from "@conform-to/zod";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { apiFetch } from "@/lib/api/api-fetch";
 import { profileSchema } from "@/lib/schemas/profile";
 import { parseApiError } from "@/lib/api/parse-error";
+import {
+  type ActionResult,
+  successVoid,
+  failure,
+} from "@/lib/api/action-result";
 
 export async function getPrefectures() {
   const session = await auth();
@@ -13,27 +19,23 @@ export async function getPrefectures() {
     return null;
   }
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/prefectures`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
-      }
-    );
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/prefectures`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
+      },
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return await res.json();
-    } else {
-      return null;
-    }
-  } catch {
-    return null;
-  }
+  if (!res) return null;
+  if (res.status === 401) redirect("/signin");
+  if (!res.ok) return null;
+
+  return await res.json();
 }
 
 export async function getProfileAction() {
@@ -42,22 +44,18 @@ export async function getProfileAction() {
     return null;
   }
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
-      {
-        method: "GET",
-      }
-    );
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
+    {
+      method: "GET",
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return await res.json();
-    } else {
-      return null;
-    }
-  } catch {
-    return null;
-  }
+  if (!res) return null;
+  if (res.status === 401) redirect("/signin");
+  if (!res.ok) return null;
+
+  return await res.json();
 }
 
 export async function updateProfileAction(_: unknown, formData: FormData) {
@@ -78,40 +76,41 @@ export async function updateProfileAction(_: unknown, formData: FormData) {
 
   const { name, prefecture_id } = submission.payload;
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
+      },
+      body: JSON.stringify({
+        user: {
+          name,
+          prefecture_id: parseInt(prefecture_id as string),
         },
-        body: JSON.stringify({
-          user: {
-            name,
-            prefecture_id: parseInt(prefecture_id as string),
-          },
-        }),
-      }
-    );
+      }),
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      revalidatePath("/profile");
-      return submission.reply();
-    } else {
-      const errorMessage = await parseApiError(
-        res,
-        "プロファイルの更新に失敗しました",
-      );
-      return submission.reply({
-        formErrors: [errorMessage],
-      });
-    }
-  } catch {
+  if (!res) {
     return submission.reply({
-      formErrors: ["プロファイルの更新に失敗しました"],
+      formErrors: ["通信エラーが発生しました。もう一度お試しください。"],
+    });
+  }
+  if (res.status === 401) redirect("/signin");
+
+  if (res.ok) {
+    revalidatePath("/profile");
+    return submission.reply();
+  } else {
+    const errorMessage = await parseApiError(
+      res,
+      "プロファイルの更新に失敗しました",
+    );
+    return submission.reply({
+      formErrors: [errorMessage],
     });
   }
 }
@@ -120,88 +119,74 @@ export async function subscribePushNotificationAction(subscription: {
   endpoint: string;
   p256dh_key: string;
   auth_key: string;
-}) {
+}): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user) {
-    return {
-      status: "error" as const,
-      error: { message: "認証が必要です" },
-    };
+    return failure("認証が必要です", "auth_required");
   }
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/push_subscriptions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
-        body: JSON.stringify({ subscription }),
-      }
-    );
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/push_subscriptions`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
+      },
+      body: JSON.stringify({ subscription }),
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return { status: "success" as const };
-    } else {
-      const errorMessage = await parseApiError(
-        res,
-        "通知の登録に失敗しました",
-      );
-      return {
-        status: "error" as const,
-        error: { message: errorMessage },
-      };
-    }
-  } catch {
-    return {
-      status: "error" as const,
-      error: { message: "通知の登録に失敗しました" },
-    };
+  if (!res) {
+    return failure("通信エラーが発生しました。もう一度お試しください。", "network_error");
+  }
+  if (res.status === 401) redirect("/signin");
+
+  if (res.ok) {
+    return successVoid();
+  } else {
+    const errorMessage = await parseApiError(
+      res,
+      "通知の登録に失敗しました",
+    );
+    return failure(errorMessage);
   }
 }
 
-export async function unsubscribePushNotificationAction(endpoint: string) {
+export async function unsubscribePushNotificationAction(
+  endpoint: string,
+): Promise<ActionResult> {
   const session = await auth();
   if (!session?.user) {
-    return {
-      status: "error" as const,
-      error: { message: "認証が必要です" },
-    };
+    return failure("認証が必要です", "auth_required");
   }
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/push_subscriptions/by_endpoint`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "User-Id": session.user.id,
-        },
-        body: JSON.stringify({ endpoint }),
-      }
-    );
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/push_subscriptions/by_endpoint`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "User-Id": session.user.id,
+      },
+      body: JSON.stringify({ endpoint }),
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return { status: "success" as const };
-    } else {
-      const errorMessage = await parseApiError(
-        res,
-        "通知の解除に失敗しました",
-      );
-      return {
-        status: "error" as const,
-        error: { message: errorMessage },
-      };
-    }
-  } catch {
-    return {
-      status: "error" as const,
-      error: { message: "通知の解除に失敗しました" },
-    };
+  if (!res) {
+    return failure("通信エラーが発生しました。もう一度お試しください。", "network_error");
+  }
+  if (res.status === 401) redirect("/signin");
+
+  if (res.ok) {
+    return successVoid();
+  } else {
+    const errorMessage = await parseApiError(
+      res,
+      "通知の解除に失敗しました",
+    );
+    return failure(errorMessage);
   }
 }

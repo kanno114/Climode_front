@@ -2,8 +2,7 @@
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import { useActionState, useEffect, useState, useTransition } from "react";
-import { toast } from "sonner";
+import { useActionState, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { submitEveningReflection } from "@/app/(protected)/evening/actions";
 import { eveningReflectionSchema } from "@/lib/schemas/evening-reflection";
 import { SuggestionFeedbackCard } from "./SuggestionFeedbackCard";
+import { useFormToast } from "@/hooks/use-form-toast";
 
 type Suggestion = {
   key: string;
@@ -71,19 +71,9 @@ export function EveningReflectionForm({
   const [selfScore, setSelfScore] = useState<number | null>(
     initialDailyLog?.self_score ?? null,
   );
-
-  // バックエンドエラーをtoastで表示
-  useEffect(() => {
-    if (lastResult) {
-      if (lastResult.status === "error") {
-        const errorMessage =
-          lastResult.error?.message ||
-          lastResult.error?.formErrors?.[0] ||
-          "夜の振り返りの保存に失敗しました。";
-        toast.error(errorMessage);
-      }
-    }
-  }, [lastResult]);
+  useFormToast(lastResult, {
+    errorFallback: "夜の振り返りの保存に失敗しました。",
+  });
 
   const [form] = useForm({
     id: "evening-reflection-form",

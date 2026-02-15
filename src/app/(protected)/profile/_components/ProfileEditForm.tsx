@@ -3,8 +3,6 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useActionState } from "react";
-import { useEffect } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, User, MapPin } from "lucide-react";
 import { profileSchema } from "@/lib/schemas/profile";
 import { updateProfileAction } from "../actions";
+import { useFormToast } from "@/hooks/use-form-toast";
 import {
   Select,
   SelectContent,
@@ -40,18 +39,10 @@ export function ProfileEditForm({ initialData, prefectures }: ProfileEditFormPro
     updateProfileAction,
     undefined
   );
-
-  // バックエンドエラーをtoastで表示
-  useEffect(() => {
-    if (lastResult?.status === "error") {
-      const errorMessage =
-        lastResult.error?.formErrors?.[0] ||
-        "プロファイルの更新に失敗しました。";
-      toast.error(errorMessage);
-    } else if (lastResult?.status === "success") {
-      toast.success("プロファイルを更新しました。");
-    }
-  }, [lastResult]);
+  useFormToast(lastResult, {
+    errorFallback: "プロファイルの更新に失敗しました。",
+    successMessage: "プロファイルを更新しました。",
+  });
 
   const [form, fields] = useForm({
     id: "profile-edit-form",

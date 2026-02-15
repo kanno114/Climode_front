@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { apiFetch } from "@/lib/api/api-fetch";
+import { redirect } from "next/navigation";
 import type { WeeklyReport } from "./types";
 
 /**
@@ -30,25 +31,21 @@ export async function getWeeklyReport(
 
   const startDate = weekStart || calculateWeekStart();
 
-  try {
-    const res = await apiFetch(
-      `${process.env.API_BASE_URL_SERVER}/api/v1/reports/weekly?start=${startDate}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        next: { revalidate: 3600 },
-      }
-    );
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/reports/weekly?start=${startDate}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      next: { revalidate: 3600 },
+    },
+  ).catch(() => null);
 
-    if (res.ok) {
-      return await res.json();
-    } else {
-      return null;
-    }
-  } catch {
-    return null;
-  }
+  if (!res) return null;
+  if (res.status === 401) redirect("/signin");
+  if (!res.ok) return null;
+
+  return await res.json();
 }

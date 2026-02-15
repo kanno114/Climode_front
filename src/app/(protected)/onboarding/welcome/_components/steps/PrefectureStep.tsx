@@ -55,7 +55,7 @@ export function PrefectureStep({
             Number(selectedPrefecture)
           );
           if (result.status === "error") {
-            setError(result.error ?? "取得地域の保存に失敗しました");
+            setError(result.error.message);
             return;
           }
           toast.success("取得地域を保存しました");
