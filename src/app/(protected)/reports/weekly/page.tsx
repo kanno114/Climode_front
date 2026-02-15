@@ -1,17 +1,71 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart3 } from "lucide-react";
 import { Suspense } from "react";
 import { WeeklyReportContent } from "./_components/WeeklyReportContent";
 
+function WeeklyReportSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Date range & navigation */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <Skeleton className="h-8 w-32" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-9 w-16 rounded-md" />
+          <Skeleton className="h-9 w-16 rounded-md" />
+        </div>
+      </div>
+
+      {/* Tab bar */}
+      <div className="flex gap-1 mb-6">
+        {["w-20", "w-24", "w-24", "w-16"].map((w, i) => (
+          <Skeleton key={i} className={`h-9 ${w} rounded-md`} />
+        ))}
+      </div>
+
+      {/* Key metrics */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="p-4 rounded-xl border border-gray-200 dark:border-gray-700"
+          >
+            <Skeleton className="h-5 w-5 rounded-full mx-auto mb-2" />
+            <Skeleton className="h-3 w-12 mx-auto mb-2" />
+            <Skeleton className="h-6 w-10 mx-auto" />
+          </div>
+        ))}
+      </div>
+
+      {/* Comparison cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            className="rounded-xl border bg-card p-6 shadow-sm space-y-4"
+          >
+            <Skeleton className="h-5 w-32" />
+            <div className="grid grid-cols-2 gap-4">
+              <Skeleton className="h-20 rounded-lg" />
+              <Skeleton className="h-20 rounded-lg" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function WeeklyReportPage({
   searchParams,
 }: {
-  searchParams: { start?: string };
+  searchParams: Promise<{ start?: string }>;
 }) {
+  const { start } = await searchParams;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
-        {/* ヘッダー */}
+        {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3">
             <BarChart3 className="h-8 w-8 text-blue-600" />
@@ -26,22 +80,9 @@ export default async function WeeklyReportPage({
           </div>
         </div>
 
-        {/* コンテンツ */}
-        <Suspense
-          fallback={
-            <Card>
-              <CardHeader>
-                <CardTitle>週間レポート</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                </div>
-              </CardContent>
-            </Card>
-          }
-        >
-          <WeeklyReportContent weekStart={searchParams.start} />
+        {/* Content */}
+        <Suspense fallback={<WeeklyReportSkeleton />}>
+          <WeeklyReportContent weekStart={start} />
         </Suspense>
       </div>
     </div>

@@ -73,6 +73,9 @@ export function WeeklyMorningChart({ daily }: WeeklyMorningChartProps) {
         backgroundColor: "rgba(59, 130, 246, 0.1)",
         tension: 0.4,
         fill: false,
+        yAxisID: "y-sleep",
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
       {
         label: "気分",
@@ -81,6 +84,9 @@ export function WeeklyMorningChart({ daily }: WeeklyMorningChartProps) {
         backgroundColor: "rgba(236, 72, 153, 0.1)",
         tension: 0.4,
         fill: false,
+        yAxisID: "y-score",
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
       {
         label: "疲労感",
@@ -89,6 +95,9 @@ export function WeeklyMorningChart({ daily }: WeeklyMorningChartProps) {
         backgroundColor: "rgba(249, 115, 22, 0.1)",
         tension: 0.4,
         fill: false,
+        yAxisID: "y-score",
+        pointRadius: 4,
+        pointHoverRadius: 6,
       },
     ],
   };
@@ -96,6 +105,10 @@ export function WeeklyMorningChart({ daily }: WeeklyMorningChartProps) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: "index" as const,
+      intersect: false,
+    },
     plugins: {
       legend: {
         display: true,
@@ -109,19 +122,50 @@ export function WeeklyMorningChart({ daily }: WeeklyMorningChartProps) {
             if (context.parsed.y === null) {
               return `${context.dataset.label || ""}: データなし`;
             }
-            const unit = context.dataset.label?.includes("時間") ? "時間" : "";
+            const unit = context.dataset.label?.includes("時間") ? "時間" : "/5";
             return `${context.dataset.label || ""}: ${context.parsed.y}${unit}`;
           },
         },
       },
     },
     scales: {
-      y: {
+      "y-sleep": {
+        type: "linear" as const,
+        display: true,
+        position: "left" as const,
         beginAtZero: true,
         min: 0,
         max: 12,
+        title: {
+          display: true,
+          text: "睡眠時間 (h)",
+          font: { size: 11 },
+        },
         grid: {
-          color: "rgba(0, 0, 0, 0.05)",
+          color: "rgba(59, 130, 246, 0.08)",
+        },
+        ticks: {
+          color: "rgb(59, 130, 246)",
+        },
+      },
+      "y-score": {
+        type: "linear" as const,
+        display: true,
+        position: "right" as const,
+        beginAtZero: true,
+        min: 0,
+        max: 5,
+        title: {
+          display: true,
+          text: "気分・疲労 (1-5)",
+          font: { size: 11 },
+        },
+        grid: {
+          drawOnChartArea: false,
+        },
+        ticks: {
+          stepSize: 1,
+          color: "rgb(236, 72, 153)",
         },
       },
       x: {

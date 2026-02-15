@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Lightbulb, CheckCircle2, XCircle } from "lucide-react";
+import { Lightbulb, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Activity,
   Heart,
@@ -23,7 +24,6 @@ import {
 } from "@/lib/suggestion-constants";
 import type { WeeklyReportSuggestions } from "../types";
 
-// tagsによる色分け（ダッシュボードSuggestions.tsxと統一）
 const tagColorMap = {
   temperature: {
     color: "text-blue-700",
@@ -85,6 +85,11 @@ export function WeeklySuggestionsSection({
   suggestions,
 }: WeeklySuggestionsSectionProps) {
   const byDay = suggestions?.by_day ?? [];
+  const sortedDays = [...byDay].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  const [dayIndex, setDayIndex] = useState(0);
 
   const getTagStyle = useCallback((tag: string) => {
     return tagColorMap[tag as keyof typeof tagColorMap] || tagColorMap.default;
@@ -95,7 +100,7 @@ export function WeeklySuggestionsSection({
     return <IconComponent className="w-3 h-3" />;
   }, []);
 
-  if (byDay.length === 0) {
+  if (sortedDays.length === 0) {
     return (
       <Card>
         <CardHeader>
@@ -113,87 +118,122 @@ export function WeeklySuggestionsSection({
     );
   }
 
-  return (
-    <div className="space-y-6">
-      <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-white">
-        <Lightbulb className="h-5 w-5" />
-        提案
-      </h3>
+  const currentDay = sortedDays[dayIndex];
+  const { date, items } = currentDay;
 
-      <div className="space-y-6">
-        {byDay.map(({ date, items }) => (
-          <Card key={date}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">
-                {format(new Date(date), "M月d日（E）", { locale: ja })}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {items.map((item) => {
-                const levelStyle = getLevelStyle(item.level);
-                return (
-                  <article
-                    key={`${date}-${item.suggestion_key}`}
-                    className={`flex flex-col gap-2 p-3 rounded border ${levelStyle.cardBgColor} ${levelStyle.borderColor}`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-semibold text-sm text-slate-900 dark:text-white min-w-0">
-                        {item.title}
-                      </h4>
-                      {item.helpfulness !== null && (
-                        <span
-                          className="shrink-0 flex items-center gap-1 text-sm"
-                          title={
-                            item.helpfulness
-                              ? "参考になった"
-                              : "参考にならなかった"
-                          }
-                        >
-                          {item.helpfulness ? (
-                            <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-500" />
-                          ) : (
-                            <XCircle className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-                          )}
-                        </span>
+  return (
+    <Card className="py-4 gap-3">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Lightbulb className="h-4 w-4" />
+            提案
+          </CardTitle>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              disabled={dayIndex === 0}
+              onClick={() => setDayIndex((i) => i - 1)}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium min-w-[5.5rem] text-center">
+              {format(new Date(date), "M/d（E）", { locale: ja })}
+            </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              disabled={dayIndex === sortedDays.length - 1}
+              onClick={() => setDayIndex((i) => i + 1)}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground text-right">
+          {items.length}件
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {items.map((item) => {
+          const levelStyle = getLevelStyle(item.level);
+          const primaryTag = (item.tags ?? [])[0];
+          const PrimaryIcon = primaryTag
+            ? (tagIconMap[primaryTag as keyof typeof tagIconMap] || Zap)
+            : Zap;
+          const primaryTagStyle = primaryTag
+            ? getTagStyle(primaryTag)
+            : tagColorMap.default;
+
+          return (
+            <article
+              key={`${date}-${item.suggestion_key}`}
+              className={`flex flex-col gap-2 p-3 rounded-lg border border-l-4 ${levelStyle.cardBgColor} ${levelStyle.borderColor} ${levelStyle.accentBorderColor}`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <PrimaryIcon
+                    className={`w-5 h-5 shrink-0 ${primaryTagStyle.color}`}
+                  />
+                  <h4 className="font-semibold text-sm text-slate-900 dark:text-white truncate">
+                    {item.title}
+                  </h4>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {item.helpfulness !== null && (
+                    <span
+                      title={
+                        item.helpfulness
+                          ? "参考になった"
+                          : "参考にならなかった"
+                      }
+                    >
+                      {item.helpfulness ? (
+                        <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-500" />
+                      ) : (
+                        <XCircle className="h-4 w-4 text-gray-400 dark:text-gray-500" />
                       )}
-                    </div>
-                    {item.message && (
-                      <p className="text-sm text-slate-700 dark:text-slate-300">
-                        {item.message}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-1 justify-end">
-                      {item.level && (
-                        <Badge
-                          variant="outline"
-                          className={`text-xs ${levelStyle.color} ${levelStyle.bgColor}`}
-                        >
-                          {getLevelLabel(item.level)}
-                        </Badge>
-                      )}
-                      {(item.tags ?? []).map((tag) => {
-                        const tagStyle = getTagStyle(tag);
-                        return (
-                          <Badge
-                            key={tag}
-                            variant="outline"
-                            className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
-                          >
-                            <span className="flex items-center gap-1">
-                              {getTagIcon(tag)}
-                              {getTagLabel(tag)}
-                            </span>
-                          </Badge>
-                        );
-                      })}
-                    </div>
-                  </article>
-                );
-              })}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+                    </span>
+                  )}
+                  {item.level && (
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${levelStyle.color} ${levelStyle.bgColor}`}
+                    >
+                      {getLevelLabel(item.level)}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              {item.message && (
+                <p className="text-sm text-slate-700 dark:text-slate-300">
+                  {item.message}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-1">
+                {(item.tags ?? []).map((tag) => {
+                  const tagStyle = getTagStyle(tag);
+                  return (
+                    <Badge
+                      key={tag}
+                      variant="outline"
+                      className={`text-xs ${tagStyle.color} ${tagStyle.bgColor} ${tagStyle.borderColor}`}
+                    >
+                      <span className="flex items-center gap-1">
+                        {getTagIcon(tag)}
+                        {getTagLabel(tag)}
+                      </span>
+                    </Badge>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 }
