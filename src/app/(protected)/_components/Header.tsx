@@ -1,6 +1,7 @@
 import DashboardMenu from "./DashboardMenu";
 import { getProfileAction } from "../settings/actions";
 import Link from "next/link";
+import Image from "next/image";
 
 export async function Header() {
 
@@ -14,6 +15,13 @@ export async function Header() {
       <div className="container mx-auto px-4 py-2">
         <div className="flex justify-between items-center">
           <Link href="/dashboard" className="flex items-center gap-2">
+            <Image
+              src="/logo.svg"
+              alt="Climode"
+              width={28}
+              height={28}
+              className="rounded-md"
+            />
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">
               Climode
             </h1>
