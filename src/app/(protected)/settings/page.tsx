@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { AlertTriangle } from "lucide-react";
 import { ProfileEditForm } from "./_components/ProfileEditForm";
 import { AccountInfo } from "./_components/AccountInfo";
+import { AccountDeleteSection } from "./_components/AccountDeleteSection";
 import { getProfileAction, getPrefectures } from "./actions";
 import { NotificationSettings } from "@/components/NotificationSettings";
 import { Card, CardContent } from "@/components/ui/card";
@@ -74,20 +75,28 @@ export default async function SettingsPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               アカウント管理
             </h2>
-            <Card>
-              <CardContent className="py-4">
-                <LogoutButton>
-                  <div className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/50">
-                      <LogOut className="h-5 w-5 text-red-600 dark:text-red-400" />
+            <div className="space-y-4">
+              <Card>
+                <CardContent className="py-4">
+                  <LogoutButton>
+                    <div className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/50">
+                        <LogOut className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      </div>
+                      <span className="text-red-600 dark:text-red-400 font-medium">
+                        ログアウト
+                      </span>
                     </div>
-                    <span className="text-red-600 dark:text-red-400 font-medium">
-                      ログアウト
-                    </span>
-                  </div>
-                </LogoutButton>
-              </CardContent>
-            </Card>
+                  </LogoutButton>
+                </CardContent>
+              </Card>
+              <AccountDeleteSection
+                isOAuthUser={
+                  !!session?.user?.image &&
+                  session.user.image.includes("googleusercontent.com")
+                }
+              />
+            </div>
           </section>
         </div>
       </div>
