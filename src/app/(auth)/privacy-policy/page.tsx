@@ -91,6 +91,20 @@ export default function PrivacyPolicyPage() {
                 <strong>Open-Meteo API</strong>
                 ：天気・気圧・湿度などの気象データの取得に使用します。ユーザーが登録した都道府県の情報をもとにデータを取得します。APIキーは不要であり、Open-Meteo側にユーザーの個人情報は送信されません。
               </li>
+              <li>
+                <strong>Google Analytics</strong>
+                ：サービス改善を目的としたアクセス解析に使用します。Google
+                Analyticsは、Cookieを使用してページビューやユーザーの行動データを匿名で収集します。収集されたデータはGoogleのプライバシーポリシーに基づき管理されます。詳しくは{" "}
+                <a
+                  href="https://policies.google.com/technologies/partner-sites"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  Googleのサービスを使用するサイトやアプリから収集した情報のGoogleによる使用
+                </a>{" "}
+                をご確認ください。
+              </li>
             </ul>
           </section>
 
@@ -106,7 +120,8 @@ export default function PrivacyPolicyPage() {
               7. Cookieおよびアクセスログ
             </h2>
             <p>
-              本アプリでは、認証状態の管理のためにCookieを使用します。また、サービスの安定運用のためにアクセスログを記録する場合があります。これらの情報は個人を特定する目的では使用しません。
+              本アプリでは、認証状態の管理のためにCookieを使用します。また、Google
+              Analyticsによるアクセス解析のためにCookieを使用し、ページビューや利用状況に関するデータを匿名で収集します。サービスの安定運用のためにアクセスログを記録する場合があります。これらの情報は個人を特定する目的では使用しません。
             </p>
           </section>
 
@@ -150,6 +165,8 @@ export default function PrivacyPolicyPage() {
           <section>
             <p className="text-sm text-muted-foreground">
               制定日：2025年2月14日
+              <br />
+              最終更新日：2026年2月16日
             </p>
           </section>
 
