@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { Session } from "next-auth";
@@ -27,9 +28,18 @@ export function HeroSection({ session }: HeroSectionProps) {
 
       <div className="text-center max-w-3xl mx-auto">
         {/* ロゴ */}
-        <p className="text-sm font-semibold tracking-widest text-blue-600 dark:text-blue-400 uppercase mb-6">
-          Climode
-        </p>
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Image
+            src="/logo.svg"
+            alt="Climode"
+            width={36}
+            height={36}
+            className="rounded-lg"
+          />
+          <p className="text-sm font-semibold tracking-widest text-blue-600 dark:text-blue-400 uppercase">
+            Climode
+          </p>
+        </div>
 
         {/* キャッチコピー */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight mb-6">

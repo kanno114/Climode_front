@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Card,
@@ -25,6 +26,15 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
+          <div className="flex justify-center">
+            <Image
+              src="/logo.svg"
+              alt="Climode"
+              width={48}
+              height={48}
+              className="rounded-lg"
+            />
+          </div>
           <CardTitle className="text-2xl font-bold text-center">
             Climode
           </CardTitle>
