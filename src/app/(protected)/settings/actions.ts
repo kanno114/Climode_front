@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { apiFetch } from "@/lib/api/api-fetch";
 import { profileSchema } from "@/lib/schemas/profile";
 import { parseApiError } from "@/lib/api/parse-error";
+import { clearAuthCookies } from "@/lib/auth/cookies";
 
 export async function getPrefectures() {
   const session = await auth();
@@ -108,4 +109,49 @@ export async function updateProfileAction(_: unknown, formData: FormData) {
       formErrors: [errorMessage],
     });
   }
+}
+
+export async function deleteAccountAction(params: {
+  password?: string;
+  confirm?: boolean;
+}): Promise<{ success: boolean; error?: string }> {
+  const session = await auth();
+  if (!session?.user) {
+    return { success: false, error: "認証が必要です" };
+  }
+
+  const body: Record<string, unknown> = {};
+  if (params.password) {
+    body.password = params.password;
+  }
+  if (params.confirm) {
+    body.confirm = true;
+  }
+
+  const res = await apiFetch(
+    `${process.env.API_BASE_URL_SERVER}/api/v1/users/${session.user.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    },
+  ).catch(() => null);
+
+  if (!res) {
+    return { success: false, error: "通信エラーが発生しました" };
+  }
+
+  if (res.status === 204) {
+    await clearAuthCookies();
+    redirect("/signin");
+  }
+
+  const json = await res.json().catch(() => null);
+  return {
+    success: false,
+    error: json?.message || "アカウントの削除に失敗しました",
+  };
 }
