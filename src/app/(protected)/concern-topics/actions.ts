@@ -59,7 +59,7 @@ export async function updateUserConcernTopicsAction(
   } catch (error) {
     if (error instanceof AuthenticationError) redirect("/signin");
     return failure(
-      error instanceof Error ? error.message : "関心ワードの更新に失敗しました",
+      error instanceof Error ? error.message : "関心トピックの更新に失敗しました",
     );
   }
 }

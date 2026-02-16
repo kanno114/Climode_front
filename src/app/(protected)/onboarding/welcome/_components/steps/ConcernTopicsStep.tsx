@@ -46,13 +46,13 @@ export function ConcernTopicsStep({
         Array.from(selectedKeys),
       );
       if (result.status === "success") {
-        toast.success("関心ワードを登録しました");
+        toast.success("関心トピックを登録しました");
         onComplete(selectedKeys.size);
       } else {
         toast.error(result.error?.message ?? "登録に失敗しました");
       }
     } catch {
-      toast.error("関心ワードの登録に失敗しました");
+      toast.error("関心トピックの登録に失敗しました");
     } finally {
       setSaving(false);
     }
@@ -62,7 +62,7 @@ export function ConcernTopicsStep({
     return (
       <div className="rounded-lg border border-border bg-card p-6 space-y-4">
         <p className="text-sm text-muted-foreground">
-          登録できる関心ワードはありません
+          登録できる関心トピックはありません
         </p>
         <Button className="w-full" onClick={onSkip}>
           次へ進む
@@ -101,7 +101,7 @@ export function ConcernTopicsStep({
         variant="ghost"
         className="w-full"
         onClick={() => {
-          toast.info("関心ワードはいつでも登録できます");
+          toast.info("関心トピックはいつでも登録できます");
           onSkip();
         }}
         disabled={saving}

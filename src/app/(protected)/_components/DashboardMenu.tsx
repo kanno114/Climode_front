@@ -70,7 +70,7 @@ const menuItemConfigs = [
   },
   {
     icon: Heart,
-    label: "関心ワード",
+    label: "関心トピック",
     href: "/concern-topics",
     description: "気になる体調・環境を登録",
     iconBg: "bg-rose-100 dark:bg-rose-900/50",

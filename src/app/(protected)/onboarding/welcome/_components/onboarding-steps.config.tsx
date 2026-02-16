@@ -40,7 +40,7 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
   },
   {
     key: "concern_topics",
-    title: "関心ワードを登録する",
+    title: "関心トピックを登録する",
     description:
       "気になる体調・環境を選ぶと、よりあなたに合った提案をお届けします。",
     subtitle: "ステップ2: 気になる項目を選びましょう",
@@ -56,7 +56,7 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
           <li>選んだ項目に合わせた行動提案を優先的に表示</li>
           <li>気になることがなければ選ばなくても大丈夫です</li>
         </ul>
-        <p className="pt-2">あとから関心ワードページでいつでも変更できます。</p>
+        <p className="pt-2">あとから関心トピックページでいつでも変更できます。</p>
       </div>
     ),
   },
