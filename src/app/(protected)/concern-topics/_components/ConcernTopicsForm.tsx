@@ -40,7 +40,7 @@ export function ConcernTopicsForm() {
           setSelectedKeys(new Set(userKeys));
         }
       } catch {
-        toast.error("関心ワードの取得に失敗しました");
+        toast.error("関心トピックの取得に失敗しました");
       } finally {
         setLoading(false);
       }
@@ -67,12 +67,12 @@ export function ConcernTopicsForm() {
         Array.from(selectedKeys),
       );
       if (result.status === "success") {
-        toast.success("関心ワードを更新しました");
+        toast.success("関心トピックを更新しました");
       } else {
         toast.error(result.error?.message ?? "更新に失敗しました");
       }
     } catch {
-      toast.error("関心ワードの更新に失敗しました");
+      toast.error("関心トピックの更新に失敗しました");
     } finally {
       setSaving(false);
     }
@@ -94,10 +94,10 @@ export function ConcernTopicsForm() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Heart className="h-5 w-5" />
-            関心ワード
+            関心トピック
           </CardTitle>
           <CardDescription>
-            登録できる関心ワードはありません
+            登録できる関心トピックはありません
           </CardDescription>
         </CardHeader>
       </Card>

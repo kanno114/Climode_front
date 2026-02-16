@@ -46,7 +46,7 @@ export default async function OnboardingWelcomePage() {
     concernTopics = topicsData ?? [];
     initialSelectedKeys = userKeys ?? [];
   } catch {
-    // 関心ワードの取得失敗時は空配列のまま進める
+    // 関心トピックの取得失敗時は空配列のまま進める
   }
 
   return (

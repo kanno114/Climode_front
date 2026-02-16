@@ -11,7 +11,7 @@ export default function ConcernTopicsLoading() {
           <Skeleton className="h-5 w-72" />
         </div>
 
-        {/* 関心ワードカード */}
+        {/* 関心トピックカード */}
         <Card>
           <CardHeader className="space-y-2">
             <Skeleton className="h-6 w-48" />

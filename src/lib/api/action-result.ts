@@ -1,7 +1,7 @@
 /**
  * Server Actions の統一戻り値型
  *
- * フォーム送信以外（プッシュ通知の登録/解除、関心ワード更新等）で使用する。
+ * フォーム送信以外（プッシュ通知の登録/解除、関心トピック更新等）で使用する。
  * Conform を使ったフォームアクションは SubmissionResult を使う。
  */
 export type ActionResult<T = void> =

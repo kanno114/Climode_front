@@ -30,7 +30,7 @@ export function CompletionScreen({
     },
     {
       icon: Heart,
-      label: "関心ワード",
+      label: "関心トピック",
       value: `${concernTopicsCount}件登録`,
     },
     {

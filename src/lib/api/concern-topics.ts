@@ -50,7 +50,7 @@ export async function fetchConcernTopics(
   checkAuthError(res);
 
   if (!res.ok) {
-    throw new Error(`関心ワードの取得に失敗しました: ${res.statusText}`);
+    throw new Error(`関心トピックの取得に失敗しました: ${res.statusText}`);
   }
 
   const json = await res.json();
@@ -68,7 +68,7 @@ export async function fetchUserConcernTopics(
   checkAuthError(res);
 
   if (!res.ok) {
-    throw new Error(`ユーザーの関心ワード取得に失敗しました: ${res.statusText}`);
+    throw new Error(`ユーザーの関心トピック取得に失敗しました: ${res.statusText}`);
   }
 
   const json = await res.json();
@@ -92,6 +92,6 @@ export async function updateUserConcernTopics(
   checkAuthError(res);
 
   if (!res.ok) {
-    throw new Error(`関心ワードの更新に失敗しました: ${res.statusText}`);
+    throw new Error(`関心トピックの更新に失敗しました: ${res.statusText}`);
   }
 }
