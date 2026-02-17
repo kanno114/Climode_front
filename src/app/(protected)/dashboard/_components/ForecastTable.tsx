@@ -42,6 +42,15 @@ type ForecastPointFromApi = {
 const DEFAULT_LABEL_W = 100;
 const DEFAULT_CELL_W = 72;
 
+const WEATHER_LABEL_MAP: Record<WeatherCondition, string> = {
+  clear: "晴れ",
+  partly_cloudy: "晴れ時々曇り",
+  cloudy: "曇り",
+  rain: "雨",
+  snow: "雪",
+  thunder: "雷",
+};
+
 function getWeatherIcon(condition: WeatherCondition) {
   switch (condition) {
     case "clear":
@@ -178,8 +187,8 @@ function ForecastMobileList({
             <span className="font-semibold text-slate-700 dark:text-slate-200 text-center">
               {h.timeLabel}
             </span>
-            <span className="flex justify-center">
-              <Icon className={`h-4 w-4 ${className}`} />
+            <span className="flex justify-center" aria-label={WEATHER_LABEL_MAP[h.condition]} role="img">
+              <Icon className={`h-4 w-4 ${className}`} aria-hidden="true" />
             </span>
             <span className="font-semibold text-slate-900 dark:text-slate-50 text-center">
               {h.tempC.toFixed(1)}
@@ -290,8 +299,10 @@ function ForecastDesktopGrid({
                   rightBorder,
                   isNow ? nowBg : baseBg,
                 ].join(" ")}
+                role="img"
+                aria-label={WEATHER_LABEL_MAP[h.condition]}
               >
-                <Icon className={`h-4 w-4 ${className}`} />
+                <Icon className={`h-4 w-4 ${className}`} aria-hidden="true" />
               </div>
             );
           })}
