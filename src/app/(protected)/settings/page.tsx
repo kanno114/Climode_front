@@ -5,6 +5,7 @@ import { AccountInfo } from "./_components/AccountInfo";
 import { AccountDeleteSection } from "./_components/AccountDeleteSection";
 import { getProfileAction, getPrefectures } from "./actions";
 import { NotificationSettings } from "@/components/NotificationSettings";
+import { CookieSettings } from "./_components/CookieSettings";
 import { Card, CardContent } from "@/components/ui/card";
 import LogoutButton from "../_components/LogoutButton";
 import { LogOut } from "lucide-react";
@@ -68,6 +69,14 @@ export default async function SettingsPage() {
               通知設定
             </h2>
             <NotificationSettings />
+          </section>
+
+          {/* セクション B2: Cookie設定 */}
+          <section>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              Cookie設定
+            </h2>
+            <CookieSettings />
           </section>
 
           {/* セクション C: アカウント管理 */}
