@@ -60,7 +60,7 @@ describe("SignUpForm", () => {
     render(<SignUpForm />);
 
     expect(
-      screen.getByRole("button", { name: /Googleで登録/i })
+      screen.getByRole("button", { name: /Googleアカウントで登録/i })
     ).toBeInTheDocument();
     expect(screen.getByPlaceholderText("山田太郎")).toBeInTheDocument();
     expect(
@@ -83,7 +83,7 @@ describe("SignUpForm", () => {
     render(<SignUpForm />);
 
     const googleButton = screen.getByRole("button", {
-      name: /Googleで登録/i,
+      name: /Googleアカウントで登録/i,
     });
     await user.click(googleButton);
 

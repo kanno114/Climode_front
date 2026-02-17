@@ -66,6 +66,7 @@ export function ProfileEditForm({ initialData, prefectures }: ProfileEditFormPro
           onSubmit={form.onSubmit}
           action={action}
           className="space-y-6"
+          aria-label="プロフィール編集"
         >
           {form.errors && (
             <Alert variant="destructive">

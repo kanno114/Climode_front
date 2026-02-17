@@ -24,7 +24,7 @@ export function AccountInfo({ user }: AccountInfoProps) {
     <Card>
       <CardContent className="flex items-center gap-4 py-6">
         <Avatar className="h-16 w-16 ring-2 ring-blue-200 dark:ring-blue-800">
-          <AvatarImage src={user.image || ""} alt={user.name || ""} />
+          <AvatarImage src={user.image || ""} alt={`${user.name || "ユーザー"}のプロフィール画像`} />
           <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 font-semibold text-lg">
             {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
           </AvatarFallback>

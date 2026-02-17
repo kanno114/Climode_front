@@ -153,7 +153,7 @@ export function WeeklyEveningChart({ feedback }: WeeklyEveningChartProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px]" role="img" aria-label="夜の振り返り推移グラフ: セルフスコアの週間推移を折れ線グラフで表示">
           <Line data={chartData} options={options} />
         </div>
       </CardContent>

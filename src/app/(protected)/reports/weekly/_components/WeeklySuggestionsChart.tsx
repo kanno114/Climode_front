@@ -159,7 +159,7 @@ export function WeeklySuggestionsChart({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px]" role="img" aria-label="日別提案数グラフ: レベル別の提案件数を積み上げ棒グラフで表示">
           <Bar data={chartData} options={options} />
         </div>
       </CardContent>

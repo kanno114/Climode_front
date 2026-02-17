@@ -203,6 +203,7 @@ export function EveningReflectionForm({
                       onClick={() => setSelfScore(score)}
                       className={`flex-1 border-2 ${scoreStyles[score as 1 | 2 | 3]}`}
                       disabled={pending || isPending}
+                      aria-pressed={selfScore === score}
                     >
                       {score === 1
                         ? "😕 悪い"
@@ -247,10 +248,11 @@ export function EveningReflectionForm({
           className="w-full"
           size="lg"
           disabled={pending || isPending}
+          aria-busy={pending || isPending}
         >
           {pending || isPending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
               保存中...
             </>
           ) : (

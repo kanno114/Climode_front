@@ -3,7 +3,7 @@ import { Loading } from "@/components/ui/loading";
 
 export default function SettingsLoading() {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4" aria-busy="true" aria-label="読み込み中">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <div className="h-9 w-24 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />

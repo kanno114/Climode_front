@@ -90,6 +90,8 @@ export function MorningDeclarationForm() {
               step={0.5}
               disabled={pending}
               className="w-full"
+              aria-label="睡眠時間"
+              aria-valuetext={`${sleepHours[0]}時間`}
             />
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>0時間</span>
@@ -122,13 +124,15 @@ export function MorningDeclarationForm() {
                 type="button"
                 onClick={() => setMood(option.value)}
                 disabled={pending}
+                aria-label={`気分: ${option.label}`}
+                aria-pressed={mood === option.value}
                 className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-colors ${
                   mood === option.value
                     ? "border-primary bg-primary/10"
                     : "border-muted hover:border-primary/50"
                 }`}
               >
-                <span className="text-2xl mb-1">{option.emoji}</span>
+                <span className="text-2xl mb-1" aria-hidden="true">{option.emoji}</span>
                 <span className="text-xs text-muted-foreground">
                   {option.label}
                 </span>
@@ -156,6 +160,8 @@ export function MorningDeclarationForm() {
                 type="button"
                 onClick={() => setFatigue(option.value)}
                 disabled={pending}
+                aria-label={`疲労感: ${option.label}`}
+                aria-pressed={fatigue === option.value}
                 className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-colors ${
                   fatigue === option.value
                     ? "border-primary bg-primary/10"
@@ -178,10 +184,10 @@ export function MorningDeclarationForm() {
         </div>
 
         {/* 送信ボタン */}
-        <Button type="submit" className="w-full" size="lg" disabled={pending}>
+        <Button type="submit" className="w-full" size="lg" disabled={pending} aria-busy={pending}>
           {pending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
               送信中...
             </>
           ) : (

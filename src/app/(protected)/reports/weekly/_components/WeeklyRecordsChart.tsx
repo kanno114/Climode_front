@@ -251,7 +251,7 @@ export function WeeklyRecordsChart({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px]" role="img" aria-label="週間推移グラフ: 選択したメトリクスの推移を折れ線グラフで表示">
           <Line data={chartData} options={options} />
         </div>
       </CardContent>
