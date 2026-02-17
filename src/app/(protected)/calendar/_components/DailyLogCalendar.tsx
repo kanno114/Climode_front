@@ -270,15 +270,20 @@ export default function DailyLogCalendar({
             eventContent={(arg) => {
               const config = arg.event.extendedProps.config;
               const selfScore = arg.event.extendedProps.selfScore;
+              const scoreLabel = selfScore === 3 ? "良い" : selfScore === 2 ? "普通" : selfScore === 1 ? "悪い" : "記録あり";
 
               return (
-                <div className="flex items-center justify-center cursor-pointer hover:opacity-50 transition-opacity duration-200">
+                <div
+                  className="flex items-center justify-center cursor-pointer hover:opacity-50 transition-opacity duration-200"
+                  aria-label={`体調: ${scoreLabel}`}
+                  role="img"
+                >
                   {selfScore ? (
-                    <span style={{ color: config.textColor, fontSize: "20px" }}>
+                    <span style={{ color: config.textColor, fontSize: "20px" }} aria-hidden="true">
                       {config.emoji}
                     </span>
                   ) : (
-                    <span style={{ color: config.textColor, fontSize: "14px" }}>
+                    <span style={{ color: config.textColor, fontSize: "14px" }} aria-hidden="true">
                       {config.emoji}
                     </span>
                   )}

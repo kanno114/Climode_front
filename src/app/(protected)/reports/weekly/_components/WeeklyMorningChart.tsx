@@ -185,7 +185,7 @@ export function WeeklyMorningChart({ daily }: WeeklyMorningChartProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px]" role="img" aria-label="朝の自己申告推移グラフ: 睡眠時間・気分・疲労感の週間推移を折れ線グラフで表示">
           <Line data={chartData} options={options} />
         </div>
       </CardContent>
