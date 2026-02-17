@@ -34,8 +34,9 @@ export function SignUpForm() {
         variant="outline"
         onClick={() => signIn("google", { callbackUrl: "/onboarding/welcome" })}
         className="w-full cursor-pointer"
+        aria-label="Googleアカウントで登録"
       >
-        <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+        <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
             fill="#4285F4"
@@ -88,7 +89,7 @@ export function SignUpForm() {
             />
           </div>
           {fields.name.errors?.map((e) => (
-            <p key={e} className="text-sm text-red-500">
+            <p key={e} className="text-sm text-red-500" role="alert">
               {e}
             </p>
           ))}
@@ -108,7 +109,7 @@ export function SignUpForm() {
             />
           </div>
           {fields.email.errors?.map((e) => (
-            <p key={e} className="text-sm text-red-500">
+            <p key={e} className="text-sm text-red-500" role="alert">
               {e}
             </p>
           ))}
@@ -128,7 +129,7 @@ export function SignUpForm() {
             />
           </div>
           {fields.password.errors?.map((e) => (
-            <p key={e} className="text-sm text-red-500">
+            <p key={e} className="text-sm text-red-500" role="alert">
               {e}
             </p>
           ))}
@@ -148,7 +149,7 @@ export function SignUpForm() {
             />
           </div>
           {fields.confirmPassword.errors?.map((e) => (
-            <p key={e} className="text-sm text-red-500">
+            <p key={e} className="text-sm text-red-500" role="alert">
               {e}
             </p>
           ))}
