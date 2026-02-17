@@ -17,6 +17,7 @@ export default function LogoutButton({
       variant="ghost"
       onClick={handleLogout}
       className="w-full h-auto p-0 hover:bg-transparent focus:bg-transparent cursor-pointer"
+      aria-label="ログアウト"
     >
       {children}
     </Button>

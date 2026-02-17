@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function OnboardingLoading() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800" aria-busy="true" aria-label="読み込み中">
       <div className="container mx-auto max-w-4xl px-4 py-12">
         <Card className="shadow-xl border-primary/10">
           <CardHeader>

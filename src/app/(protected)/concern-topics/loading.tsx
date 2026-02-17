@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function ConcernTopicsLoading() {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4" aria-busy="true" aria-label="読み込み中">
       <div className="max-w-2xl mx-auto">
         {/* ページヘッダー */}
         <div className="mb-8 space-y-2">
