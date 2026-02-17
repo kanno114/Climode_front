@@ -152,24 +152,28 @@ export function SuggestionFeedbackCard({
           <button
             type="button"
             onClick={() => onHelpfulnessChange(true)}
+            aria-label="役立った"
+            aria-pressed={helpfulness === true}
             className={`flex-1 px-4 py-2 rounded-lg border-2 transition-colors ${
               helpfulness === true
                 ? "border-green-500 bg-green-50 text-green-700 font-medium dark:border-green-600 dark:bg-green-950/50 dark:text-green-400"
                 : "border-muted hover:border-green-300 dark:hover:border-green-800"
             }`}
           >
-            👍 役立った
+            <span aria-hidden="true">👍 </span>役立った
           </button>
           <button
             type="button"
             onClick={() => onHelpfulnessChange(false)}
+            aria-label="役立たなかった"
+            aria-pressed={helpfulness === false}
             className={`flex-1 px-4 py-2 rounded-lg border-2 transition-colors ${
               helpfulness === false
                 ? "border-red-500 bg-red-50 text-red-700 font-medium dark:border-red-600 dark:bg-red-950/50 dark:text-red-400"
                 : "border-muted hover:border-red-300 dark:hover:border-red-800"
             }`}
           >
-            👎 役立たなかった
+            <span aria-hidden="true">👎 </span>役立たなかった
           </button>
         </div>
       </div>
