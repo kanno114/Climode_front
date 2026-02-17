@@ -119,7 +119,7 @@ export default function DashboardMenu({ user }: Props) {
         </DialogHeader>
 
         <Link href="/settings">
-          <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 rounded-xl mb-4 hover:shadow-md transition-shadow">
+          <div className="flex items-center gap-4 p-4 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 rounded-xl mb-4 hover:shadow-md transition-shadow">
             <Avatar className="h-12 w-12 ring-2 ring-blue-200 dark:ring-blue-800">
               <AvatarImage src={user.image || ""} alt={user.name || ""} />
               <AvatarFallback className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 font-semibold">
