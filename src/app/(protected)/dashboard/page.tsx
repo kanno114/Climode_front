@@ -1,6 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { TodayArea } from "./_components/TodayArea";
-import { UpcomingFeatures } from "./_components/UpcomingFeatures";
 import { EmailConfirmationBanner } from "@/components/EmailConfirmationBanner";
 import { auth } from "@/auth";
 import { Suspense } from "react";
@@ -34,8 +33,6 @@ export default async function DashboardPage() {
           <Suspense fallback={<TodayAreaSkeleton />}>
             <TodayArea />
           </Suspense>
-
-          <UpcomingFeatures />
         </div>
       </div>
     </div>
