@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 
 import { TutorialPanel } from "./TutorialPanel";
+import { getStepTutorial } from "./StepTutorials";
 import { PrefectureStep } from "./steps/PrefectureStep";
 import { ConcernTopicsStep } from "./steps/ConcernTopicsStep";
 import { NotificationStep } from "./steps/NotificationStep";
@@ -195,7 +196,7 @@ export function OnboardingWizard({
                 icon={displayedStep.icon}
                 title={displayedStep.title}
                 subtitle={displayedStep.subtitle}
-                content={displayedStep.tutorial}
+                content={getStepTutorial(displayedStep.tutorialKey)}
               />
             </details>
             <div className="hidden lg:block">
@@ -203,7 +204,7 @@ export function OnboardingWizard({
                 icon={displayedStep.icon}
                 title={displayedStep.title}
                 subtitle={displayedStep.subtitle}
-                content={displayedStep.tutorial}
+                content={getStepTutorial(displayedStep.tutorialKey)}
               />
             </div>
             {formContent}
