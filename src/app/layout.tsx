@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ConditionalGoogleAnalytics } from "@/components/ConditionalGoogleAnalytics";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0070f3",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({
@@ -49,18 +53,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster position="top-center" richColors closeButton expand={true} />
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <ConditionalGoogleAnalytics
-            gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
-          />
-        )}
-        <CookieConsentBanner />
+        <ThemeProvider>
+          {children}
+          <Toaster position="top-center" richColors closeButton expand={true} />
+          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+            <ConditionalGoogleAnalytics
+              gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
+            />
+          )}
+          <CookieConsentBanner />
+        </ThemeProvider>
       </body>
     </html>
   );

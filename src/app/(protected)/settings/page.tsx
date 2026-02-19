@@ -5,6 +5,7 @@ import { AccountInfo } from "./_components/AccountInfo";
 import { AccountDeleteSection } from "./_components/AccountDeleteSection";
 import { getProfileAction, getPrefectures } from "./actions";
 import { NotificationSettings } from "@/components/NotificationSettings";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { CookieSettings } from "./_components/CookieSettings";
 import { Card, CardContent } from "@/components/ui/card";
 import LogoutButton from "../_components/LogoutButton";
@@ -61,6 +62,24 @@ export default async function SettingsPage() {
                 prefectures={prefectures ?? []}
               />
             </div>
+          </section>
+
+          {/* セクション A2: 外観設定 */}
+          <section>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              外観設定
+            </h2>
+            <Card>
+              <CardContent className="flex items-center justify-between py-4">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-white">テーマ</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    アプリの外観を切り替えます
+                  </p>
+                </div>
+                <ThemeToggle />
+              </CardContent>
+            </Card>
           </section>
 
           {/* セクション B: 通知設定 */}
