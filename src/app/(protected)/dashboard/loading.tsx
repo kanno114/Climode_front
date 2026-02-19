@@ -47,12 +47,6 @@ export default function DashboardLoading() {
               ))}
             </div>
           </div>
-
-          {/* UpcomingFeaturesスケルトン */}
-          <div className="rounded-xl border border-dashed bg-card py-6 px-6 shadow-sm space-y-3">
-            <Skeleton className="h-6 w-40" />
-            <Skeleton className="h-4 w-64" />
-          </div>
         </div>
       </div>
     </div>
