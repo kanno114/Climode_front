@@ -4,10 +4,20 @@ const STORAGE_KEY = "cookie_consent";
 
 const GA_COOKIE_PREFIXES = ["_ga", "_gid", "_gat"];
 
+// --- 純粋関数 ---
+
+export function isValidConsentValue(
+  value: string | null,
+): value is CookieConsentValue {
+  return value === "accepted" || value === "rejected";
+}
+
+// --- 副作用関数 ---
+
 export function getCookieConsent(): CookieConsentValue | null {
   if (typeof window === "undefined") return null;
   const value = localStorage.getItem(STORAGE_KEY);
-  if (value === "accepted" || value === "rejected") return value;
+  if (isValidConsentValue(value)) return value;
   return null;
 }
 

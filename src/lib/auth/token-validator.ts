@@ -6,6 +6,20 @@ export type TokenValidationResult = {
   accessToken: string | null;
 };
 
+// --- 純粋関数 ---
+
+export function parseTokenValidationResponse(
+  data: Record<string, unknown>,
+  accessToken: string,
+): TokenValidationResult {
+  if (data.valid) {
+    return { isValid: true, accessToken };
+  }
+  return { isValid: false, accessToken };
+}
+
+// --- 副作用関数 ---
+
 /**
  * アクセストークンの有効性を確認する
  * @returns TokenValidationResult
@@ -63,15 +77,9 @@ export async function validateTokenWithApi(): Promise<TokenValidationResult> {
 
     if (response.ok) {
       const data = await response.json();
-      if (data.valid) {
-        return {
-          isValid: true,
-          accessToken,
-        };
-      }
+      return parseTokenValidationResponse(data, accessToken);
     }
 
-    // エラー
     return {
       isValid: false,
       accessToken,
