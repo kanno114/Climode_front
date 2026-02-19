@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { STEP_DEFINITIONS, type StepKey } from "../onboarding-steps.config";
+import { STEP_DEFINITIONS, type StepKey } from "@/lib/onboarding/steps-config";
 
 type StepCompletion = Record<StepKey, boolean>;
 type SkippedSteps = Partial<Record<StepKey, boolean>>;

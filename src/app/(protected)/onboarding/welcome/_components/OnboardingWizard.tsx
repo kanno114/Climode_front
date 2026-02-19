@@ -17,8 +17,8 @@ import { ConcernTopicsStep } from "./steps/ConcernTopicsStep";
 import { NotificationStep } from "./steps/NotificationStep";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { CompletionScreen } from "./CompletionScreen";
-import { STEP_DEFINITIONS } from "./onboarding-steps.config";
-import { useOnboardingWizard } from "./hooks/useOnboardingWizard";
+import { STEP_DEFINITIONS } from "@/lib/onboarding/steps-config";
+import { useOnboardingWizard } from "@/hooks/use-onboarding-wizard";
 import type { ConcernTopic } from "@/lib/schemas/concern-topics";
 
 type PrefectureOption = {
