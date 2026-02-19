@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Loader2, Mail, Lock } from "lucide-react";
+import Link from "next/link";
 import { signInAction } from "../actions";
 import { signInSchema } from "@/lib/schemas/signin";
 import { useFormToast } from "@/hooks/use-form-toast";
@@ -112,6 +113,15 @@ export function SignInForm() {
               {e}
             </p>
           ))}
+        </div>
+
+        <div className="text-right">
+          <Link
+            href="/forgot-password"
+            className="text-xs text-muted-foreground hover:underline"
+          >
+            パスワードをお忘れですか？
+          </Link>
         </div>
 
         <Button
