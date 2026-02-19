@@ -1,6 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { TodayArea } from "./_components/TodayArea";
 import { UpcomingFeatures } from "./_components/UpcomingFeatures";
+import { EmailConfirmationBanner } from "@/components/EmailConfirmationBanner";
 import { auth } from "@/auth";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
@@ -12,6 +13,7 @@ async function requireOnboardingComplete() {
   if (!hasPrefecture) {
     redirect("/onboarding/welcome");
   }
+  return profile;
 }
 
 export default async function DashboardPage() {
@@ -20,12 +22,15 @@ export default async function DashboardPage() {
     redirect("/signin?message=login_required");
   }
 
-  await requireOnboardingComplete();
+  const profile = await requireOnboardingComplete();
+  const emailConfirmed = profile?.user?.email_confirmed !== false;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <div className="container mx-auto px-4 py-4 lg:px-8">
         <div className="space-y-6">
+          {!emailConfirmed && <EmailConfirmationBanner />}
+
           <Suspense fallback={<TodayAreaSkeleton />}>
             <TodayArea />
           </Suspense>
