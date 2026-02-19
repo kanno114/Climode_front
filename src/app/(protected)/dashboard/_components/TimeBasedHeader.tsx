@@ -3,13 +3,21 @@
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { NotebookPen } from "lucide-react";
+import { NotebookPen, Sun, Moon, Sunset, Sunrise } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   getTimeOfDay,
   getTimeBasedMessage,
   type TimeOfDay,
+  type TimeIconName,
 } from "@/lib/time-based";
+
+const TIME_ICON_COMPONENTS: Record<TimeIconName, ReactNode> = {
+  sunrise: <Sunrise className="h-6 w-6 text-amber-500" />,
+  sun: <Sun className="h-6 w-6 text-yellow-500" />,
+  sunset: <Sunset className="h-6 w-6 text-orange-500" />,
+  moon: <Moon className="h-6 w-6 text-indigo-500" />,
+};
 
 interface TimeBasedHeaderProps {
   hasDailyLog: boolean;
@@ -53,7 +61,7 @@ export function TimeBasedHeader({
   return (
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-3 min-w-0">
-        {message.icon}
+        {TIME_ICON_COMPONENTS[message.iconName]}
         <div>
           <h2 className="text-xl font-semibold tracking-tight">
             {message.title}

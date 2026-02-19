@@ -1,9 +1,14 @@
-import React from "react";
-import { Sun, Moon, Sunset, Sunrise } from "lucide-react";
-
 export type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
 
-export function getTimeOfDay(): TimeOfDay {
+export type TimeIconName = "sunrise" | "sun" | "sunset" | "moon";
+
+export type TimeBasedMessage = {
+  title: string;
+  description: string;
+  iconName: TimeIconName;
+};
+
+export function getTimeOfDay(date?: Date): TimeOfDay {
   const override = process.env.NEXT_PUBLIC_TIME_OF_DAY_OVERRIDE as
     | TimeOfDay
     | undefined;
@@ -17,7 +22,7 @@ export function getTimeOfDay(): TimeOfDay {
     return override;
   }
 
-  const now = new Date();
+  const now = date ?? new Date();
   const hour = now.getHours();
 
   if (hour >= 5 && hour < 12) {
@@ -31,28 +36,33 @@ export function getTimeOfDay(): TimeOfDay {
   }
 }
 
+const TIME_ICON_MAP: Record<TimeOfDay, TimeIconName> = {
+  morning: "sunrise",
+  afternoon: "sun",
+  evening: "sunset",
+  night: "moon",
+};
+
 export function getTimeBasedMessage(
   timeOfDay: TimeOfDay,
   hasDailyLog: boolean,
   hasReflection: boolean = false,
-): {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-} {
+): TimeBasedMessage {
+  const iconName = TIME_ICON_MAP[timeOfDay];
+
   switch (timeOfDay) {
     case "morning":
       if (hasDailyLog) {
         return {
           title: "おはようございます",
           description: "今日も一日、体調を整えながら過ごしましょう",
-          icon: <Sunrise className="h-6 w-6 text-amber-500" />,
+          iconName,
         };
       } else {
         return {
           title: "おはようございます",
           description: "今日の体調を入力して、一日をスタートしましょう",
-          icon: <Sunrise className="h-6 w-6 text-amber-500" />,
+          iconName,
         };
       }
     case "afternoon":
@@ -60,13 +70,13 @@ export function getTimeBasedMessage(
         return {
           title: "こんにちは",
           description: "午後の時間、体調に気を配りながら過ごしましょう",
-          icon: <Sun className="h-6 w-6 text-yellow-500" />,
+          iconName,
         };
       } else {
         return {
           title: "こんにちは",
           description: "今日の体調を記録してみませんか？",
-          icon: <Sun className="h-6 w-6 text-yellow-500" />,
+          iconName,
         };
       }
     case "evening":
@@ -76,13 +86,13 @@ export function getTimeBasedMessage(
           description: hasReflection
             ? "今日一日お疲れ様でした。ゆっくり休んでください"
             : "今日一日お疲れ様でした。一日を振り返りましょう",
-          icon: <Sunset className="h-6 w-6 text-orange-500" />,
+          iconName,
         };
       } else {
         return {
           title: "こんばんは",
           description: "今日の体調を記録してみませんか？",
-          icon: <Sunset className="h-6 w-6 text-orange-500" />,
+          iconName,
         };
       }
     case "night":
@@ -92,13 +102,13 @@ export function getTimeBasedMessage(
           description: hasReflection
             ? "今日もお疲れ様でした。ゆっくり休んでください"
             : "今日一日を振り返って、一日を締めくくりましょう",
-          icon: <Moon className="h-6 w-6 text-indigo-500" />,
+          iconName,
         };
       } else {
         return {
           title: "おやすみなさい",
           description: "今日の体調を記録して、一日を締めくくりましょう",
-          icon: <Moon className="h-6 w-6 text-indigo-500" />,
+          iconName,
         };
       }
   }
