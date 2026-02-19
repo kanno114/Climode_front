@@ -112,6 +112,6 @@ export async function signUpAction(_: unknown, formData: FormData) {
   }
 
   if (submission.status === "success") {
-    redirect("/onboarding/welcome");
+    redirect("/check-email");
   }
 }
