@@ -1,10 +1,40 @@
 // 認証のコールバック関数を定義するファイル
 
-import { NextAuthConfig } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
+import type { Account, User } from "next-auth";
 import { setAuthCookies } from "@/lib/auth/cookies";
 
+const DEFAULT_TOKEN_MAX_AGE_SEC = 60 * 60 * 24 * 30;
+
+// --- 純粋関数 ---
+
+export function buildOAuthRequestBody(user: User, account: Account | null | undefined) {
+  return {
+    user: {
+      email: user.email,
+      name: user.name,
+      image: user.image,
+      provider: account?.provider,
+      uid: account?.providerAccountId,
+    },
+  };
+}
+
+export function mapOAuthResponse(data: Record<string, unknown>) {
+  const userData = data?.user as Record<string, unknown> | undefined;
+  return {
+    userId: (userData?.id ?? data?.id) as string | undefined,
+    accessToken: data?.access_token as string | undefined,
+    expiresIn:
+      typeof data?.expires_in === "number"
+        ? data.expires_in
+        : DEFAULT_TOKEN_MAX_AGE_SEC,
+  };
+}
+
+// --- コールバック（副作用） ---
+
 export const callbacks: NextAuthConfig["callbacks"] = {
-  // OAuth成功後、Railsへユーザー同期
   async signIn({ user, account }) {
     if (account?.provider !== "credentials") {
       try {
@@ -17,15 +47,7 @@ export const callbacks: NextAuthConfig["callbacks"] = {
               Accept: "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({
-              user: {
-                email: user.email,
-                name: user.name,
-                image: user.image,
-                provider: account?.provider,
-                uid: account?.providerAccountId,
-              },
-            }),
+            body: JSON.stringify(buildOAuthRequestBody(user, account)),
           }
         );
 
@@ -34,21 +56,16 @@ export const callbacks: NextAuthConfig["callbacks"] = {
         }
 
         const data = await response.json();
+        const { userId, accessToken, expiresIn } = mapOAuthResponse(data);
 
-        // ユーザーIDを設定（data.user.id 形式と data.id 形式の両対応）
-        user.id = data?.user?.id ?? data?.id;
+        if (userId) {
+          user.id = userId;
+        }
 
-        // RailsからのJWTを保存してRails側のサインイン状態を確立
-        const access_token = data?.access_token;
-        const expires_in = data?.expires_in;
-
-        if (access_token) {
+        if (accessToken) {
           await setAuthCookies({
-            accessToken: access_token,
-            accessTokenMaxAgeSec:
-              typeof expires_in === "number"
-                ? expires_in
-                : 60 * 60 * 24 * 30,
+            accessToken,
+            accessTokenMaxAgeSec: expiresIn,
           });
         }
       } catch {
@@ -58,18 +75,16 @@ export const callbacks: NextAuthConfig["callbacks"] = {
     return true;
   },
 
-  // JWTにユーザー情報を保持
   async jwt({ token, user }) {
     if (user) {
       token.user = {
         ...user,
-        emailVerified: null, // 必要に応じて適切な値を設定
+        emailVerified: null,
       };
     }
     return token;
   },
 
-  // セッションにユーザー情報を展開
   async session({ session, token }) {
     if (token.user) {
       session.user = token.user;
