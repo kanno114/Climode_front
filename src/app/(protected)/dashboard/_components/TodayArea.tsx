@@ -1,6 +1,6 @@
 import { GreetingSection } from "./GreetingSection";
 import { BeforeInputContent } from "./BeforeInputContent";
-import { AfterInputContent } from "./AfterInputContent";
+import Suggestions from "./Suggestions";
 import { WeatherSection } from "./WeatherSection";
 import { ReflectionLinkFooter } from "./ReflectionLinkFooter";
 import { EveningReflectionDisplay } from "./EveningReflectionDisplay";
@@ -39,9 +39,7 @@ export async function TodayArea() {
       {!todayDailyLog ? (
         <BeforeInputContent />
       ) : (
-        <AfterInputContent
-          suggestions={normalizedSuggestions}
-        />
+        <Suggestions suggestions={normalizedSuggestions} />
       )}
 
       <WeatherSection forecast={forecastSeries ?? null} />
