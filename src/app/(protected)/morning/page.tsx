@@ -1,8 +1,16 @@
+import { redirect } from "next/navigation";
 import { MorningDeclarationForm } from "./_components/MorningDeclarationForm";
+import { getTodayDailyLog } from "./actions";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
 export default async function MorningPage() {
+  const todayDailyLog = await getTodayDailyLog();
+
+  if (todayDailyLog) {
+    redirect("/dashboard");
+  }
+
   const today = new Date();
 
   return (
@@ -24,4 +32,3 @@ export default async function MorningPage() {
     </div>
   );
 }
-

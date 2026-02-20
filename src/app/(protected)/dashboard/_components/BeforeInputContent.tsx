@@ -1,7 +1,6 @@
-"use client";
-
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MorningDeclarationForm } from "../../morning/_components/MorningDeclarationForm";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 
 export function BeforeInputContent() {
@@ -17,7 +16,9 @@ export function BeforeInputContent() {
         </p>
       </CardHeader>
       <CardContent>
-        <MorningDeclarationForm />
+        <Button asChild className="w-full">
+          <Link href="/morning">体調を記録する</Link>
+        </Button>
       </CardContent>
     </Card>
   );
