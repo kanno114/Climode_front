@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://climode-front.vercel.app"),
+  metadataBase: new URL("https://climode.app"),
   title: {
     default: "Climode - 体調管理アプリ",
     template: "%s - Climode",

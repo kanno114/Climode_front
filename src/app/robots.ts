@@ -24,6 +24,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: "https://climode-front.vercel.app/sitemap.xml",
+    sitemap: "https://climode.app/sitemap.xml",
   };
 }

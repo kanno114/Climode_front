@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://climode-front.vercel.app";
+  const baseUrl = "https://climode.app";
 
   return [
     {
