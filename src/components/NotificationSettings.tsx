@@ -2,13 +2,7 @@
 
 import { Bell, BellOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { usePushNotification } from "@/hooks/use-push-notification";
@@ -54,32 +48,32 @@ export function NotificationSettings() {
 
   if (!isSupported) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BellOff className="h-5 w-5" />
+      <div className="space-y-3">
+        <div>
+          <Label className="flex items-center gap-2">
+            <BellOff className="h-4 w-4" />
             プッシュ通知
-          </CardTitle>
-          <CardDescription>
+          </Label>
+          <p className="text-sm text-muted-foreground mt-1">
             お使いのブラウザはプッシュ通知に対応していません
-          </CardDescription>
-        </CardHeader>
-      </Card>
+          </p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Bell className="h-5 w-5" />
+    <div className="space-y-3">
+      <div>
+        <Label className="flex items-center gap-2">
+          <Bell className="h-4 w-4" />
           プッシュ通知
-        </CardTitle>
-        <CardDescription>
+        </Label>
+        <p className="text-sm text-muted-foreground mt-1">
           朝8時は行動提案、夜20時は振り返りのリマインドを受け取る
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </p>
+      </div>
+      <div className="space-y-4">
         {isLoading && !isSubscribed ? (
           <div className="flex items-center justify-between">
             <div className="space-y-2">
@@ -135,7 +129,7 @@ export function NotificationSettings() {
             )}
           </>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

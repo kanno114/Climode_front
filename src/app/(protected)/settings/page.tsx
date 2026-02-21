@@ -1,15 +1,8 @@
 import { auth } from "@/auth";
 import { AlertTriangle } from "lucide-react";
-import { ProfileEditForm } from "./_components/ProfileEditForm";
-import { AccountInfo } from "./_components/AccountInfo";
-import { AccountDeleteSection } from "./_components/AccountDeleteSection";
 import { getProfileAction, getPrefectures } from "./actions";
-import { NotificationSettings } from "@/components/NotificationSettings";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { CookieSettings } from "./_components/CookieSettings";
 import { Card, CardContent } from "@/components/ui/card";
-import LogoutButton from "../_components/LogoutButton";
-import { LogOut } from "lucide-react";
+import { SettingsTabs } from "./_components/SettingsTabs";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -46,87 +39,15 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <div className="space-y-8">
-          {/* セクション A: アカウント情報 */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              アカウント情報
-            </h2>
-            <div className="space-y-4">
-              <AccountInfo user={session?.user ?? {}} />
-              <ProfileEditForm
-                initialData={{
-                  name: profile?.user?.name || "",
-                  prefecture_id: profile?.user?.prefecture_id,
-                }}
-                prefectures={prefectures ?? []}
-              />
-            </div>
-          </section>
-
-          {/* セクション A2: 外観設定 */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              外観設定
-            </h2>
-            <Card>
-              <CardContent className="flex items-center justify-between py-4">
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">テーマ</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    アプリの外観を切り替えます
-                  </p>
-                </div>
-                <ThemeToggle />
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* セクション B: 通知設定 */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              通知設定
-            </h2>
-            <NotificationSettings />
-          </section>
-
-          {/* セクション B2: Cookie設定 */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              Cookie設定
-            </h2>
-            <CookieSettings />
-          </section>
-
-          {/* セクション C: アカウント管理 */}
-          <section>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              アカウント管理
-            </h2>
-            <div className="space-y-4">
-              <Card>
-                <CardContent className="py-4">
-                  <LogoutButton>
-                    <div className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/50">
-                        <LogOut className="h-5 w-5 text-red-600 dark:text-red-400" />
-                      </div>
-                      <span className="text-red-600 dark:text-red-400 font-medium">
-                        ログアウト
-                      </span>
-                    </div>
-                  </LogoutButton>
-                </CardContent>
-              </Card>
-              <AccountDeleteSection
-                isOAuthUser={
-                  !!session?.user?.image &&
-                  session.user.image.includes("googleusercontent.com")
-                }
-              />
-            </div>
-          </section>
-        </div>
+        <SettingsTabs
+          user={session?.user ?? {}}
+          profile={profile}
+          prefectures={prefectures ?? []}
+          isOAuthUser={
+            !!session?.user?.image &&
+            session.user.image.includes("googleusercontent.com")
+          }
+        />
       </div>
     </div>
   );
