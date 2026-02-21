@@ -3,7 +3,6 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -51,9 +50,8 @@ export function AccountDeleteSection({ isOAuthUser }: Props) {
   };
 
   return (
-    <Card className="border-red-200 dark:border-red-800/50">
-      <CardContent className="py-4">
-        <Dialog open={open} onOpenChange={handleOpenChange}>
+    <div>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <button
               type="button"
@@ -135,8 +133,7 @@ export function AccountDeleteSection({ isOAuthUser }: Props) {
               </Button>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
+      </Dialog>
+    </div>
   );
 }

@@ -6,7 +6,6 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, User, MapPin } from "lucide-react";
 import { profileSchema } from "@/lib/schemas/profile";
@@ -59,15 +58,14 @@ export function ProfileEditForm({ initialData, prefectures }: ProfileEditFormPro
   });
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardContent>
-        <form
-          id={form.id}
-          onSubmit={form.onSubmit}
-          action={action}
-          className="space-y-6"
-          aria-label="プロフィール編集"
-        >
+    <div>
+      <form
+        id={form.id}
+        onSubmit={form.onSubmit}
+        action={action}
+        className="space-y-6"
+        aria-label="プロフィール編集"
+      >
           {form.errors && (
             <Alert variant="destructive">
               <AlertDescription>
@@ -137,8 +135,7 @@ export function ProfileEditForm({ initialData, prefectures }: ProfileEditFormPro
               更新する
             </Button>
           </div>
-        </form>
-      </CardContent>
-    </Card>
+      </form>
+    </div>
   );
 }
