@@ -7,12 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle2, MapPin, Heart, Bell } from "lucide-react";
+import { CheckCircle2, MapPin, Heart, Bell, Palette } from "lucide-react";
 
 type CompletionScreenProps = {
   prefectureName: string | null;
   concernTopicsCount: number;
   notificationEnabled: boolean;
+  themeName: string;
   onGoToDashboard: () => void;
 };
 
@@ -20,6 +21,7 @@ export function CompletionScreen({
   prefectureName,
   concernTopicsCount,
   notificationEnabled,
+  themeName,
   onGoToDashboard,
 }: CompletionScreenProps) {
   const summaryItems = [
@@ -37,6 +39,11 @@ export function CompletionScreen({
       icon: Bell,
       label: "通知",
       value: notificationEnabled ? "有効" : "スキップ",
+    },
+    {
+      icon: Palette,
+      label: "外観",
+      value: themeName,
     },
   ];
 
