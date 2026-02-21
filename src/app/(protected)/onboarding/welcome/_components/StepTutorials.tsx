@@ -44,6 +44,21 @@ const STEP_TUTORIALS: Record<StepKey, React.ReactNode> = {
       </p>
     </div>
   ),
+  theme: (
+    <div className="space-y-3 text-sm text-muted-foreground">
+      <p>
+        アプリの外観をお好みに合わせて選べます。選択するとすぐにプレビューされます。
+      </p>
+      <ul className="list-disc list-inside space-y-1 ml-2">
+        <li>ライト：明るい背景で見やすい表示</li>
+        <li>ダーク：目に優しい暗めの表示</li>
+        <li>システム：端末の設定に自動で合わせる</li>
+      </ul>
+      <p className="pt-2">
+        あとから設定ページでいつでも変更できます。
+      </p>
+    </div>
+  ),
 };
 
 export function getStepTutorial(key: StepKey): React.ReactNode {

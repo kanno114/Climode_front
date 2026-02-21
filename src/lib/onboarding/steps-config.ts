@@ -1,7 +1,7 @@
 import type React from "react";
-import { Thermometer, Heart, Bell } from "lucide-react";
+import { Thermometer, Heart, Bell, Palette } from "lucide-react";
 
-export type StepKey = "prefecture" | "concern_topics" | "notification";
+export type StepKey = "prefecture" | "concern_topics" | "notification" | "theme";
 
 export type StepDefinition = {
   key: StepKey;
@@ -42,5 +42,15 @@ export const STEP_DEFINITIONS: StepDefinition[] = [
     required: false,
     icon: Bell,
     tutorialKey: "notification",
+  },
+  {
+    key: "theme",
+    title: "好みの外観を選ぶ",
+    description:
+      "ライトモード・ダークモードなど、使いやすい外観を選べます。",
+    subtitle: "ステップ4: アプリの見た目を選びましょう",
+    required: false,
+    icon: Palette,
+    tutorialKey: "theme",
   },
 ];

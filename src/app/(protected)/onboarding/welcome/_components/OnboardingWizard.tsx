@@ -16,6 +16,7 @@ import { getStepTutorial } from "./StepTutorials";
 import { PrefectureStep } from "./steps/PrefectureStep";
 import { ConcernTopicsStep } from "./steps/ConcernTopicsStep";
 import { NotificationStep } from "./steps/NotificationStep";
+import { ThemeStep } from "./steps/ThemeStep";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { CompletionScreen } from "./CompletionScreen";
 import { STEP_DEFINITIONS } from "@/lib/onboarding/steps-config";
@@ -65,6 +66,7 @@ export function OnboardingWizard({
   const [concernTopicsCount, setConcernTopicsCount] = useState(
     initialSelectedKeys.length
   );
+  const [selectedThemeName, setSelectedThemeName] = useState("システム");
 
   // Step transition animation
   const [displayedStepIndex, setDisplayedStepIndex] = useState(currentStepIndex);
@@ -109,6 +111,7 @@ export function OnboardingWizard({
         prefectureName={prefectureName}
         concernTopicsCount={concernTopicsCount}
         notificationEnabled={notificationEnabled}
+        themeName={skippedSteps.theme ? "システム" : selectedThemeName}
         onGoToDashboard={handleGoToDashboard}
       />
     );
@@ -148,6 +151,16 @@ export function OnboardingWizard({
           <NotificationStep
             onComplete={() => handleStepComplete("notification")}
             onSkip={() => handleStepSkip("notification")}
+          />
+        );
+      case "theme":
+        return (
+          <ThemeStep
+            onComplete={(themeName: string) => {
+              setSelectedThemeName(themeName);
+              handleStepComplete("theme");
+            }}
+            onSkip={() => handleStepSkip("theme")}
           />
         );
       default:

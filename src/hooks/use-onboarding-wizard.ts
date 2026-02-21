@@ -25,6 +25,7 @@ export function useOnboardingWizard({
     prefecture: initialPrefectureCompleted,
     concern_topics: false,
     notification: false,
+    theme: false,
   });
   const [skippedSteps, setSkippedSteps] = useState<SkippedSteps>({});
 
@@ -40,6 +41,7 @@ export function useOnboardingWizard({
       stepCompletion.prefecture &&
       stepCompletion.concern_topics &&
       stepCompletion.notification &&
+      stepCompletion.theme &&
       currentStepIndex === totalSteps - 1;
     if (allCompleted && phase === "steps") {
       setPhase("complete");
