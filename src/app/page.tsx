@@ -29,7 +29,7 @@ export default async function Home() {
     name: "Climode",
     description:
       "睡眠・気分・症状などの身体データと、天気・気圧・湿度などの環境データを統合して体調をスコア化する健康管理アプリ",
-    url: "https://climode-front.vercel.app",
+    url: "https://climode.app",
     applicationCategory: "HealthApplication",
     operatingSystem: "Web",
     offers: {
