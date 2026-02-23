@@ -5,16 +5,21 @@ Climode のフロントエンドアプリケーション。Next.js 15（App Rout
 ## 技術スタック
 
 - **Node.js**: 23
-- **React**: 19.1.0
-- **Next.js**: 15.5.2（App Router）
+- **React**: 19.1.2
+- **Next.js**: 15.5.12（App Router + Turbopack）
 - **TypeScript**: 5.x
 - **認証**: next-auth 5.0.0-beta.29
 - **UI**: shadcn/ui（Radix UI + Tailwind CSS 4）
-- **フォーム**: @conform-to/react, @conform-to/zod, @hookform/resolvers
+- **フォーム**: @conform-to/react, @conform-to/zod
 - **カレンダー**: @fullcalendar/react 6.1.19
-- **グラフ**: chart.js 4.5.0 + react-chartjs-2
+- **グラフ**: chart.js 4.5.0 + react-chartjs-2 5.3.0
+- **エラーモニタリング**: @sentry/nextjs
+- **テーマ**: next-themes（ダークモード対応）
+- **アナリティクス**: @next/third-parties（Google Analytics 4）
+- **OGP**: @vercel/og
 - **その他**: zod, date-fns, lucide-react, sonner
 - **テスト**: jest, @testing-library/react, @testing-library/jest-dom
+- **デプロイ**: Vercel
 
 ## 開発環境の起動
 
@@ -47,7 +52,10 @@ npm run dev
 
 - `/signin` - サインイン
 - `/signup` - サインアップ
-- `/onboarding/welcome` - オンボーディング（都道府県設定、トリガー登録、通知設定）
+- `/forgot-password` - パスワードリセット要求
+- `/reset-password` - パスワードリセット実行
+- `/check-email` - メール送信確認
+- `/confirm-email` - メールアドレス確認
 
 ### メイン機能
 
@@ -57,12 +65,20 @@ npm run dev
 - `/calendar` - カレンダー表示
 - `/dailylog/[id]` - 日次ログ詳細
 - `/reports/weekly` - 週次レポート（グラフ・統計・トレンド）
+- `/concern-topics` - 関心トピック管理
+- `/onboarding/welcome` - オンボーディング（都道府県設定、トピック登録、通知設定、テーマ選択）
 
 ### 設定
 
-- `/profile` - プロフィール編集
+- `/settings` - ユーザー設定
 
 ### その他
+
+- `/about` - サービス紹介
+- `/privacy-policy` - プライバシーポリシー
+- `/terms-of-service` - 利用規約
+- Cookie 同意バナー（全ページ共通）
+- ダークモード対応（ライト / ダーク / システム）
 
 ## プロジェクト構成
 
