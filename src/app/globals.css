@@ -121,6 +121,64 @@
   }
 }
 
+/* FullCalendar ダークモード対応 */
+.dark .fc-col-header-cell {
+  background-color: var(--card);
+  color: var(--foreground);
+}
+
+.dark .fc-col-header-cell-cushion {
+  color: var(--foreground);
+}
+
+.dark .fc-daygrid-day {
+  background-color: var(--background);
+}
+
+.dark .fc-daygrid-day-number {
+  color: var(--foreground);
+}
+
+.dark .fc-day-today {
+  background-color: oklch(0.3 0.05 264) !important;
+}
+
+.dark .fc-toolbar-title {
+  color: var(--foreground);
+}
+
+.dark .fc-button {
+  background-color: var(--secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--foreground) !important;
+}
+
+.dark .fc-button:hover {
+  background-color: var(--accent) !important;
+}
+
+.dark .fc-button-active {
+  background-color: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+}
+
+.dark .fc-scrollgrid {
+  border-color: var(--border) !important;
+}
+
+.dark .fc-scrollgrid td,
+.dark .fc-scrollgrid th {
+  border-color: var(--border) !important;
+}
+
+.dark .fc-daygrid-day-frame {
+  border-color: var(--border);
+}
+
+.dark .fc-day-other .fc-daygrid-day-number {
+  color: var(--muted-foreground);
+}
+
 @layer utilities {
   .step-enter-from-right {
     opacity: 0;
